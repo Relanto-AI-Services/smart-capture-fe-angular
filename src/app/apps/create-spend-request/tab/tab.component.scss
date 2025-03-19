@@ -1,0 +1,65 @@
+.tabs {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    justify-content: center;
+  }
+  .tab-item {
+    display: flex;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+  }
+  .tab-circle {
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+    border-radius: 50%;
+    background-color: gray;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+  .active-circle {
+    background-color: blue;
+  }
+  .tab-label {
+    margin-left: 8px;
+    font-size: 0.7rem;
+    color: black;
+  }
+  .tab-line {
+    flex-grow: 1;
+    height: 2px;
+    background-color: #ccc;
+    margin: 0 10px;
+  }
+  .active-tab .tab-label {
+    font-weight: bold;
+  }
+  
+  // Adjusted for better alignment
+  .tabs .tab-item:not(:last-child)::after {
+    content: '';
+    flex-grow: 1;
+    height: 2px;
+    background-color: #ccc;
+    position: relative;
+    margin-left: 10px;
+  }
+  
+  // Ensure proper spacing
+  @media (max-width: 768px) {
+    .tabs {
+      flex-wrap: wrap;
+    }
+    .tab-item {
+      flex: 1 1 auto;
+      justify-content: center;
+    }
+    .tab-line {
+      display: none;
+    }
+  }

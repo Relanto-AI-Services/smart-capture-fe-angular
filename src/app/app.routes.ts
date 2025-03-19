@@ -1,0 +1,13 @@
+import { Routes } from '@angular/router';
+import { LoginComponent } from './components/logs/login/login.component';
+import { HomeComponent } from './home/home.component';
+import { authGuard } from './guard/auth.guard';
+
+export const routes: Routes = [
+    {path:'login',component:LoginComponent, canActivate:[authGuard]},
+    {path:'home',component:HomeComponent},
+    {path:'',redirectTo:'/login', pathMatch: 'full'},
+    {path:'dashboard', loadChildren: () => import('./apps/dashboard/dashboard.module').then(m=>m.DashboardModule)},
+    {path:'spendRequest', loadChildren: () => import('./apps/create-spend-request/create-spend-request.module').then(m=>m.CreateSpendRequestModule)},
+    {path:'**',redirectTo:'/login', pathMatch: 'full'},
+];

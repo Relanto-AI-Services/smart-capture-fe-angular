@@ -1,0 +1,28 @@
+
+<div class="container">
+    <p class="heading">What type of spend request would you like to proceed with?</p>
+    <div class="grid">
+        @for (request of requests; track $index; let i = $index) {
+            <div class="card" (click)="onCardClick(request, request.title)" [ngClass]="{ 'active': (request.title === isActive) }">
+                <div class="icon-container">
+                    <img class="icon" [src]="request.icon" alt="icon">
+                </div>
+                <div class="content">
+                    <h3 class="title">{{ request.title }}</h3>
+                    <p class="description">{{ request.description }}</p>
+                </div>
+                @if (i===0) {
+                    <div  class="badge">
+                        <img  src="../../../../assets/images/star-white.png" /><span>Smart Spend Request</span>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <br/>
+    <hr/>
+    <div class="Create-spend-request-button-div">
+        <button class="back-continue-button back">Back</button>
+        <button class="back-continue-button continue" [ngClass]="{'active':isActive}" (click)="clickNext()">Continue</button>
+    </div>
+</div>

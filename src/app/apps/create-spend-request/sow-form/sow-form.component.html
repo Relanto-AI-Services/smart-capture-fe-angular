@@ -1,0 +1,97 @@
+<!-- <div class="sow-form">
+    <form [formGroup]="sowForm" (ngSubmit)="submitForm()">
+      <mat-form-field appearance="outline">
+        <mat-label>Purchase Name</mat-label>
+        <input matInput formControlName="purchaseName">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Spend Category</mat-label>
+        <input matInput formControlName="spendCategory">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Spend Sub Category</mat-label>
+        <input matInput formControlName="spendSubCategory">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Purchase Description</mat-label>
+        <textarea matInput formControlName="purchaseDescription"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Media Plan</mat-label>
+        <input matInput formControlName="mediaPlan">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>MPR ID</mat-label>
+        <input matInput formControlName="mprId">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Work Start Date</mat-label>
+        <input matInput formControlName="workStartDate" type="date">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Work End Date</mat-label>
+        <input matInput formControlName="workEndDate" type="date">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Country</mat-label>
+        <input matInput formControlName="country">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Currency</mat-label>
+        <input matInput formControlName="currency">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Role</mat-label>
+        <input matInput formControlName="role">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Total Spend</mat-label>
+        <input matInput formControlName="totalSpend" type="number">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Supplier Legal Name</mat-label>
+        <input matInput formControlName="supplierLegalName">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Legal Name</mat-label>
+        <input matInput formControlName="legalName">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Supplier POC</mat-label>
+        <input matInput formControlName="supplierPoc">
+      </mat-form-field>
+
+      <div formArrayName="forecastBudget">
+        <div *ngFor="let budget of forecastBudget.controls; let i = index" [formGroup]="budget">
+          <mat-form-field appearance="outline">
+            <mat-label>Quarter</mat-label>
+            <input matInput formControlName="quarter">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Amount</mat-label>
+            <input matInput formControlName="amount" type="number">
+          </mat-form-field>
+
+          <button mat-icon-button (click)="removeBudgetRow(i)">-</button>
+        </div>
+        <button mat-button (click)="addBudgetRow()">+ Add Budget</button>
+      </div>
+
+      <button mat-raised-button color="primary" type="submit">Submit</button>
+    </form>
+</div> -->

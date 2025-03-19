@@ -1,0 +1,54 @@
+<div class="table-layout">
+    <div class="container">
+        <p>Search Tactic by</p>
+        <div class="search-container">
+            <div class="filter-container">
+                <select class="filter" style="margin-right: 5px;" [(ngModel)]="selectedFilter">
+                  <option *ngFor="let filter of filters" [value]="filter">{{ filter }}</option>
+                </select>
+                <input class="filter"  type="text" [(ngModel)]="searchText" placeholder="Search..." />
+            </div>
+            <div class="filter-button">
+                <button (click)="applyFilter()">🔍</button>
+            </div>
+        </div>
+      
+        <p>Which tactic would you like to use?</p>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th style="width: 20vw;">Tactic Name</th>
+                <th>Program / Vendor</th>
+                <th>Tactic Type</th>
+                <th>Start Date</th>
+                <th>End date</th>
+                <th>Cost Center</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let row of filteredData">
+                <td><input type="checkbox" [disabled]="row.warning" (change)="toggleSelection($event, row)" /></td>
+                <td>
+                  <div class="tactic-title">{{row?.id + ' - ' + row?.tacticName }}</div>
+                  <div class="tactic-subtitle">{{ row?.subTitle }}</div>
+                  <span class="warning-text" *ngIf="row?.warning">{{ row?.warning }}</span>
+                  <span class="edit-tactic" *ngIf="row?.warningAction" (click)="performAction(row.warningAction)">{{ row?.warningAction }}</span>
+                </td>
+                <td>{{ row?.program }}</td>
+                <td>{{ row?.type }}</td>
+                <td>{{ row?.startDate }}</td>
+                <td>{{ row?.endDate }}</td>
+                <td>{{ row?.costCenter }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <br />
+    <div class="Create-spend-request-button-div">
+        <button class="back-continue-button back">Back</button>
+        <button class="back-continue-button continue" [ngClass]="{'active':isActive}" (click)="clickNext()">Continue</button>
+    </div>
+</div>

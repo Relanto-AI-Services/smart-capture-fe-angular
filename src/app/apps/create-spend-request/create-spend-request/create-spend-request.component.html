@@ -1,0 +1,72 @@
+<app-popup-message [title]="'sjgad'" [description]="'adassa dsadasd adasdasd'"
+    [isOpen]="isPopupOpen"></app-popup-message>
+<div class="layout" [style]="chatVisible? {width:'100vw'} : {width:'80vw',margin: 'auto'}">
+    <div class="create-content" style="display: flex;">
+        <div class="content" [style]="chatVisible? {width:'80%'} : {width:'100%'}">
+            <div class="header">
+                <p>Create Smart Spend Request</p>
+            </div>
+            @if (activePage !=='Request Type') {
+            <div class="tab">
+                <app-tab ngSkipHydration [activeTab]="activeTab" (tabClick)="tabClick($event)"></app-tab>
+            </div>
+            }
+            <div>
+                @if (activePage ==='Request Type') {
+                <app-request-type (cardClick)="requestType($event)"></app-request-type>
+                }
+                @else if (activeTab === 'tactic' ) {
+                <app-tactic-table (tacticClick)="onTacticSelection($event)" ngSkipHydration></app-tactic-table>
+                }
+                @else if (activeTab === 'sow' ) {
+                <app-sow (sowClick)="onSowSelection($event)" ngSkipHydration></app-sow>
+                }
+                @else if (activeTab === 'riskAssessment' ) {
+                <app-risk-assessment (riskAssessmentClick)="onRiskAssessmentSelection($event)"
+                    ngSkipHydration></app-risk-assessment>
+                }
+                @else if (activeTab === 'reviewAndSubmit' ) {
+                <app-submit-spend-request (finalSubmitionClick)="onFinalSubmitionClick($event)"
+                    ngSkipHydration></app-submit-spend-request>
+                }
+            </div>
+        </div>
+        <div class="chat-container" [class.hidden]="!chatVisible" [style]="chatVisible? {width:'20%'} : {display:'none'}">
+            <div class="chat-header">
+                <span class="chat-title">Hello, David</span>
+                <span class="close-icon" (click)="toggleChat()">&#10006;</span>
+            </div>
+            <div class="chat-body">
+                @for (msg of messages; track $index) {
+                    @if (msg.sender === 'ai') {
+                        <div class="ai">
+                            <img class="chat-icon" src="../../../../assets/images/ai-icon.png" alt="AI">
+                            <div class="chat-bubble ai-message" [innerHTML]="msg.text"></div>
+                            @if (msg.options) {
+                                <div class="options-container">
+                                    @for (option of msg.options; track $index) {
+                                        <button class="option-button" (click)="selectOption(option)">{{ option }}</button>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    @if (msg.sender === 'user') {
+                        <div class="user">
+                            <div class="chat-bubble user-message" [innerHTML]="msg.text"></div>
+                            <img class="user-icon" src="../../../../assets/images/user-icon.png" alt="User">
+                        </div>
+                    }
+                }
+            </div>
+            <div class="chat-footer">
+                <input type="text" [(ngModel)]="newMessage" placeholder="Type your message here ..." />
+                <button (click)="sendMessage()">
+                    <img src="../../../../assets/images/send-icon.png" />
+                </button>
+            </div>
+        </div>
+        
+    </div>
+
+</div>

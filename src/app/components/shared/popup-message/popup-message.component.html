@@ -1,0 +1,9 @@
+<ng-content>
+    @if (isOpen) {
+        <div class="popup-content">
+            <h2>{{ title?title:'' }}</h2>
+            <p>{{ description?description:'' }}</p>
+            <button (click)="closePopup.emit()">✖</button>
+          </div>
+    }
+</ng-content>

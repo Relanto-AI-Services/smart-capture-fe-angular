@@ -1,0 +1,11 @@
+<div class="tabs">
+    @for (tab of tabs; track $index;let i = $index) {
+        <div class="tab-item" [class.active]="tab?.value === activeTab" (click)="selectTab(tab,i)">
+            <div class="tab-circle" [class.active-circle]="tab?.value === activeTab">{{ i + 1 }}</div>
+            <span class="tab-label">{{ tab.label }}</span>
+            @if (i < tabs.length - 1) {
+                <div class="tab-line"></div>
+            }
+          </div>
+    }
+  </div>
