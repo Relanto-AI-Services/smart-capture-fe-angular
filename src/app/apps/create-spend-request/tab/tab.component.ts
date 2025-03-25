@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonService } from '../../../services/common/common.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tab',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './tab.component.html',
   styleUrl: './tab.component.scss'
 })
@@ -17,7 +18,7 @@ export class TabComponent {
     console.log(this.activeTab);
     this.commonService.tab$.subscribe({
       next: (activTab) => {
-        console.log('activTab Success:', activTab);
+        // console.log('activTab Success:', activTab);
       }
     });    
   }
@@ -25,6 +26,7 @@ export class TabComponent {
   selectTab(tab:any,index: number) {
     this.activeTab = index;
     this.commonService.setActiveTab(tab?.value);
+    localStorage.setItem('activeTab',this.activeTab)
     this.tabClick.emit(tab?.value);
   }
   ngOnChanges(changes: SimpleChanges) {
@@ -34,5 +36,10 @@ export class TabComponent {
         console.log('Changes detected activTab Success:', activTab);
       }
     });  
+  }
+
+  selectStep(stepValue: any) {
+    this.activeTab = stepValue;
+    this.tabClick.emit(stepValue);
   }
 }

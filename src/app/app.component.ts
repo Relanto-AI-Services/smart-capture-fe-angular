@@ -12,4 +12,12 @@ import { HttpClientModule } from '@angular/common/http';
 })
 export class AppComponent {
   title = 'Smart-Capture';
+  public userSession :boolean = false
+  ngOnInit() {
+    if(localStorage.getItem('sid')){
+      this.userSession = true
+    }else{
+      this.userSession = false
+    }
+  }
 }

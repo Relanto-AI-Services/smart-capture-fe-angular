@@ -1,65 +1,68 @@
-.tabs {
+  .stepper-container {
     display: flex;
     align-items: center;
-    padding: 10px 0;
-    justify-content: center;
+    gap: 16px;
+    justify-content: space-between;
   }
-  .tab-item {
+
+  .step-wrapper {
     display: flex;
     align-items: center;
     position: relative;
-    cursor: pointer;
   }
-  .tab-circle {
+
+  .step-circle {
     width: 20px;
     height: 20px;
     font-size: 0.7rem;
-    border-radius: 50%;
-    background-color: gray;
-    color: white;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     font-weight: bold;
+    border-radius: 50%;
+    background-color: #ddd;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
-  .active-circle {
+
+  .step-circle.active {
     background-color: blue;
+    color: white;
   }
-  .tab-label {
+
+  .step-circle.error {
+    background-color: red;
+    color: white;
+  }
+
+  .step-details {
+    display: flex;
+    flex-direction: column;
     margin-left: 8px;
+  }
+
+  .step-label {
     font-size: 0.7rem;
-    color: black;
   }
-  .tab-line {
-    flex-grow: 1;
+
+  .step-sub-label {
+    font-size: 0.6rem;
+    color: #4285f4;
+    line-height: 0.6rem;
+  }
+
+  .step-error {
+    color: red;
+    font-size: 0.6rem;
+  }
+
+  /* Horizontal Line - Positioned AFTER Each Label */
+  .step-line {
     height: 2px;
-    background-color: #ccc;
-    margin: 0 10px;
-  }
-  .active-tab .tab-label {
-    font-weight: bold;
-  }
-  
-  // Adjusted for better alignment
-  .tabs .tab-item:not(:last-child)::after {
-    content: '';
-    flex-grow: 1;
-    height: 2px;
-    background-color: #ccc;
+    width: 11vw;
+    background-color: gray;
     position: relative;
-    margin-left: 10px;
-  }
-  
-  // Ensure proper spacing
-  @media (max-width: 768px) {
-    .tabs {
-      flex-wrap: wrap;
-    }
-    .tab-item {
-      flex: 1 1 auto;
-      justify-content: center;
-    }
-    .tab-line {
-      display: none;
-    }
+    top: 50%;
+    margin-left: 12px;
   }

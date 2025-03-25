@@ -1,82 +1,59 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
-declare var gapi: any;
-declare var google: any;
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { AuthService } from '../../../services/auth/auth.service';
+import { GoogleDriveService } from '../../../services/googleDrive/google-drive.service';
+import { SowFormComponent } from "../sow-form/sow-form.component";
+import { CommonService } from '../../../services/common/common.service';
+
 @Component({
   selector: 'app-sow',
-  imports: [CommonModule],
+  imports: [CommonModule, SowFormComponent],
   templateUrl: './sow.component.html',
   styleUrl: './sow.component.scss'
 })
 export class SowComponent {
   @Output() sowClick = new EventEmitter<any>();
-  isActive:boolean=true
-  data:any={}
-
-  clickNext() {
-    this.sowClick.emit(this.data);
-    console.log('SOW...');
-  }
+  @ViewChild(SowFormComponent) sowForm!: SowFormComponent;
+  isActive: boolean = true
+  data: any = {}
+  public user = localStorage.getItem('user')
+  public userData = JSON.parse(this.user ? this.user : '');
 
   selectedFiles: any[] = [];
-  developerKey = 'AIzaSyBrrnYEOOoSWQhsnlBMRZFVQ4u5R3H4tGQ';
-  clientId = '594715748674-qiv013juoo6tvf7s49odabv8sdc2g331.apps.googleusercontent.com';
-  scope = ['https://www.googleapis.com/auth/drive.file'];
-  pickerApiLoaded = false;
-  oauthToken: string | null = null;
+  oauthToken: string = this.userData?.token?.client_id;
+  showSowForm: boolean = false;
+  constructor(public authService: AuthService, private googleDriveService: GoogleDriveService, public commonService:CommonService) {
 
+  }
   ngOnInit() {
-    // this.loadGoogleAPIs();
-  }
+    // this.commonService.resetTabs()
+    this.selectedFiles = []
+    this.googleDriveService.fileSelected.subscribe((files) => {
+      this.selectedFiles = files;
+      console.log("fileeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", this.selectedFiles);
+    });
 
-  loadGoogleAPIs() {
-    gapi.load('auth', { callback: this.onAuthApiLoad.bind(this) });
-    gapi.load('picker', { callback: this.onPickerApiLoad.bind(this) });
-  }
-
-  onAuthApiLoad() {
-    gapi.auth.authorize(
-      {
-        client_id: this.clientId,
-        scope: this.scope,
-        immediate: false
-      },
-      (authResult: any) => {
-        if (authResult && !authResult.error) {
-          this.oauthToken = authResult.access_token;
-        }
-      }
-    );
-  }
-
-  onPickerApiLoad() {
-    this.pickerApiLoaded = true;
   }
 
   openGoogleDrivePicker() {
-    if (!this.pickerApiLoaded || !this.oauthToken) {
-      alert('Google Drive API is not ready yet.');
-      return;
-    }
-
-    const picker = new google.picker.PickerBuilder()
-      .addView(google.picker.ViewId.DOCS)
-      .setOAuthToken(this.oauthToken)
-      .setDeveloperKey(this.developerKey)
-      .setCallback(this.pickerCallback.bind(this))
-      .build();
-    picker.setVisible(true);
-  }
-
-  pickerCallback(data: any) {
-    if (data.action === google.picker.Action.PICKED) {
-      const file = data.docs[0];
-      this.selectedFiles.push({ name: file.name, progress: 100 });
-    }
+    this.googleDriveService.openPicker();
   }
 
   removeFile(index: number) {
     this.selectedFiles.splice(index, 1);
   }
 
+  clickNext(type:any) {
+    if(type === 'extract'){
+      this.showSowForm = true
+    }else{
+      this.sowForm.onSubmit();
+      if(this.sowForm.isFormValid){
+        this.sowClick.emit(this.data);
+      }
+    }
+  }
+  getSowFormData(event: any) {
+    this.data = event //form data from sow
+  }
 }

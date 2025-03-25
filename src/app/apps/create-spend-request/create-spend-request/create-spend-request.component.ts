@@ -1,14 +1,16 @@
-import { Component } from '@angular/core';
-import { PopupMessageComponent } from "../../../components/shared/popup-message/popup-message.component";
-import { TabComponent } from "../tab/tab.component";
-import { TacticTableComponent } from "../tactic-table/tactic-table.component";
-import { RequestTypeComponent } from "../request-type/request-type.component";
-import { SowComponent } from "../sow/sow.component";
-import { RiskAssessmentComponent } from "../risk-assessment/risk-assessment.component";
-import { SubmitSpendRequestComponent } from "../submit-spend-request/submit-spend-request.component";
-import { FormGroup, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { Component, importProvidersFrom } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PopupMessageComponent } from '../../../components/shared/popup-message/popup-message.component';
+import { TabComponent } from '../tab/tab.component';
+import { TacticTableComponent } from '../tactic-table/tactic-table.component';
+import { RequestTypeComponent } from '../request-type/request-type.component';
+import { SowComponent } from '../sow/sow.component';
+import { RiskAssessmentComponent } from '../risk-assessment/risk-assessment.component';
+import { SubmitSpendRequestComponent } from '../submit-spend-request/submit-spend-request.component';
 import { CommonService } from '../../../services/common/common.service';
+import { AuthService } from '../../../services/auth/auth.service';
+
 interface ChatMessage {
   text: string;
   sender: 'user' | 'ai';
@@ -16,16 +18,32 @@ interface ChatMessage {
 }
 @Component({
   selector: 'app-create-spend-request',
-  imports: [PopupMessageComponent, TabComponent, TacticTableComponent, RequestTypeComponent, SowComponent, RiskAssessmentComponent, SubmitSpendRequestComponent,ReactiveFormsModule,FormsModule,CommonModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    PopupMessageComponent,
+    TabComponent,
+    TacticTableComponent,
+    RequestTypeComponent,
+    SowComponent,
+    RiskAssessmentComponent,
+    SubmitSpendRequestComponent,
+    FormsModule,
+    ReactiveFormsModule
+    // importProvidersFrom(FormsModule, ReactiveFormsModule)
+  ],
   templateUrl: './create-spend-request.component.html',
   styleUrl: './create-spend-request.component.scss',
-  standalone: true,
 })
 export class CreateSpendRequestComponent {
   public isPopupOpen: boolean = false
   public activeTab:any= 'tactic'
   public activePage = 'Request Type'
-  constructor(public commonService:CommonService) { }
+  constructor(public commonService:CommonService, public authService:AuthService) { }
+  ngOnInit() {
+    console.log('userrrrrrrrrrrrrrrrrrrrrrr',localStorage.getItem('sid'));
+
+   }
 
   tabClick(event: any) {
     this.activeTab = event
@@ -34,33 +52,25 @@ export class CreateSpendRequestComponent {
   }
   requestType(event: any) {
     this.activePage = 'Tactics'
-    // this.activeTab = 'tactic'
-    // this.commonService.setActiveTab('tactic');
     this.tabClick('tactic')
-    // console.log('event from Request type',event);
   }
   onTacticSelection(event:any){
     this.activePage = 'SOW'
-    // this.commonService.setActiveTab('sow');
     this.tabClick('sow')
-    // console.log('event from tactic',event);
   }
   onSowSelection(event:any){
-    this.activePage = 'Risk Assessment'
-    // this.commonService.setActiveTab('riskAssessment');
+    this.activePage = 'Risk Assessment';
+    console.log('sow extracted form data in create ',event);
+    
     this.tabClick('riskAssessment')
-    // console.log('event from SOW',event);
   }
   onRiskAssessmentSelection(event:any){
     this.activePage = 'Review And Submit'
     this.tabClick('reviewAndSubmit')
-    // this.commonService.setActiveTab('reviewAndSubmit');
-    // console.log('event from onRiskAssessmentSelection',event);
   }
   onFinalSubmitionClick(event:any){
     this.activePage = 'Review And Submit'
     this.tabClick('reviewAndSubmit')
-    // console.log('event from final sumbmition',event);
   }
 
 

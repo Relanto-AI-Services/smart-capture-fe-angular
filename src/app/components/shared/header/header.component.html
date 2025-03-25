@@ -1,5 +1,35 @@
-<div class="main-div">
-    <div class="app-title">
-        <span>SmartCapture</span>
+<mat-toolbar class="header-toolbar">
+    <div class="header-left">
+      <img src="../../../../assets/images/logo.png" style="height: 1.5rem;" alt="Logo" class="logo" />
+      <nav class="breadcrumb">
+        <mat-menu #appMenu="matMenu">
+          <button mat-menu-item>App 1</button>
+          <button mat-menu-item>App 2</button>
+        </mat-menu>
+        <button mat-button [matMenuTriggerFor]="appMenu">Apps <mat-icon>arrow_drop_down</mat-icon></button>
+        <span>/</span>
+        <mat-menu #marketMenu="matMenu">
+          <button mat-menu-item>Google MRM Marketers</button>
+        </mat-menu>
+        <button mat-button [matMenuTriggerFor]="marketMenu">Google MRM Marketers <mat-icon>arrow_drop_down</mat-icon></button>
+        <span>/</span>
+        <mat-menu #homeMenu="matMenu">
+          <button mat-menu-item>00. Home</button>
+          <button mat-menu-item>0.3 Spend Request Home (Drafts)</button>
+        </mat-menu>
+        <button mat-button [matMenuTriggerFor]="homeMenu">00. Home / 0.3 Spend Request Home (Drafts) <mat-icon>arrow_drop_down</mat-icon></button>
+      </nav>
     </div>
-</div>
+    <div class="header-right">
+      <mat-icon>search</mat-icon>
+      <div class="notification">
+        <mat-icon>notifications</mat-icon>
+        <span class="badge">1</span>
+      </div>
+      <mat-icon>help</mat-icon>
+      <mat-menu #user="matMenu">
+        <button mat-menu-item>Logout</button>
+      </mat-menu>
+      <div class="avatar" [matMenuTriggerFor]="user">HV</div>
+    </div>
+  </mat-toolbar>

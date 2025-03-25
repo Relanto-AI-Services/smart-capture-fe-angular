@@ -24,8 +24,6 @@ export class RequestTypeComponent {
     this.isActive = title
   }
   clickNext() {
-    console.log('asdasfda');
     this.cardClick.emit(this.data);
-    
   }
 }

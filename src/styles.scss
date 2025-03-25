@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+@include mat.core();
 
 body {
     margin: 5px;
@@ -21,20 +23,22 @@ body {
     }
 
     .continue {
-        background: none;
-        color: #656565;
-        border: 1px solid #656565;
+        color: #656565bf;
+        border: 1px solid #65656533;
+        background-color: #65656533;
         padding: 5px 17px;
-        border-radius: 15px;
+        border-radius: 100px;
+        font-size: 0.6rem;
+        gap: 8px;
     }
-    
+
     .active {
         border-radius: 100px;
         gap: 8px;
         background-color: #0B57D0;
         border: 1px solid #0B57D0;
         cursor: pointer;
-        color:white;
+        color: white;
         font-size: 0.6rem;
     }
 }
@@ -46,5 +50,27 @@ body {
 .display-flex {
     display: flex;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// .mat-mdc-form-field {
+//     --mdc-shape-small-component: 10px;
+//     font-size: 0.7rem !important;
+//     line-height: 10px !important;
+
+//     .mat-mdc-text-field-wrapper {
+//         height: 7vh !important;
+//     }
+//     .mat-mdc-select{
+//         font-size: 0.7rem !important;
+//         line-height: 10px !important;
+//     }
+// }

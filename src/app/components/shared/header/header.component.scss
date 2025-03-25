@@ -1,9 +1,61 @@
-.main-div{
-    background-color: rgb(66 133 244);
-    border-radius: 10px 10px 0px 0px;
-    padding: 0.7rem 1rem;
-    .app-title{
-        color: white;
-        font-weight: 600;
-    }
-}
+.header-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: #fff;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+  
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .breadcrumb span {
+    color: #757575;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .notification {
+    position: relative;
+  }
+  
+  .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: red;
+    color: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    background: #3f51b5;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+  }
+  

@@ -17,9 +17,9 @@ export class TacticTableComponent {
   data = [
     { id: 'SCA12696', tacticName: 'Event & Experience', subTitle: 'Multiple Events - Central: 1P SMB Webinars', program: 'Program', type: 'Events & Experiences: Multiple Events', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '1P8: Touched Center - Traditional', warning: '', warningAction: '' },
     { id: 'GLO24352', tacticName: 'Event & Experience', subTitle: 'Single Event - Cloud Summit JAPAC', program: 'Program', type: 'Events & Experiences: Single Event', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - JAPAC', warning: '', warningAction: '' },
-    { id: 'GLO63746', tacticName: 'Event & Experience', subTitle: 'Multiple Events', program: 'Program', type: 'Events & Experiences: Multiple Events', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - JAPAC APAC', warning: '⚠️ Missing Basic Details', warningAction: 'Edit Tactic' },
+    { id: 'GLO63746', tacticName: 'Event & Experience', subTitle: 'Multiple Events', program: 'Program', type: 'Events & Experiences: Multiple Events', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - JAPAC APAC', warning: 'Missing Basic Details', warningAction: 'Edit Tactic' },
     { id: 'SCA12696', tacticName: 'Event & Experience', subTitle: 'Multiple Events - Mumbai Leaders Connect', program: 'Program', type: 'Events & Experiences: Multiple Events', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - EMEA', warning: '', warningAction: '' },
-    { id: 'GLO34526', tacticName: 'Event & Experience', subTitle: 'Single Event', program: 'Program', type: 'Events & Experiences: Single Event', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - JAPAC', warning: '⚠️ Missing Basic Details', warningAction: 'Edit Tactic' },
+    { id: 'GLO34526', tacticName: 'Event & Experience', subTitle: 'Single Event', program: 'Program', type: 'Events & Experiences: Single Event', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - JAPAC', warning: 'Missing Basic Details', warningAction: 'Edit Tactic' },
     { id: 'SCA23432', tacticName: 'Event & Experience', subTitle: 'Single Event - Sydney Summit', program: 'Program', type: 'Events & Experiences: Multiple Events', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - JAPAC APAC', warning: '', warningAction: '' }
   ];
   
@@ -63,9 +63,8 @@ export class TacticTableComponent {
   //   editDetails(row:any){
   //     console.log(row);
   //   }
-    clickNext() {
-      console.log('asdasfda');
-      this.tacticClick.emit(this.selectedData);
+    clickNext(type:any) {
+      this.tacticClick.emit({...this.selectedData,type:type});
     }
 
 }

@@ -1,97 +1,136 @@
-<!-- <div class="sow-form">
-    <form [formGroup]="sowForm" (ngSubmit)="submitForm()">
-      <mat-form-field appearance="outline">
-        <mat-label>Purchase Name</mat-label>
-        <input matInput formControlName="purchaseName">
-      </mat-form-field>
+<form [formGroup]="sowForm" (ngSubmit)="onSubmit()" class="sow-form">
+    <p class="form-title">SOW details auto-filled for you</p>
+    <p class="form-subtitle">Review and complete any missing details, ensuring all mandatory fields (*) are filled.</p>
+<div class="formDiv">
 
-      <mat-form-field appearance="outline">
-        <mat-label>Spend Category</mat-label>
-        <input matInput formControlName="spendCategory">
-      </mat-form-field>
+    <div>
+        <p class="section-title">Purchase Name</p>
+        <p class="section-subtitle">A name helps approve and support team better understand what you're requesting.</p>
+        <div class="formfield">
 
-      <mat-form-field appearance="outline">
-        <mat-label>Spend Sub Category</mat-label>
-        <input matInput formControlName="spendSubCategory">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Purchase Description</mat-label>
-        <textarea matInput formControlName="purchaseDescription"></textarea>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Media Plan</mat-label>
-        <input matInput formControlName="mediaPlan">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>MPR ID</mat-label>
-        <input matInput formControlName="mprId">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Work Start Date</mat-label>
-        <input matInput formControlName="workStartDate" type="date">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Work End Date</mat-label>
-        <input matInput formControlName="workEndDate" type="date">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Country</mat-label>
-        <input matInput formControlName="country">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Currency</mat-label>
-        <input matInput formControlName="currency">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Role</mat-label>
-        <input matInput formControlName="role">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Total Spend</mat-label>
-        <input matInput formControlName="totalSpend" type="number">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Supplier Legal Name</mat-label>
-        <input matInput formControlName="supplierLegalName">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Legal Name</mat-label>
-        <input matInput formControlName="legalName">
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Supplier POC</mat-label>
-        <input matInput formControlName="supplierPoc">
-      </mat-form-field>
-
-      <div formArrayName="forecastBudget">
-        <div *ngFor="let budget of forecastBudget.controls; let i = index" [formGroup]="budget">
-          <mat-form-field appearance="outline">
-            <mat-label>Quarter</mat-label>
-            <input matInput formControlName="quarter">
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Amount</mat-label>
-            <input matInput formControlName="amount" type="number">
-          </mat-form-field>
-
-          <button mat-icon-button (click)="removeBudgetRow(i)">-</button>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Purchase Name </mat-label>
+                <input matInput formControlName="purchaseName" [ngClass]="{'auto-filled': isAutoFilled('purchaseName')}">
+                <mat-error *ngIf="isFieldInvalid('purchaseName')">This field is required</mat-error>
+            </mat-form-field>
         </div>
-        <button mat-button (click)="addBudgetRow()">+ Add Budget</button>
-      </div>
+    </div>
 
-      <button mat-raised-button color="primary" type="submit">Submit</button>
-    </form>
-</div> -->
+    <section>
+        <p class="section-title">Spend Details</p>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Spend Category </mat-label>
+                <mat-select formControlName="spendCategory">
+                    <mat-option value="Learning">Learning</mat-option>
+                    <mat-option value="Infrastructure">Infrastructure</mat-option>
+                </mat-select>
+                <mat-error *ngIf="isFieldInvalid('spendCategory')">This field is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Spend Sub Category </mat-label>
+                <mat-select formControlName="spendSubCategory">
+                    <mat-option value="Software Licensing">Software Licensing</mat-option>
+                    <mat-option value="Hardware">Hardware</mat-option>
+                </mat-select>
+                <mat-error *ngIf="isFieldInvalid('spendSubCategory')">This field is required</mat-error>
+            </mat-form-field>
+    </section>
+
+    <section>
+        <p class="section-title">Purchase Description</p>
+        <p class="section-subtitle">Provide a detailed description of the good and/or service that the supplier will
+            provide, and any other relevant project information.</p>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Purchase Description </mat-label>
+            <textarea matInput formControlName="purchaseDescription" rows="3"
+                [ngClass]="{'auto-filled': isAutoFilled('purchaseDescription')}"></textarea>
+            <mat-error *ngIf="isFieldInvalid('purchaseDescription')">This field is required</mat-error>
+        </mat-form-field>
+    </section>
+
+    <section>
+        <p class="section-title">Media Plan</p>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Media Plan</mat-label>
+            <input matInput formControlName="mediaPlan" [ngClass]="{'auto-filled': isAutoFilled('mediaPlan')}">
+        </mat-form-field>
+    </section>
+
+    <section>
+        <p class="section-title">MRFID</p>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>MRFID </mat-label>
+            <input matInput formControlName="mrfid" [ngClass]="{'auto-filled': isAutoFilled('mrfid')}">
+            <mat-error *ngIf="isFieldInvalid('mrfid')">This field is required</mat-error>
+        </mat-form-field>
+    </section>
+
+    <section>
+        <p class="section-title">Timeline</p>
+        <div class="row">
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Work Start Date </mat-label>
+                <input matInput [matDatepicker]="picker1" formControlName="workStartDate"
+                    [ngClass]="{'auto-filled': isAutoFilled('workStartDate')}">
+                <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error *ngIf="isFieldInvalid('workStartDate')">This field is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Work End Date </mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="workEndDate"
+                    [ngClass]="{'auto-filled': isAutoFilled('workEndDate')}">
+                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error *ngIf="isFieldInvalid('workEndDate')">This field is required</mat-error>
+            </mat-form-field>
+        </div>
+    </section>
+
+    <section>
+        <p class="section-title">Market Information</p>
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Select Country </mat-label>
+                <mat-select formControlName="selectCountry" [ngClass]="{'auto-filled': isAutoFilled('selectCountry')}">
+                    <mat-option value="USA">United States</mat-option>
+                    <mat-option value="India">India</mat-option>
+                </mat-select>
+                <mat-error *ngIf="isFieldInvalid('selectCountry')">This field is required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Select Currency</mat-label>
+                <input matInput formControlName="selectCurrency"
+                    [ngClass]="{'auto-filled': isAutoFilled('selectCurrency')}">
+            </mat-form-field>
+    </section>
+
+    <section>
+        <p class="section-title">Supplier Information</p>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Select Role</mat-label>
+            <input matInput formControlName="selectRole" [ngClass]="{'auto-filled': isAutoFilled('selectRole')}">
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Supplier Legal Name </mat-label>
+            <input matInput formControlName="supplierLegalName"
+                [ngClass]="{'auto-filled': isAutoFilled('supplierLegalName')}">
+            <mat-error *ngIf="isFieldInvalid('supplierLegalName')">This field is required</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Legal Name</mat-label>
+            <input matInput formControlName="legalName" [ngClass]="{'auto-filled': isAutoFilled('legalName')}">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Name of Supplier POC </mat-label>
+            <input matInput formControlName="supplierPOC" [ngClass]="{'auto-filled': isAutoFilled('supplierPOC')}">
+            <mat-error *ngIf="isFieldInvalid('supplierPOC')">This field is required</mat-error>
+        </mat-form-field>
+    </section>
+
+    <!-- <button mat-raised-button color="primary" type="submit" class="submit-btn">Submit</button> -->
+</div>
+</form>

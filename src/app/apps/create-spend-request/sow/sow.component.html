@@ -1,29 +1,45 @@
 <div class="container">
-     <div class="container">
-        <h2>Upload your draft SOW</h2>
-        <p>to let AI automatically fill in your information.</p>
-      
-        <div class="upload-box" (click)="openGoogleDrivePicker()">
+  @if (!showSowForm){
+    <div class="browsDiv">
+       <p class="upload-heading">Upload your draft SOW</p>
+       <p>to let AI automatically fill in your information.</p>
+     
+       <div class="upload-box">
+        @if (selectedFiles.length === 0) {
           <img src="../../../../assets/images/browe-file.png" alt="Upload Icon" />
-          <button class="browse-btn">Browse File</button>
-        </div>
-      
-        <div *ngIf="selectedFiles.length > 0" class="file-list">
-          <div class="file-item" *ngFor="let file of selectedFiles; let i = index">
-            <span class="file-name">{{ file.name }}</span>
-            <div class="progress-bar">
-              <div class="progress" [style.width.%]="file.progress"></div>
+        }
+        @else {
+          <div class="file-list">
+            <div class="file-div" *ngFor="let file of selectedFiles; let i = index">
+              <div class="file-name">{{ file.name }} {{file.fileSizeMB}} </div>
+              <div class="file-item" >
+                <img style="height:2vh"  src="../../../../assets/images/tick-green-circle-icon.png" />
+                <div class="progress-bar">
+                  <div class="progress" [style.width.%]="file.progress"></div>
+                </div>
+                <span class="remove-file" (click)="removeFile(i)">✖</span>
+              </div>
             </div>
-            <span class="remove-file" (click)="removeFile(i)">✖</span>
           </div>
-        </div>
-      
-        <p class="skip-text">Don’t have one yet? <br>You may skip this step and enter the information you do have in the next step.</p>
-      </div>
-      
-      <!-- <app-sow-form /> -->
+        }
+         <button class="browse-btn"  (click)="openGoogleDrivePicker()">Browse File</button>
+       </div>
+     
+     
+       <p class="skip-text">Don’t have one yet? <br>You may skip this step and enter the information you do have in the next step.</p>
+     </div>
+  }
+  @else {
+      <app-sow-form (sendFormdata)="getSowFormData($event)" />
+  }
+  <hr />
     <div class="Create-spend-request-button-div">
         <button class="back-continue-button back">Back</button>
-        <button class="back-continue-button continue" [ngClass]="{'active':isActive}" (click)="clickNext()">Continue</button>
-    </div>
+        @if (!showSowForm) {
+          <button class="back-continue-button continue" [ngClass]="{'active':isActive}" (click)="clickNext('extract')">Continue</button>
+        }
+        @else {
+          <button class="back-continue-button continue" [ngClass]="{'active':isActive}" (click)="clickNext('submit')">Continue</button>
+        }
+      </div>
 </div>
