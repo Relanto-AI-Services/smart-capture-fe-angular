@@ -1,38 +1,110 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule,  } from '@angular/common';
+import { Component, EventEmitter, Input, Output, inject, ChangeDetectorRef } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-tactic-table',
   imports: [FormsModule, ReactiveFormsModule, CommonModule ],
   templateUrl: './tactic-table.component.html',
-  styleUrl: './tactic-table.component.scss'
+  styleUrl: './tactic-table.component.scss',
 })
 export class TacticTableComponent {
   @Output() tacticClick = new EventEmitter<any>();
   selectedFilter = 'Cost Center';
   searchText = '';
-  filters = ['Name', 'ID', 'Cost Center', 'Category'];
-  isActive:boolean=false
+  filters = ['Name', 'ID', 'Cost Center', 'Type', 'Program'];
+  isActive: boolean = false;
+  private dialog = inject(MatDialog);
+  private cdr= inject(ChangeDetectorRef);
   data = [
-    { id: 'SCA12696', tacticName: 'Event & Experience', subTitle: 'Multiple Events - Central: 1P SMB Webinars', program: 'Program', type: 'Events & Experiences: Multiple Events', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '1P8: Touched Center - Traditional', warning: '', warningAction: '' },
-    { id: 'GLO24352', tacticName: 'Event & Experience', subTitle: 'Single Event - Cloud Summit JAPAC', program: 'Program', type: 'Events & Experiences: Single Event', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - JAPAC', warning: '', warningAction: '' },
-    { id: 'GLO63746', tacticName: 'Event & Experience', subTitle: 'Multiple Events', program: 'Program', type: 'Events & Experiences: Multiple Events', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - JAPAC APAC', warning: 'Missing Basic Details', warningAction: 'Edit Tactic' },
-    { id: 'SCA12696', tacticName: 'Event & Experience', subTitle: 'Multiple Events - Mumbai Leaders Connect', program: 'Program', type: 'Events & Experiences: Multiple Events', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - EMEA', warning: '', warningAction: '' },
-    { id: 'GLO34526', tacticName: 'Event & Experience', subTitle: 'Single Event', program: 'Program', type: 'Events & Experiences: Single Event', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - JAPAC', warning: 'Missing Basic Details', warningAction: 'Edit Tactic' },
-    { id: 'SCA23432', tacticName: 'Event & Experience', subTitle: 'Single Event - Sydney Summit', program: 'Program', type: 'Events & Experiences: Multiple Events', startDate: '1/1/2025', endDate: '12/29/2025', costCenter: '095: Cloud Summit - JAPAC APAC', warning: '', warningAction: '' }
+    {
+      id: 'SCA12696',
+      tacticName: 'Cloud Summit',
+      subTitle: 'Multiple Events - Central: 1P SMB Webinars',
+      program: 'Program',
+      type: 'Events & Experiences: Multiple Events',
+      startDate: '1/1/2025',
+      endDate: '12/29/2025',
+      costCenter: '1P8: Touched Center - Traditional',
+      warning: '',
+      warningAction: '',
+    },
+    {
+      id: 'GLO24352',
+      tacticName: 'Leaders Connect',
+      subTitle: 'Single Event - Cloud Summit JAPAC',
+      program: 'Vendor',
+      type: 'Events & Experiences: Single Event',
+      startDate: '1/1/2025',
+      endDate: '12/29/2025',
+      costCenter: '095: Cloud Summit - JAPAC',
+      warning: '',
+      warningAction: '',
+    },
+    {
+      id: 'GLO63746',
+      tacticName: 'webinars',
+      subTitle: 'Multiple Events',
+      program: 'Program',
+      type: 'Events & Experiences: Multiple Events',
+      startDate: '1/1/2025',
+      endDate: '12/29/2025',
+      costCenter: '095: Cloud Summit - JAPAC APAC',
+      warning: 'Missing Basic Details',
+      warningAction: 'Edit Tactic',
+    },
+    // {
+    //   id: 'SCA12696',
+    //   tacticName: 'Event & Experience',
+    //   subTitle: 'Multiple Events - Mumbai Leaders Connect',
+    //   program: 'vendor',
+    //   type: 'Events & Experiences: Multiple Events',
+    //   startDate: '1/1/2025',
+    //   endDate: '12/29/2025',
+    //   costCenter: '095: Cloud Summit - EMEA',
+    //   warning: '',
+    //   warningAction: '',
+    // },
+    // {
+    //   id: 'GLO34526',
+    //   tacticName: 'Event & Experience',
+    //   subTitle: 'Single Event',
+    //   program: 'vendor',
+    //   type: 'Events & Experiences: multiple Event',
+    //   startDate: '1/1/2025',
+    //   endDate: '12/29/2025',
+    //   costCenter: '095: Cloud Summit - JAPAC',
+    //   warning: 'Missing Basic Details',
+    //   warningAction: 'Edit Tactic',
+    // },
+    // {
+    //   id: 'SCA23432',
+    //   tacticName: 'Event & Experience',
+    //   subTitle: 'Single Event - Sydney Summit',
+    //   program: 'Program',
+    //   type: 'Events & Experiences: Multiple Events',
+    //   startDate: '1/1/2025',
+    //   endDate: '12/29/2025',
+    //   costCenter: '095: Cloud Summit - JAPAC APAC',
+    //   warning: '',
+    //   warningAction: '',
+    // },
+   
   ];
-  
+
+  droppedItems: any[] = [];
+
   filteredData = [...this.data];
-  
+
   selectedData: any[] = [];
 
   toggleSelection(event: any, row: any) {
-    this.isActive = true
+    this.isActive = true;
     if (event.target.checked) {
       this.selectedData.push(row);
     } else {
-      this.selectedData = this.selectedData.filter(item => item !== row);
+      this.selectedData = this.selectedData.filter((item) => item !== row);
     }
   }
 
@@ -42,30 +114,42 @@ export class TacticTableComponent {
 
   applyFilter(): void {
     const filterMap: Record<string, keyof (typeof this.data)[0]> = {
-      'Name': 'tacticName',
-      'ID': 'id',
+      Name: 'tacticName',
+      ID: 'id',
       'Cost Center': 'costCenter',
-      'Category': 'type'
+      Type: 'type',
+      Program: 'program'
     };
-  
+
     const filterKey = filterMap[this.selectedFilter];
-  
+
     if (!filterKey) {
       this.filteredData = [...this.data];
       return;
     }
-  
+
     this.filteredData = this.data.filter((row) =>
-      row[filterKey]?.toString().toLowerCase().includes(this.searchText.toLowerCase())
+      row[filterKey]
+        ?.toString()
+        .toLowerCase()
+        .includes(this.searchText.toLowerCase())
     );
   }
-  
+
+  resetIfEmpty(): void {
+    console.log('hello');
+    if (!this.searchText.trim()) {
+      this.filteredData = [...this.data]; // Restore full table
+    }
+  }
+
   //   editDetails(row:any){
   //     console.log(row);
   //   }
-    clickNext(type:any) {
-      this.tacticClick.emit({...this.selectedData,type:type});
-    }
+  clickNext(type: any) {
+    this.tacticClick.emit({ ...this.selectedData, type: type });
+  }
+ 
+
 
 }
-

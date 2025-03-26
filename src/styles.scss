@@ -1,10 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
 @include mat.core();
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
 
 body {
     margin: 5px;
     padding: 0px;
+    font-family: 'Roboto', sans-serif;
 }
 
 .Create-spend-request-button-div {
@@ -61,16 +64,7 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-// .mat-mdc-form-field {
-//     --mdc-shape-small-component: 10px;
-//     font-size: 0.7rem !important;
-//     line-height: 10px !important;
-
-//     .mat-mdc-text-field-wrapper {
-//         height: 7vh !important;
-//     }
-//     .mat-mdc-select{
-//         font-size: 0.7rem !important;
-//         line-height: 10px !important;
-//     }
-// }
+.mat-body, .mat-body-2, .mat-typography .mat-body, .mat-typography .mat-body-2, .mat-typography {
+    font: unset !important;
+    letter-spacing: .0178571429em;
+}

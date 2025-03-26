@@ -20,14 +20,14 @@
     align-items: center;
     font-weight: bold;
     border-radius: 50%;
-    background-color: #ddd;
-    color: #555;
+    background-color: #69696B;
+    color: #F8F8FA;
     cursor: pointer;
     transition: all 0.3s ease;
   }
 
   .step-circle.active {
-    background-color: blue;
+    background-color: #1C73DF;
     color: white;
   }
 
