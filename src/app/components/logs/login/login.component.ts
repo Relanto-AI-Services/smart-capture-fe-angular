@@ -2,6 +2,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { LoaderModalComponent } from '../../shared/loader-modal/loader-modal.component';
 
 @Component({
   selector: 'app-login',
@@ -9,8 +11,9 @@ import { AuthService } from '../../../services/auth/auth.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  dialogRef: any;
 
-  constructor(private router: Router, public authService: AuthService) { }
+  constructor(private router: Router, public authService: AuthService,private dialog: MatDialog) { }
 
   ngOnInit() {
     // this.authService.userSession.subscribe({
@@ -27,14 +30,17 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle() {
+    this.openLoader();
     this.authService.logeInUser('http://localhost:8000/login').subscribe((res) => {
-      console.log(res);
+      this.dialogRef.close()
       this.router.navigate(['/spendRequest/createSpendRequest']);
     })
   }
 
-
-  routeToCreatre() {
-    this.router.navigate(['/spendRequest/createSpendRequest']);
-  }
+  openLoader(): void {
+      this.dialogRef = this.dialog.open(LoaderModalComponent, {
+        disableClose: true,
+        data: { page: 'login' },
+      });
+    }
 }

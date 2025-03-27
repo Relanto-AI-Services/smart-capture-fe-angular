@@ -1,7 +1,6 @@
-import { Component, importProvidersFrom } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PopupMessageComponent } from '../../../components/shared/popup-message/popup-message.component';
 import { TabComponent } from '../tab/tab.component';
 import { TacticTableComponent } from '../tactic-table/tactic-table.component';
 import { RequestTypeComponent } from '../request-type/request-type.component';
@@ -10,6 +9,7 @@ import { RiskAssessmentComponent } from '../risk-assessment/risk-assessment.comp
 import { SubmitSpendRequestComponent } from '../submit-spend-request/submit-spend-request.component';
 import { CommonService } from '../../../services/common/common.service';
 import { AuthService } from '../../../services/auth/auth.service';
+import { AllocatedBudgetComponent } from "../allocated-budget/allocated-budget.component";
 
 interface ChatMessage {
   text: string;
@@ -21,7 +21,6 @@ interface ChatMessage {
   standalone: true,
   imports: [
     CommonModule,
-    PopupMessageComponent,
     TabComponent,
     TacticTableComponent,
     RequestTypeComponent,
@@ -31,18 +30,17 @@ interface ChatMessage {
     FormsModule,
     ReactiveFormsModule
     // importProvidersFrom(FormsModule, ReactiveFormsModule)
-  ],
+    ,
+    AllocatedBudgetComponent
+],
   templateUrl: './create-spend-request.component.html',
   styleUrl: './create-spend-request.component.scss',
 })
 export class CreateSpendRequestComponent {
-  public isPopupOpen: boolean = false
   public activeTab:any= 'tactic'
   public activePage = 'Request Type'
   constructor(public commonService:CommonService, public authService:AuthService) { }
   ngOnInit() {
-    console.log('userrrrrrrrrrrrrrrrrrrrrrr',localStorage.getItem('sid'));
-
    }
 
   tabClick(event: any) {
@@ -59,9 +57,11 @@ export class CreateSpendRequestComponent {
     this.tabClick('sow')
   }
   onSowSelection(event:any){
-    this.activePage = 'Risk Assessment';
-    console.log('sow extracted form data in create ',event);
-    
+    this.activePage = 'Allocated Budget';    
+    this.tabClick('allocatedBudget')
+  }
+  onAllocatedBidgetSelection(event:any){
+    this.activePage = 'Risk Assessment';    
     this.tabClick('riskAssessment')
   }
   onRiskAssessmentSelection(event:any){
@@ -107,8 +107,11 @@ messages: ChatMessage[] = [
     }
 ];
 
+
+
+//////////////////////////////////////////////////////// Chat functionality
 newMessage: string = '';
-chatVisible: boolean = false;
+chatVisible: boolean = true;
 
 toggleChat() {
     this.chatVisible = !this.chatVisible;

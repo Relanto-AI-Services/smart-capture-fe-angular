@@ -1,0 +1,28 @@
+.modal-content {
+    display: flex;
+    gap: 10px;
+    // width: 35vw;
+
+    .icon {
+        height: 7vh;
+    }
+
+    .loader {
+        height: 8vh;
+    }
+
+    .content {
+        padding-top: 0.8rem;
+
+        p {
+            font-size: 0.7rem;
+            line-height: 16px;
+            color: black;
+        }
+    }
+}
+
+.mat-mdc-dialog-container .mat-mdc-dialog-content {
+    padding: 2.5vh!important;
+    width: 25vw!important;
+}

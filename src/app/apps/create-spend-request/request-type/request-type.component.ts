@@ -22,8 +22,14 @@ export class RequestTypeComponent {
   onCardClick(event: any, title: any) {
     this.data = { event: event, page: 'Request Type' }
     this.isActive = title
+    this.clickNext()
   }
   clickNext() {
-    this.cardClick.emit(this.data);
+    if(this.isActive === 'Default'){
+      this.cardClick.emit(this.data);
+    }else{
+      return
+      window.open('https://www.figma.com/proto/pCrVhQL8S6bS8at3DFlkLm/Himmat----Google?page-id=3%3A6&node-id=3377-77469&viewport=-14204%2C-46155%2C0.43&t=5utaSyAWIXstXnD3-8&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=3286%3A25500&show-proto-sidebar=1&hide-ui=1', '_blank');
+    }
   }
 }

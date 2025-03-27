@@ -3,7 +3,28 @@
         <div class="popup-content">
             <h2>{{ title?title:'' }}</h2>
             <p>{{ description?description:'' }}</p>
+            
             <button (click)="closePopup.emit()">✖</button>
           </div>
     }
 </ng-content>
+
+<!-- M3 Popup Dialog Component -->
+<!-- <mat-dialog-content class="popup-container">
+    <div class="popup-content">
+      <div class="icon">✨</div>
+      <div>
+        <strong>Extracting data...</strong> Reading your document
+      </div>
+      <p>
+        I'm automatically extracting information from your
+        <strong>Statement of Work (SOW)</strong> to pre-fill your request form.
+      </p>
+      <div class="loading-wave">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+      </div>
+    </div>
+  </mat-dialog-content> -->
+  

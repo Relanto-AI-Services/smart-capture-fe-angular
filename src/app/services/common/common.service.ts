@@ -13,6 +13,7 @@ export class CommonService {
   private tabs = [
     { "label": "Tactics", "value": "tactic", "subLabel": "", "hasError": false, "errorMessage": "" },
     { "label": "SOW", "value": "sow", "subLabel": "", "hasError": false, "errorMessage": "" },
+    { "label": "Allocated Budget", "value": "allocatedBudget", "subLabel": "", "hasError": false, "errorMessage": "" },
     { "label": "Risk Assessment", "value": "riskAssessment", "subLabel": "", "hasError": false, "errorMessage": "" },
     { "label": "Review and Submit", "value": "reviewAndSubmit", "subLabel": "", "hasError": false, "errorMessage": "" }
   ];

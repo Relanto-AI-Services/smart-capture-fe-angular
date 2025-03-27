@@ -1,7 +1,7 @@
   .stepper-container {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 2px;
     justify-content: space-between;
   }
 
@@ -57,12 +57,12 @@
     font-size: 0.6rem;
   }
 
-  /* Horizontal Line - Positioned AFTER Each Label */
   .step-line {
-    height: 2px;
-    width: 11vw;
-    background-color: gray;
+    height: 1px;
+    width: 8vw;
+    background-color: #80808078;
     position: relative;
     top: 50%;
-    margin-left: 12px;
+    right: 0px;
+    margin-left: 4px;
   }

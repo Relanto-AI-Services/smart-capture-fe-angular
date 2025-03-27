@@ -53,7 +53,7 @@ export class AuthService {
           errorMessage = 'Bad Request: Invalid request sent to the server.';
           break;
         case 401:
-          localStorage.removeItem('sid')
+          localStorage.clear()
           this.router.navigate(['/login'])
           errorMessage = 'Unauthorized: Access is denied due to invalid credentials.';
           break;

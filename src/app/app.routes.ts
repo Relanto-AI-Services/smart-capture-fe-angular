@@ -8,7 +8,6 @@ export const routes: Routes = [
     {path:'login',component:LoginComponent},
     {path:'home',component:HomeComponent},
     {path:'',redirectTo:'/login', pathMatch: 'full'},
-    {path:'dashboard', loadChildren: () => import('./apps/dashboard/dashboard.module').then(m=>m.DashboardModule)},
     {path:'spendRequest', loadChildren: () => import('./apps/create-spend-request/create-spend-request.module').then(m=>m.CreateSpendRequestModule)},
     {path:'**',redirectTo:'/login', pathMatch: 'full'},
 ];

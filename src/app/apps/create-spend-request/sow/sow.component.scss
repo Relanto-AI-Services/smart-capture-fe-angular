@@ -1,99 +1,123 @@
 .container {
-    margin: auto;
-    padding: 20px;
-  }
-  
-  .browsDiv{
-    text-align: center;
-    border-radius: 8px;
-    border: 1.5px dotted gray;
-    margin: 12px;
-    width: 40vw;
-    margin: auto;
-    padding: 20px 15px;
-  }
-  .upload-box {
+  margin: auto;
+  padding: 20px;
+}
+
+.browsDiv {
+  text-align: center;
+  border-radius: 8px;
+  border: 1.5px dotted gray;
+  margin: 12px;
+  width: 40vw;
+  margin: auto;
+  padding: 20px 15px;
+}
+
+.upload-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.upload-heading {
+  margin-top: 1vh;
+  font-weight: 500;
+  color: #000000c4;
+  margin-bottom: 1px;
+}
+
+.upload-box img {
+  height: 25vh;
+}
+
+.browse-btn {
+  border-radius: 20px;
+  background-color: #0B57D0;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 0.8rem;
+  padding: 7px 16px;
+  margin-top: 10px;
+}
+
+.browse-btn:hover {
+  background-color: #0056b3;
+}
+
+.file-list {
+  margin-top: 20px;
+  width: 40vw;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f9f9f9;
+  padding: 0px 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.file-name {
+  flex: 1;
+  font-size: 14px;
+  text-align: left;
+  padding-left: 1.8rem;
+}
+
+.progress-bar {
+  flex: 2;
+  height: 5px;
+  background: #ddd;
+  border-radius: 3px;
+  margin: 0 10px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: #28a745;
+  transition: width 0.3s ease;
+}
+
+.remove-file {
+  color: red;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.remove-file:hover {
+  color: darkred;
+}
+
+.skip-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.select-access-type {
+  display: inline-grid;
+  color: #525050;
+  font-size: 0.8rem;
+  .userName{
+    border: 1px solid gray;
+    border-radius: 14px;
+    margin-bottom: 9px;  
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 12px;
-    border-radius: 10px;
+    padding: 2px;
   }
-  .upload-heading{
-    margin-top: 1vh;
-    font-weight: 500;
-    color: #000000c4;
-    margin-bottom: 1px;
-  }
-  .upload-box img {
-    height: 25vh;
-  }
-  
-  .browse-btn {
-    border-radius: 20px;
-    background-color: #0B57D0;
-    border: none;
-    cursor: pointer;
+  .avatar {
+    width: 20px;
+    height: 20px;
+    background-color: #ff4081;
     color: white;
-    font-size: 0.8rem;
-    padding: 7px 16px;
-    margin-top: 10px;
+    font-size: 0.7rem;
+    border-radius: 50%;
   }
   
-  .browse-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .file-list {
-    margin-top: 20px;
-    width: 40vw;
-  }
-  
-  .file-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #f9f9f9;
-    padding: 0px 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  
-  .file-name {
-    flex: 1;
-    font-size: 14px;
-    text-align: left;
-    padding-left: 1.8rem;
-  }
-  
-  .progress-bar {
-    flex: 2;
-    height: 5px;
-    background: #ddd;
-    border-radius: 3px;
-    margin: 0 10px;
-    overflow: hidden;
-  }
-  
-  .progress {
-    height: 100%;
-    background: #28a745;
-    transition: width 0.3s ease;
-  }
-  
-  .remove-file {
-    color: red;
-    cursor: pointer;
-    font-size: 18px;
-  }
-  
-  .remove-file:hover {
-    color: darkred;
-  }
-  
-  .skip-text {
-    margin-top: 20px;
-    font-size: 14px;
-    color: #666;
-  }
-  
+}

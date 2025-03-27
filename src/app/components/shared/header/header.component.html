@@ -28,7 +28,7 @@
       </div>
       <mat-icon>help</mat-icon>
       <mat-menu #user="matMenu">
-        <button mat-menu-item>Logout</button>
+        <button mat-menu-item (click)="logout()">Logout</button>
       </mat-menu>
       <div class="avatar" [matMenuTriggerFor]="user">HV</div>
     </div>

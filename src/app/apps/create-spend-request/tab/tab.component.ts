@@ -18,7 +18,6 @@ export class TabComponent {
     console.log(this.activeTab);
     this.commonService.tab$.subscribe({
       next: (activTab) => {
-        // console.log('activTab Success:', activTab);
       }
     });    
   }

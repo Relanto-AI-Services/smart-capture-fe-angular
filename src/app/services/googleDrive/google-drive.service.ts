@@ -39,6 +39,8 @@ export class GoogleDriveService {
   }
 
   initAuth() {
+    try {
+      
     if (!this.clientId) {
       console.error('Client ID is missing!');
       return;
@@ -68,31 +70,37 @@ export class GoogleDriveService {
         },
       })
       .requestAccessToken();
+    } catch (error) {
+      console.error('error',error)
+    }
   }
 
   openPicker() {
-    if (!this.oauthToken) {
-      console.error('OAuth Token not found!');
-      return;
+    try {
+      if (!this.oauthToken) {
+        console.error('OAuth Token not found!');
+        return;
+      }
+
+      const view = new google.picker.View(google.picker.ViewId.DOCS);
+      view.setMimeTypes('application/vnd.google-apps.document,application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+      // view.setMimeTypes('application/vnd.google-apps.document,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf');
+      const picker = new google.picker.PickerBuilder()
+        .enableFeature(google.picker.Feature.NAV_HIDDEN)
+        .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+        .setOAuthToken(this.oauthToken)
+        .setDeveloperKey(this.developerKey)
+        .addView(view)
+        .addView(google.picker.ViewId.DOCS)
+        .addView(google.picker.ViewId.SPREADSHEETS)
+        .addView(google.picker.ViewId.PRESENTATIONS)
+        .setCallback(this.pickerCallback.bind(this))
+        .build();
+
+      picker.setVisible(true);
+    } catch (error) {
+      console.error('error', error)
     }
-
-    const view = new google.picker.View(google.picker.ViewId.DOCS);
-    view.setMimeTypes('application/vnd.google-apps.document,application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-    view.setMimeTypes('application/vnd.google-apps.document,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf');
-
-    const picker = new google.picker.PickerBuilder()
-      .enableFeature(google.picker.Feature.NAV_HIDDEN)
-      .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
-      .setOAuthToken(this.oauthToken)
-      .setDeveloperKey(this.developerKey)
-      .addView(view)
-      .addView(google.picker.ViewId.DOCS)
-      .addView(google.picker.ViewId.SPREADSHEETS)
-      .addView(google.picker.ViewId.PRESENTATIONS)
-      .setCallback(this.pickerCallback.bind(this))
-      .build();
-
-    picker.setVisible(true);
   }
 
   pickerCallback(data: any) {
@@ -103,9 +111,9 @@ export class GoogleDriveService {
         name: file.name,
         mimeType: file.mimeType,
         url: file.url,
-        fileSizeMB : (file.sizeBytes / (1024 * 1024)).toFixed(2) + ' MB'
+        fileSizeMB: (file.sizeBytes / (1024 * 1024)).toFixed(2) + ' MB'
       }));
-      this.fileSelected.emit(selectedFiles); 
+      this.fileSelected.emit(selectedFiles);
     } else {
       console.error('No file selected or error in response');
     }
