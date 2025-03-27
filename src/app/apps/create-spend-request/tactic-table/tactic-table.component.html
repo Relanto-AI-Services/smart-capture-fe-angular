@@ -95,19 +95,7 @@
       </div>
 
      
-      <!-- <div
-        class="drop-container"
-        cdkDropList 
-       #dropList="cdkDropList" 
-       [cdkDropListData]="droppedData" 
-       [cdkDropListConnectedTo]="['tableData']" 
-       (cdkDropListDropped)="drop($event)"
-      >
-        <h3>Dropped Items</h3>
-        <div *ngFor="let item of droppedData" class="dropped-item" cdkDrag>
-          {{ item.tacticName }} ({{ item.costCenter }})
-        </div>
-      </div> -->
+   
     </div>
   </div>
   <br />
@@ -122,5 +110,29 @@
     >
       Continue
     </button>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="editPopUp">
+  <div class="popup">
+  <div class="title">
+    <h2>Edit Tactic</h2>
+    <button class="closeX" (click)="closePopup()">X</button>
+  </div>
+ 
+ 
+   
+    <div>
+      <img src="" />
+      <p>
+        You are about to leave this page are you sure
+      </p>
+    </div>
+   
+    <div class="botton-buttons">
+      <button class="btn-1">Cancle</button>
+      <button class="btn-2">Continue</button>
+
+    </div>
   </div>
 </div>

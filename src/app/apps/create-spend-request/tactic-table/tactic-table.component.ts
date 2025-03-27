@@ -1,22 +1,26 @@
 import { CommonModule,  } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject, ChangeDetectorRef } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject, ChangeDetectorRef, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+// import { MatDialog } from '@angular/material/dialog';
+import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CommonService } from '../../../services/common/common.service';
+import { ApiService } from '../../../services/api.service';
 
 @Component({
   selector: 'app-tactic-table',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule ],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, DragDropModule ],
   templateUrl: './tactic-table.component.html',
   styleUrl: './tactic-table.component.scss',
 })
-export class TacticTableComponent {
+export class TacticTableComponent implements OnInit {
   @Output() tacticClick = new EventEmitter<any>();
   selectedFilter = 'Cost Center';
   searchText = '';
   filters = ['Name', 'ID', 'Cost Center', 'Type', 'Program'];
   isActive: boolean = false;
-  private dialog = inject(MatDialog);
+  // private dialog = inject(MatDialog);
   private cdr= inject(ChangeDetectorRef);
+  cs = inject(CommonService)
   data = [
     {
       id: 'SCA12696',
@@ -54,42 +58,42 @@ export class TacticTableComponent {
       warning: 'Missing Basic Details',
       warningAction: 'Edit Tactic',
     },
-    // {
-    //   id: 'SCA12696',
-    //   tacticName: 'Event & Experience',
-    //   subTitle: 'Multiple Events - Mumbai Leaders Connect',
-    //   program: 'vendor',
-    //   type: 'Events & Experiences: Multiple Events',
-    //   startDate: '1/1/2025',
-    //   endDate: '12/29/2025',
-    //   costCenter: '095: Cloud Summit - EMEA',
-    //   warning: '',
-    //   warningAction: '',
-    // },
-    // {
-    //   id: 'GLO34526',
-    //   tacticName: 'Event & Experience',
-    //   subTitle: 'Single Event',
-    //   program: 'vendor',
-    //   type: 'Events & Experiences: multiple Event',
-    //   startDate: '1/1/2025',
-    //   endDate: '12/29/2025',
-    //   costCenter: '095: Cloud Summit - JAPAC',
-    //   warning: 'Missing Basic Details',
-    //   warningAction: 'Edit Tactic',
-    // },
-    // {
-    //   id: 'SCA23432',
-    //   tacticName: 'Event & Experience',
-    //   subTitle: 'Single Event - Sydney Summit',
-    //   program: 'Program',
-    //   type: 'Events & Experiences: Multiple Events',
-    //   startDate: '1/1/2025',
-    //   endDate: '12/29/2025',
-    //   costCenter: '095: Cloud Summit - JAPAC APAC',
-    //   warning: '',
-    //   warningAction: '',
-    // },
+    {
+      id: 'SCA12696',
+      tacticName: 'Event & Experience',
+      subTitle: 'Multiple Events - Mumbai Leaders Connect',
+      program: 'vendor',
+      type: 'Events & Experiences: Multiple Events',
+      startDate: '1/1/2025',
+      endDate: '12/29/2025',
+      costCenter: '095: Cloud Summit - EMEA',
+      warning: '',
+      warningAction: '',
+    },
+    {
+      id: 'GLO34526',
+      tacticName: 'Event & Experience',
+      subTitle: 'Single Event',
+      program: 'vendor',
+      type: 'Events & Experiences: multiple Event',
+      startDate: '1/1/2025',
+      endDate: '12/29/2025',
+      costCenter: '095: Cloud Summit - JAPAC',
+      warning: 'Missing Basic Details',
+      warningAction: 'Edit Tactic',
+    },
+    {
+      id: 'SCA23432',
+      tacticName: 'Event & Experience',
+      subTitle: 'Single Event - Sydney Summit',
+      program: 'Program',
+      type: 'Events & Experiences: Multiple Events',
+      startDate: '1/1/2025',
+      endDate: '12/29/2025',
+      costCenter: '095: Cloud Summit - JAPAC APAC',
+      warning: '',
+      warningAction: '',
+    },
    
   ];
 
@@ -98,6 +102,15 @@ export class TacticTableComponent {
   filteredData = [...this.data];
 
   selectedData: any[] = [];
+  conceptValue: boolean = false;
+  editPopUp: boolean = false;
+  constructor(private apiService: ApiService) {}
+
+  ngOnInit(): void {
+    this.cs.value$.subscribe((newValue) => {
+      this.conceptValue = newValue; 
+    });
+  }
 
   toggleSelection(event: any, row: any) {
     this.isActive = true;
@@ -109,7 +122,7 @@ export class TacticTableComponent {
   }
 
   performAction(action: string) {
-    console.log('Action triggered:', action);
+    this.editPopUp  = true;
   }
 
   applyFilter(): void {
@@ -147,9 +160,43 @@ export class TacticTableComponent {
   //     console.log(row);
   //   }
   clickNext(type: any) {
+    if(type === 'continue' ){
+      this.sendRequest([...this.selectedData])
+    }
     this.tacticClick.emit({ ...this.selectedData, type: type });
   }
  
+
+  sendRequest(arr: Array<any>) {
+    console.log(arr)
+    const spendRequestId = this.generateRandomString(10);
+    const tacticNames = arr.map((dt) => {
+      return dt.id + '-' +dt.tacticName
+    })
+   
+
+    this.apiService.saveSpendRequestTactic(spendRequestId, tacticNames).subscribe({
+      next: (response) => console.log('Success:', response),
+      error: (error) => console.error('Error:', error)
+    });
+  }
+
+
+   generateRandomString(length: number) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+  }
+
+
+ 
+
+  closePopup() {
+    this.editPopUp = false;
+  }
 
 
 }

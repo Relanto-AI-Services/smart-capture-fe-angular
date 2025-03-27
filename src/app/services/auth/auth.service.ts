@@ -23,7 +23,7 @@ export class AuthService {
     );
   }
   private getHeaders(): HttpHeaders {
-    const sessionId = localStorage.getItem('sid')
+    const sessionId = localStorage.getItem('sid') 
     return new HttpHeaders({
       'session-id': `${sessionId}`,
     });

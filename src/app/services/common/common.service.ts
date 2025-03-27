@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommonService {
-
-  constructor() { }
+  constructor() {}
   private tabSubject = new BehaviorSubject<string>('tactic'); // Default to "tactic"
   tab$ = this.tabSubject.asObservable();
+   
 
   private tabs = [
     { "label": "Tactics", "value": "tactic", "subLabel": "", "hasError": false, "errorMessage": "" },
@@ -23,31 +23,49 @@ export class CommonService {
   }
 
   setActiveTab(tabValue: string) {
-    if (this.tabs.some(tab => tab.value === tabValue)) {
-    localStorage.setItem('activeTab',tabValue)
+    if (this.tabs.some((tab) => tab.value === tabValue)) {
+      localStorage.setItem('activeTab', tabValue);
       this.tabSubject.next(tabValue);
     }
   }
 
-updateTabsValue(activeTab:any,subLabel:any,hasError:boolean,errorMessage:any){
-if(activeTab){
-  this.tabs.filter(el=>{
-    if(el.value === activeTab){
-      el.hasError = hasError;
-      el.subLabel = subLabel;
-      el.errorMessage = errorMessage;
+  updateTabsValue(
+    activeTab: any,
+    subLabel: any,
+    hasError: boolean,
+    errorMessage: any
+  ) {
+    if (activeTab) {
+      this.tabs.filter((el) => {
+        if (el.value === activeTab) {
+          el.hasError = hasError;
+          el.subLabel = subLabel;
+          el.errorMessage = errorMessage;
+        }
+      });
     }
-  })
-}
-}
-resetTabs(){
-  const updatedTab = this.tabs.map(el=>({
-    ...el,
-    hasError : false,
-    subLabel:'',
-    errorMessage :''
-  }))
-  this.tabs = updatedTab
-  console.log(this.tabs);
-}
+  }
+  resetTabs() {
+    const updatedTab = this.tabs.map((el) => ({
+      ...el,
+      hasError: false,
+      subLabel: '',
+      errorMessage: '',
+    }));
+    this.tabs = updatedTab;
+    console.log(this.tabs);
+  }
+
+  private concept = new BehaviorSubject<boolean>(false); // Initial value
+  value$ = this.concept.asObservable(); // Observable to listen to changes
+
+  // Function to update the value
+  setValue() {
+    this.concept.next(!this.concept.value);
+  }
+
+  // Function to get the current value (if needed)
+  getValue() {
+    return this.concept.value;
+  }
 }
