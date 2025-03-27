@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
 
   loginWithGoogle() {
     this.openLoader();
-    this.authService.logeInUser('http://localhost:8000/login').subscribe((res) => {
+    this.authService.logeInUser('/login').subscribe((res) => {
       this.dialogRef.close()
       this.router.navigate(['/spendRequest/createSpendRequest']);
     })

@@ -8,15 +8,16 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient, public router:Router) { }
+  constructor(private http: HttpClient, public router: Router) { }
   public userData: any
   public userSession = new Subject<any>();
-
+  public baseUrl = 'http://localhost:8000'
   logeInUser(url: any): Observable<any> {
-    return this.http.get<any>(url).pipe(
+    const urls = this.baseUrl + url
+    return this.http.get<any>(urls).pipe(
       tap(response => {
         this.userData = response
-        localStorage.setItem('user',JSON.stringify(this.userData))
+        localStorage.setItem('user', JSON.stringify(this.userData))
         localStorage.setItem('sid', response?.session_id)
         this.userSession.next(response?.session_id)
       })
@@ -30,13 +31,15 @@ export class AuthService {
   }
 
   getData(url: string): Observable<any> {
-    return this.http.get<any>(url, { headers: this.getHeaders() }).pipe(
+    const urls = this.baseUrl + url
+    return this.http.get<any>(urls, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
   postData(url: string, body: any): Observable<any> {
-    return this.http.post<any>(url, body, { headers: this.getHeaders() }).pipe(
+    const urls = this.baseUrl + url
+    return this.http.post<any>(urls, body, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }

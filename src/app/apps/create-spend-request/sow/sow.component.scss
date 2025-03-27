@@ -104,13 +104,15 @@
   display: inline-grid;
   color: #525050;
   font-size: 0.8rem;
-  .userName{
+
+  .userName {
     border: 1px solid gray;
     border-radius: 14px;
-    margin-bottom: 9px;  
+    margin-bottom: 9px;
     display: flex;
     padding: 2px;
   }
+
   .avatar {
     width: 20px;
     height: 20px;
@@ -118,6 +120,9 @@
     color: white;
     font-size: 0.7rem;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  
+
 }

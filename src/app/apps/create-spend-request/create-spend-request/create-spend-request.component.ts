@@ -10,12 +10,8 @@ import { SubmitSpendRequestComponent } from '../submit-spend-request/submit-spen
 import { CommonService } from '../../../services/common/common.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { AllocatedBudgetComponent } from "../allocated-budget/allocated-budget.component";
+import { switchMap } from 'rxjs';
 
-interface ChatMessage {
-  text: string;
-  sender: 'user' | 'ai';
-  options?: string[];
-}
 @Component({
   selector: 'app-create-spend-request',
   standalone: true,
@@ -28,112 +24,117 @@ interface ChatMessage {
     RiskAssessmentComponent,
     SubmitSpendRequestComponent,
     FormsModule,
-    ReactiveFormsModule
-    // importProvidersFrom(FormsModule, ReactiveFormsModule)
-    ,
+    ReactiveFormsModule,
     AllocatedBudgetComponent
-],
+  ],
   templateUrl: './create-spend-request.component.html',
   styleUrl: './create-spend-request.component.scss',
 })
 export class CreateSpendRequestComponent {
-  public activeTab:any= 'tactic'
+  public activeTab: any = 'tactic'
   public activePage = 'Request Type'
-  constructor(public commonService:CommonService, public authService:AuthService) { }
+  public user = localStorage.getItem('user')
+  public userData = JSON.parse(this.user ? this.user : '');
+  public userAvtarText = this.userData?.email.split('@')[0].split('.').map((word: any[]) => word[0]).join('').toUpperCase();
+  public rowId: any;
+  constructor(public commonService: CommonService, public authService: AuthService) { }
   ngOnInit() {
-   }
+  }
 
   tabClick(event: any) {
     this.activeTab = event
     console.log(event);
     this.commonService.setActiveTab(event);
+    switch (this.activeTab) {
+      case 'tactic':
+        this.loadTacticMessages({ "messages": [] })
+        break;
+      case 'sow':
+        this.getPromaryKey()
+        break;
+
+      default:
+        this.messages ={}
+        console.log('wait')
+        break;
+    }
   }
   requestType(event: any) {
     this.activePage = 'Tactics'
     this.tabClick('tactic')
   }
-  onTacticSelection(event:any){
+  onTacticSelection(event: any) {
     this.activePage = 'SOW'
     this.tabClick('sow')
   }
-  onSowSelection(event:any){
-    this.activePage = 'Allocated Budget';    
+  onSowSelection(event: any) {
+    this.activePage = 'Allocated Budget';
     this.tabClick('allocatedBudget')
   }
-  onAllocatedBidgetSelection(event:any){
-    this.activePage = 'Risk Assessment';    
+  onAllocatedBidgetSelection(event: any) {
+    this.activePage = 'Risk Assessment';
     this.tabClick('riskAssessment')
   }
-  onRiskAssessmentSelection(event:any){
+  onRiskAssessmentSelection(event: any) {
     this.activePage = 'Review And Submit'
     this.tabClick('reviewAndSubmit')
   }
-  onFinalSubmitionClick(event:any){
+  onFinalSubmitionClick(event: any) {
     this.activePage = 'Review And Submit'
     this.tabClick('reviewAndSubmit')
   }
 
-
+  getPromaryKey() {
+    try {
+      this.authService.postData('/generate_primary_key', {}).subscribe((res) => {
+        this.rowId = res.row_id
+      })
+    } catch (error) {
+      console.error('error', error)
+    }
+  }
   // ####################################
+  //////////////////////////////////////////////////////// Chat functionality
 
+  messages: any;
 
-messages: ChatMessage[] = [
-    {
-        text: "Need help with your SOW?",
-        sender: 'ai',
-        options: ["Need help with your SOW?", "Need a quick review?", "Should I assist with anything else?"]
-    },
-    {
-        text: "**I've pre-filled 11 of 14 questions in blue.**<br> Please review, edit if needed, and continue.",
-        sender: 'ai'
-    },
-    {
-        text: "Help me update the work start date 04/01/2025 and end date 03/01/2026",
-        sender: 'user'
-    },
-    {
-        text: "Got it! I’ve updated the dates. Let me know if you need any further changes!",
-        sender: 'ai'
-    },
-    {
-        text: "You submitted a spend request for Creative Solutions 4 months ago.<br>**Want to reuse those answers to speed up?**",
-        sender: 'ai',
-        options: ["Yes", "No"]
-    },
-    {
-        text: "**Almost there! Everything looks good?**<br> Please validate and ‘Submit’ when you’re ready!",
-        sender: 'ai',
-        options: ["Need help before submitting?"]
-    }
-];
+  newMessage: string = '';
+  chatVisible: boolean = true;
 
-
-
-//////////////////////////////////////////////////////// Chat functionality
-newMessage: string = '';
-chatVisible: boolean = true;
-
-toggleChat() {
+  toggleChat() {
     this.chatVisible = !this.chatVisible;
-}
+  }
 
-sendMessage() {
+  sendMessage() {
     if (this.newMessage.trim()) {
-        this.messages.push({ text: this.newMessage, sender: 'user' });
-        this.newMessage = '';
-
-        setTimeout(() => {
-            this.messages.push({ text: "I'm processing your request...", sender: 'ai' });
-        }, 1000);
+      this.messages['messages'].push({ content: this.newMessage, role: 'user' });
+      this.newMessage = '';
+      this.loadTacticMessages({ "messages": this.messages['messages'] })
     }
-}
+  }
 
-selectOption(option: string) {
-    this.messages.push({ text: option, sender: 'user' });
-}
+  selectOption(option: string) {
+    this.messages['messages'].push({ content: option, role: 'user' });
+    this.loadTacticMessages({ "messages": this.messages['messages'] })
 
-extractChatJSON() {
-    console.log(JSON.stringify(this.messages, null, 2));
-}
+  }
 
+  loadTacticMessages(message: any) {
+    try {
+      const messages = message
+      this.authService.getData('/tactic_chatbot_url').pipe(
+        switchMap(firstResponse => this.authService.postData(`${firstResponse?.next_url}`, messages))
+      ).subscribe({
+        next: secondResponse => {
+          console.log('Final Response:', secondResponse)
+          this.messages = secondResponse
+        },
+        error: error => console.error('Error:', error),
+        complete: () => console.log('API calls completed')
+      });
+    } catch (error) {
+      console.error('error', error)
+    }
+
+  }
 }

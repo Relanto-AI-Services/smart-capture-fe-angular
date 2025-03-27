@@ -1,6 +1,4 @@
-
-<div class="layout"
-    >
+<div class="layout">
     <div class="create-content">
         <div class="create-spend-request-header-and-tab">
             <div class="header">
@@ -16,7 +14,8 @@
         <div class="body-content" style="display: flex;">
 
             <div class="content">
-                <div [style]="(chatVisible && activePage !=='Request Type')? {width:'80vw'} : {width:'100vw',margin: 'auto'}" >
+                <div
+                    [style]="(chatVisible && activePage !=='Request Type')? {width:'80vw'} : {width:'95vw',margin: 'auto'}">
                     @if (activePage ==='Request Type') {
                     <app-request-type (cardClick)="requestType($event)"></app-request-type>
                     }
@@ -24,10 +23,11 @@
                     <app-tactic-table (tacticClick)="onTacticSelection($event)" ngSkipHydration></app-tactic-table>
                     }
                     @else if (activeTab === 'sow' ) {
-                    <app-sow (sowClick)="onSowSelection($event)" ngSkipHydration></app-sow>
+                    <app-sow (sowClick)="onSowSelection($event)" [rowId]="rowId" ngSkipHydration></app-sow>
                     }
                     @else if (activeTab === 'allocatedBudget' ) {
-                    <app-allocated-budget (sowClick)="onAllocatedBidgetSelection($event)" ngSkipHydration></app-allocated-budget>
+                    <app-allocated-budget (sowClick)="onAllocatedBidgetSelection($event)"
+                        ngSkipHydration></app-allocated-budget>
                     }
                     @else if (activeTab === 'riskAssessment' ) {
                     <app-risk-assessment (riskAssessmentClick)="onRiskAssessmentSelection($event)"
@@ -40,31 +40,33 @@
                 </div>
             </div>
             @if (chatVisible && activePage !=='Request Type') {
-            <div class="chat-container"
-                [style]="chatVisible? {width:'20%'} : {display:'none'}">
+            <div class="chat-container" [style]="chatVisible? {width:'20%'} : {display:'none'}">
                 <div class="chat-header">
                     <span class="chat-title">Hello, David</span>
                     <span class="close-icon" (click)="toggleChat()">&#10006;</span>
                 </div>
                 <div class="chat-body">
-                    @for (msg of messages; track $index) {
-                    @if (msg.sender === 'ai') {
+                    @for (msg of messages?.messages; track $index;let i= $index) {
+                    @if (msg.role === 'assistant') {
                     <div class="ai">
-                        <img class="chat-icon" src="../../../../assets/images/ai-icon.png" alt="AI">
-                        <div class="chat-bubble ai-message" [innerHTML]="msg.text"></div>
-                        @if (msg.options) {
+                        <div style="display: flex;">
+                            <img class="chat-icon" src="../../../../assets/images/ai-icon.png" alt="AI">
+                            <div class="chat-bubble ai-message" [innerHTML]="msg.content"></div>
+                        </div>
+                        @if (messages?.options && i === messages?.messages.length - 1) {
                         <div class="options-container">
-                            @for (option of msg.options; track $index) {
+                            @for (option of messages?.options; track $index) {
                             <button class="option-button" (click)="selectOption(option)">{{ option }}</button>
                             }
                         </div>
                         }
                     </div>
                     }
-                    @if (msg.sender === 'user') {
-                    <div class="user">
-                        <div class="chat-bubble user-message" [innerHTML]="msg.text"></div>
-                        <img class="user-icon" src="../../../../assets/images/user-icon.png" alt="User">
+                    @if (msg.role === 'user') {
+                    <div class="user" style="display: flex; justify-content: right;">
+                        <div class="chat-bubble user-message" [innerHTML]="msg.content"></div>
+                        <div class="avatar">{{userAvtarText}} </div>
+                        <!-- <img class="user-icon" src="../../../../assets/images/user-icon.png" alt="User"> -->
                     </div>
                     }
                     }

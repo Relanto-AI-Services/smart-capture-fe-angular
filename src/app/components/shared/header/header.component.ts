@@ -15,7 +15,7 @@ export class HeaderComponent {
 constructor(public authService:AuthService,public router:Router){}
 logout(){
   try {
-    this.authService.getData('http://localhost:8000/logout').subscribe((res:any)=>{
+    this.authService.getData('/logout').subscribe((res:any)=>{
       this.router.navigate(['login'])
       localStorage.clear()
       console.log(res);

@@ -29,7 +29,7 @@
             // right: 20px;
             // bottom: 20px;
             width: 375px;
-            height: auto;
+            height: 70vh;
             background: #fff;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -68,9 +68,21 @@
 
                 .ai,
                 .user {
-                    display: flex;
+                    // display: flex;
                     align-items: center;
                     gap: 8px;
+
+                    .avatar {
+                        width: 25px;
+                        height: 25px;
+                        background-color: #ff4081;
+                        color: white;
+                        font-size: 0.7rem;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
                 }
 
                 .chat-icon,
@@ -131,6 +143,8 @@
                 padding: 10px;
                 border-top: 1px solid #ddd;
                 background: #fff;
+                position: fixed;
+                bottom: 0px;
 
                 input {
                     flex: 1;

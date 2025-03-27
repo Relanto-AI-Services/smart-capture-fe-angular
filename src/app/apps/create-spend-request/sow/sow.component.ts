@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { AuthService } from '../../../services/auth/auth.service';
 import { GoogleDriveService } from '../../../services/googleDrive/google-drive.service';
 import { SowFormComponent } from "../sow-form/sow-form.component";
@@ -27,19 +27,21 @@ import { LoaderModalComponent } from '../../../components/shared/loader-modal/lo
 export class SowComponent {
   @Output() sowClick = new EventEmitter<any>();
   @ViewChild(SowFormComponent) sowForm!: SowFormComponent;
+  @Input() rowId!: string;
+
   isActive: boolean = true
   data: any = {}
   public user = localStorage.getItem('user')
   public userData = JSON.parse(this.user ? this.user : '');
-  public accessType :any = 'writer'
+  public accessType: any = 'writer'
   selectedFiles: any[] = [];
   oauthToken: string = this.userData?.token?.client_id;
   showSowForm: boolean = false;
-  extractedData:any={}
+  extractedData: any = {}
   userName: string = 'John Doe';
   firstLetter: string = this.userData?.email.charAt(0).toUpperCase();
   dialogRef: any;
-  constructor(public authService: AuthService, private googleDriveService: GoogleDriveService, public commonService:CommonService,private dialog: MatDialog) {
+  constructor(public authService: AuthService, private googleDriveService: GoogleDriveService, public commonService: CommonService, private dialog: MatDialog) {
 
   }
   ngOnInit() {
@@ -60,47 +62,56 @@ export class SowComponent {
     this.selectedFiles.splice(index, 1);
   }
 
-  clickNext(type:any) {
-    if(type === 'extract'){
+  clickNext(type: any) {
+    if (type === 'extract') {
       this.shareAccess()
-    }else{
+    } else {
       this.sowForm.onSubmit();
-      if(this.sowForm.isFormValid && this.extractedData){
+      if (this.sowForm.isFormValid && this.extractedData) {
         this.sowClick.emit(this.extractedData);
       }
     }
   }
-  shareAccess(){
+  shareAccess() {
     try {
       let id = this.selectedFiles[0].id
-      const payload ={
+      const payload = {
         "doc_links": [`https://docs.google.com/document/d/${id}/`],
         "roles": [this.accessType]
         // "roles": ["writer"]
       }
-      this.authService.postData('http://localhost:8000/share',payload).subscribe(res=>{
+      this.authService.postData('/share', payload).subscribe(res => {
         let processPayload = {
-          urls:[res.shared_links[0].shared_link]
+          urls: [res.shared_links[0].shared_link],
+          row_id: this.rowId
         }
         this.extractData(processPayload)
       })
     } catch (error) {
-      console.error('error',error)
+      console.error('error', error)
     }
   }
 
-  extractData(payload:any){
+  extractData(payload: any) {
     try {
       this.openLoader()
-      this.authService.postData('http://localhost:8000/process_urls_for_extraction',payload).subscribe(proRes=>{
-       this.dialogRef.close()
-        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',proRes);
+      this.authService.postData('/process_urls_for_extraction', payload).subscribe(proRes => {
+        this.dialogRef.close()
+        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', proRes);
         this.extractedData = proRes
         this.showSowForm = true // after extracting data
+        let payload = proRes
+        // this.pushToBigQuery(this.rowId,)
       })
     } catch (error) {
-      console.error('error',error)
+      console.error('error', error)
     }
+  }
+  pushToBigQuery(id:any,payload:any){
+    this.authService.postData('/ingest_to_bigquery',payload).subscribe((res)=>{
+      console.log('Res',res);
+      
+    })
   }
   getSowFormData(event: any) {
     this.data = event //form data from sow
