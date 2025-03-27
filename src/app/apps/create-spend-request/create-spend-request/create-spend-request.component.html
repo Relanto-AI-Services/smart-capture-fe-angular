@@ -42,7 +42,7 @@
             @if (chatVisible && activePage !=='Request Type') {
             <div class="chat-container" [style]="chatVisible? {width:'20%'} : {display:'none'}">
                 <div class="chat-header">
-                    <span class="chat-title">Hello, David</span>
+                    <span class="chat-title">Hello, {{this.userData?.email}}</span>
                     <span class="close-icon" (click)="toggleChat()">&#10006;</span>
                 </div>
                 <div class="chat-body">

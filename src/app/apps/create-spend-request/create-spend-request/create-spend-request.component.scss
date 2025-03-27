@@ -49,6 +49,7 @@
 
                 .chat-title {
                     color: #d50000;
+                    font-size: 0.6rem;
                 }
 
                 .close-icon {
@@ -143,7 +144,7 @@
                 padding: 10px;
                 border-top: 1px solid #ddd;
                 background: #fff;
-                position: fixed;
+                position: relative;
                 bottom: 0px;
 
                 input {

@@ -2,13 +2,15 @@ import { CommonModule,  } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject, ChangeDetectorRef, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { MatDialog } from '@angular/material/dialog';
-import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+// import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonService } from '../../../services/common/common.service';
 import { ApiService } from '../../../services/api.service';
 
 @Component({
   selector: 'app-tactic-table',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, DragDropModule ],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule,
+    //  DragDropModule 
+    ],
   templateUrl: './tactic-table.component.html',
   styleUrl: './tactic-table.component.scss',
 })

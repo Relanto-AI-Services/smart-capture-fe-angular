@@ -54,8 +54,8 @@ export class CreateSpendRequestComponent {
         break;
 
       default:
-        this.messages ={}
         console.log('wait')
+        this.messages ={}
         break;
     }
   }
