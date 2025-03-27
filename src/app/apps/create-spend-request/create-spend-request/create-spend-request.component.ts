@@ -50,9 +50,9 @@ export class CreateSpendRequestComponent {
         this.loadTacticMessages({ "messages": [] })
         break;
       case 'sow':
-        this.getPromaryKey()
+        this.messages ={}
+        this.getPrimaryKey()
         break;
-
       default:
         console.log('wait')
         this.messages ={}
@@ -84,7 +84,7 @@ export class CreateSpendRequestComponent {
     this.tabClick('reviewAndSubmit')
   }
 
-  getPromaryKey() {
+  getPrimaryKey() {
     try {
       this.authService.postData('/generate_primary_key', {}).subscribe((res) => {
         this.rowId = res.row_id
@@ -96,7 +96,7 @@ export class CreateSpendRequestComponent {
   // ####################################
   //////////////////////////////////////////////////////// Chat functionality
 
-  messages: any;
+  public messages: any;
 
   newMessage: string = '';
   chatVisible: boolean = true;

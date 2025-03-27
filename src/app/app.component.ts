@@ -25,4 +25,7 @@ export class AppComponent {
       this.userSession = false
     }
   }
+  // ngOnChange(){
+  //   console.log('change, change, change, change, change')
+  // }
 }

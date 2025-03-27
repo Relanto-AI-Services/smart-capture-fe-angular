@@ -7,7 +7,7 @@ export const routes: Routes = [
     // {path:'login',component:LoginComponent, canActivate:[authGuard]},
     {path:'login',component:LoginComponent},
     {path:'home',component:HomeComponent},
-    {path:'',redirectTo:'/login', pathMatch: 'full'},
+    {path:'',redirectTo:'/Login', pathMatch: 'full'},
     {path:'spendRequest', loadChildren: () => import('./apps/create-spend-request/create-spend-request.module').then(m=>m.CreateSpendRequestModule)},
-    {path:'**',redirectTo:'/login', pathMatch: 'full'},
+    {path:'**',redirectTo:'/Login', pathMatch: 'full'},
 ];

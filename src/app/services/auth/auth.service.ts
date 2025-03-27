@@ -11,7 +11,8 @@ export class AuthService {
   constructor(private http: HttpClient, public router: Router) { }
   public userData: any
   public userSession = new Subject<any>();
-  public baseUrl = 'http://localhost:8000'
+  // public baseUrl = 'http://localhost:8000'
+  public baseUrl = 'http://34.173.40.128:8080'
   logeInUser(url: any): Observable<any> {
     const urls = this.baseUrl + url
     return this.http.get<any>(urls).pipe(
@@ -57,7 +58,7 @@ export class AuthService {
           break;
         case 401:
           localStorage.clear()
-          this.router.navigate(['/login'])
+          this.router.navigate(['/Login'])
           errorMessage = 'Unauthorized: Access is denied due to invalid credentials.';
           break;
         case 403:
