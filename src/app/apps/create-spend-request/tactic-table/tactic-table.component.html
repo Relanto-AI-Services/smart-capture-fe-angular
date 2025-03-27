@@ -1,63 +1,126 @@
 <div class="table-layout">
   <div class="container">
-    <p>Search Tactic by</p>
+    <h4>Filter Tactic by</h4>
     <div class="search-container">
       <div class="filter-container">
-        <select class="filter" style="margin-right: 5px;" [(ngModel)]="selectedFilter">
-          <option *ngFor="let filter of filters" [value]="filter">{{ filter }}</option>
+        <select
+          class="filter"
+          style="margin-right: 5px"
+          [(ngModel)]="selectedFilter"
+        >
+          <option *ngFor="let filter of filters" [value]="filter">
+            {{ filter }}
+          </option>
         </select>
-        <input style="border-left: 1px solid gray;" class="filter" type="text" [(ngModel)]="searchText" placeholder="Search..." />
+
+        <input
+          style="border-left: 1px solid gray"
+          class="filter"
+          type="text"
+          [(ngModel)]="searchText"
+          placeholder=""
+          (keydown.enter)="applyFilter()"
+          (ngModelChange)="resetIfEmpty()"
+          tabindex="0"
+        />
       </div>
       <div class="filter-button">
-        <img style="margin-top: 0.3rem;cursor: pointer;" src="../../../../assets/images/search-icon.png" (click)="applyFilter()" />
+        <img
+          style="margin-top: 0.3rem; cursor: pointer"
+          src="../../../../assets/images/search-icon.png"
+          (click)="applyFilter()"
+          tabindex="0"
+        />
       </div>
     </div>
 
-    <p>Which tactic would you like to use?</p>
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th style="width: 20vw;">Tactic Name</th>
-            <th>Program / Vendor</th>
-            <th>Tactic Type</th>
-            <th>Start Date</th>
-            <th>End date</th>
-            <th>Cost Center</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let row of filteredData">
-            <td><input type="checkbox" [disabled]="row.warning" (change)="toggleSelection($event, row)" /></td>
-            <td>
-              <div class="tactic-title">{{row?.id + ' - ' + row?.tacticName }}</div>
-              <div class="tactic-subtitle">{{ row?.subTitle }}</div>
-              <div class="warning-container">
-                <span class="warning-text" *ngIf="row?.warning">
-                  <img src="../../../../assets/images/warning-icon.png" />
-                  {{ row?.warning }}
-                </span>
-                <span class="edit-tactic" *ngIf="row?.warningAction" (click)="performAction(row.warningAction)">
-                  {{ row?.warningAction }}
-                </span>
-              </div>
+    <h4>Select the tactic(s) your spend request is funding</h4>
+    <div>
+      <div class="table-container">
+        <table
+        
+        >
+          <thead>
+            <tr>
+              <th></th>
+              <th style="width: 20vw">Tactic Name</th>
+              <th>Program / Vendor</th>
+              <th>Tactic Type</th>
+              <th>Start Date</th>
+              <th>End date</th>
+              <th>Cost Center</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let row of filteredData"
+              [ngClass]="{ 'warning-background': row?.warning }"
+            >
+              <td class="check-container">
+                <input
+                  type="checkbox"
+                  class="custom-checkbox"
+                  [disabled]="row.warning"
+                  (change)="toggleSelection($event, row)"
+                />
+              </td>
 
-            </td>
-            <td>{{ row?.program }}</td>
-            <td>{{ row?.type }}</td>
-            <td>{{ row?.startDate }}</td>
-            <td>{{ row?.endDate }}</td>
-            <td>{{ row?.costCenter }}</td>
-          </tr>
-        </tbody>
-      </table>
+              <td>
+                <div class="tactic-title">
+                  {{ row?.id + " - " + row?.tacticName }}
+                </div>
+                <div class="tactic-subtitle">{{ row?.subTitle }}</div>
+                <div class="warning-container">
+                  <span class="warning-text" *ngIf="row?.warning">
+                    <img src="../../../../assets/images/warning-icon.png" />
+                    {{ row?.warning }}
+                  </span>
+                  <span
+                    class="edit-tactic"
+                    *ngIf="row?.warningAction"
+                    (click)="performAction(row.warningAction)"
+                  >
+                    {{ row?.warningAction }}
+                  </span>
+                </div>
+              </td>
+              <td>{{ row?.program }}</td>
+              <td>{{ row?.type }}</td>
+              <td>{{ row?.startDate }}</td>
+              <td>{{ row?.endDate }}</td>
+              <td>{{ row?.costCenter }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+     
+      <!-- <div
+        class="drop-container"
+        cdkDropList 
+       #dropList="cdkDropList" 
+       [cdkDropListData]="droppedData" 
+       [cdkDropListConnectedTo]="['tableData']" 
+       (cdkDropListDropped)="drop($event)"
+      >
+        <h3>Dropped Items</h3>
+        <div *ngFor="let item of droppedData" class="dropped-item" cdkDrag>
+          {{ item.tacticName }} ({{ item.costCenter }})
+        </div>
+      </div> -->
     </div>
   </div>
   <br />
   <div class="Create-spend-request-button-div">
-    <button class="back-continue-button back" (click)="clickNext('back')">Back</button>
-    <button class="back-continue-button continue" [ngClass]="{'active':isActive}"
-      (click)="clickNext('continue')">Continue</button>
+    <button class="back-continue-button back" (click)="clickNext('back')">
+      Back
+    </button>
+    <button
+      class="back-continue-button continue"
+      [ngClass]="{ active: isActive }"
+      (click)="clickNext('continue')"
+    >
+      Continue
+    </button>
   </div>
 </div>
