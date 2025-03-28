@@ -1,7 +1,7 @@
 // auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, Observable, Subject, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, Subject, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable({
@@ -10,9 +10,11 @@ import { Router } from '@angular/router';
 export class AuthService {
   constructor(private http: HttpClient, public router: Router) { }
   public userData: any
-  public userSession = new Subject<any>();
-  // public baseUrl = 'http://localhost:8000'
-  public baseUrl = 'http://34.173.40.128:8080'
+  public userSession = new BehaviorSubject<any>('');
+  public userLog = this.userSession.asObservable();
+
+  public baseUrl = 'http://localhost:8000'
+  // public baseUrl = 'http://34.173.40.128:8080'
   logeInUser(url: any): Observable<any> {
     const urls = this.baseUrl + url
     return this.http.get<any>(urls).pipe(
@@ -58,7 +60,8 @@ export class AuthService {
           break;
         case 401:
           localStorage.clear()
-          this.router.navigate(['/Login'])
+          this.userSession.next('')
+          this.router.navigate(['/login'])
           errorMessage = 'Unauthorized: Access is denied due to invalid credentials.';
           break;
         case 403:

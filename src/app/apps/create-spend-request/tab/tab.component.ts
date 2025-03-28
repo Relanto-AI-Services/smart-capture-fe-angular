@@ -14,12 +14,14 @@ export class TabComponent {
   @Input() activeTab: any = '';
   constructor(public commonService:CommonService) { }
   ngOnInit() {
-    this.tabs = this.commonService.getTabs()
-    console.log(this.activeTab);
-    this.commonService.tab$.subscribe({
-      next: (activTab) => {
-      }
-    });    
+    this.commonService.tabObserver.subscribe((res:any)=>{
+      this.tabs = res
+    })
+    // console.log(this.activeTab);
+    // this.commonService.tab$.subscribe({
+    //   next: (activTab) => {
+    //   }
+    // });    
   }
 
   selectTab(tab:any,index: number) {
@@ -35,9 +37,15 @@ export class TabComponent {
         console.log('Changes detected activTab Success:', activTab);
       }
     });  
+    this.commonService.tabObserver.subscribe((res:any)=>{
+      this.tabs = res
+    })
   }
 
   selectStep(stepValue: any) {
+    if(this.activeTab === stepValue){
+      return
+    }
     this.activeTab = stepValue;
     this.tabClick.emit(stepValue);
   }

@@ -45,7 +45,6 @@ export class SowComponent {
 
   }
   ngOnInit() {
-    // this.commonService.resetTabs()
     this.selectedFiles = []
     this.googleDriveService.fileSelected.subscribe((files) => {
       this.selectedFiles = files;
@@ -68,7 +67,7 @@ export class SowComponent {
     } else {
       this.sowForm.onSubmit();
       if (this.sowForm.isFormValid && this.extractedData) {
-        this.sowClick.emit(this.extractedData);
+        this.sowClick.emit(this.sowForm.sowForm);
       }
     }
   }
@@ -80,6 +79,7 @@ export class SowComponent {
         "roles": [this.accessType]
         // "roles": ["writer"]
       }
+      this.openLoader()
       this.authService.postData('/share', payload).subscribe(res => {
         let processPayload = {
           urls: [res.shared_links[0].shared_link],
@@ -94,20 +94,21 @@ export class SowComponent {
 
   extractData(payload: any) {
     try {
-      this.openLoader()
       this.authService.postData('/process_urls_for_extraction', payload).subscribe(proRes => {
         this.dialogRef.close()
         console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', proRes);
         this.extractedData = proRes
         this.showSowForm = true // after extracting data
-        let payload = proRes
-        // this.pushToBigQuery(this.rowId,)
+        this.pushToBigQuery({...proRes,extraction_results:proRes?.results})
       })
     } catch (error) {
       console.error('error', error)
     }
   }
-  pushToBigQuery(id:any,payload:any){
+  pushToBigQuery(data:any){
+    delete data.total_processing_time
+    delete data.results
+    let payload = data;
     this.authService.postData('/ingest_to_bigquery',payload).subscribe((res)=>{
       console.log('Res',res);
       

@@ -8,9 +8,9 @@ import { CommonModule } from '@angular/common';
   styleUrl: './allocated-budget.component.scss'
 })
 export class AllocatedBudgetComponent {
-  @Output() sowClick = new EventEmitter<any>();
+  @Output() allocatedBudgetSubmit = new EventEmitter<any>();
   isActive:boolean=true
   clickNext(type:any) {
-    this.sowClick.emit('');
+    this.allocatedBudgetSubmit.emit('');
   }
 }

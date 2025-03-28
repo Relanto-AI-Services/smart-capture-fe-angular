@@ -6,8 +6,8 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class CommonService {
   constructor() {}
-  private tabSubject = new BehaviorSubject<string>('tactic'); // Default to "tactic"
-  tab$ = this.tabSubject.asObservable();
+  private activeTabSubject = new BehaviorSubject<string>('tactic'); // Default to "tactic"
+  tab$ = this.activeTabSubject.asObservable();
    
 
   private tabs = [
@@ -17,15 +17,18 @@ export class CommonService {
     { "label": "Risk Assessment", "value": "riskAssessment", "subLabel": "", "hasError": false, "errorMessage": "" },
     { "label": "Review and Submit", "value": "reviewAndSubmit", "subLabel": "", "hasError": false, "errorMessage": "" }
   ];
-
+  private tabSubject = new BehaviorSubject<any>(this.tabs); // Default to "tactic"
+  tabObserver = this.tabSubject.asObservable();
   getTabs() {
     return this.tabs;
   }
 
   setActiveTab(tabValue: string) {
+
+
     if (this.tabs.some((tab) => tab.value === tabValue)) {
       localStorage.setItem('activeTab', tabValue);
-      this.tabSubject.next(tabValue);
+      this.activeTabSubject.next(tabValue);
     }
   }
 
@@ -44,6 +47,7 @@ export class CommonService {
         }
       });
     }
+    this.tabSubject.next(this.tabs)
   }
   resetTabs() {
     const updatedTab = this.tabs.map((el) => ({
@@ -52,8 +56,10 @@ export class CommonService {
       subLabel: '',
       errorMessage: '',
     }));
-    this.tabs = updatedTab;
-    console.log(this.tabs);
+    this.tabSubject.next(updatedTab)
+
+    // this.tabs = updatedTab;
+    // console.log('reset tabs',this.tabs);
   }
 
   private concept = new BehaviorSubject<boolean>(false); // Initial value

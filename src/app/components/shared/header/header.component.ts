@@ -18,6 +18,7 @@ logout(){
   try {
     this.authService.getData('/logout').subscribe((res:any)=>{
       this.router.navigate(['login'])
+      this.authService.userSession.next('')
       localStorage.clear()
       console.log(res);
     })
@@ -25,8 +26,6 @@ logout(){
     console.error('error',error)
   }
 }
-
-
 
   updateValue() {
     this.cs.setValue(); // Set the value to true

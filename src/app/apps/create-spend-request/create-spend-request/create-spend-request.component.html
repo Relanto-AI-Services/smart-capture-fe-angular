@@ -26,7 +26,7 @@
                     <app-sow (sowClick)="onSowSelection($event)" [rowId]="rowId" ngSkipHydration></app-sow>
                     }
                     @else if (activeTab === 'allocatedBudget' ) {
-                    <app-allocated-budget (sowClick)="onAllocatedBidgetSelection($event)"
+                    <app-allocated-budget (allocatedBudgetSubmit)="onAllocatedBidgetSelection($event)"
                         ngSkipHydration></app-allocated-budget>
                     }
                     @else if (activeTab === 'riskAssessment' ) {
@@ -45,13 +45,13 @@
                     <span class="chat-title">Hello, {{this.userData?.email}}</span>
                     <span class="close-icon" (click)="toggleChat()">&#10006;</span>
                 </div>
-                <div class="chat-body">
+                <div #chatContainer class="chat-body">
                     @for (msg of messages?.messages; track $index;let i= $index) {
                     @if (msg.role === 'assistant') {
                     <div class="ai">
                         <div style="display: flex;">
                             <img class="chat-icon" src="../../../../assets/images/ai-icon.png" alt="AI">
-                            <div class="chat-bubble ai-message" [innerHTML]="msg.content"></div>
+                            <div class="chat-bubble ai-message" [innerHTML]="msg['content']"></div>
                         </div>
                         @if (messages?.options && i === messages?.messages.length - 1) {
                         <div class="options-container">
@@ -72,7 +72,7 @@
                     }
                 </div>
                 <div class="chat-footer">
-                    <input type="text" [(ngModel)]="newMessage" placeholder="Type your message here ..." />
+                    <input type="text" [(ngModel)]="newMessage" (keydown.enter)="sendMessage()" placeholder="Type your message here ..." />
                     <button (click)="sendMessage()">
                         <img src="../../../../assets/images/send-icon.png" />
                     </button>

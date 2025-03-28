@@ -19,7 +19,7 @@
         </div>
 
         <section>
-            <p class="section-title">Spend Details</p>
+            <!-- <p class="section-title">Spend Details</p> -->
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Spend Category </mat-label>
                 <mat-select formControlName="spend_category" [ngClass]="{'auto-filled': isAutoFilled('spend_category')}">
@@ -44,7 +44,7 @@
         <section>
             <p class="section-title">Purchase Description</p>
             <p class="section-subtitle">Provide a detailed description of the good and/or service that the supplier will
-                provide, and any other relevant project information.</p>
+                provide, and any other relevant project information. If applicable, include the project objective of deliverable </p>
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Purchase Description </mat-label>
                 <textarea matInput formControlName="purchase_description" rows="3"
@@ -53,7 +53,7 @@
             </mat-form-field>
         </section>
 
-        <section>
+        <!-- <section>
             <p class="section-title">Media Plan</p>
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Media Plan</mat-label>
@@ -68,7 +68,7 @@
                 <input matInput formControlName="MRFID" [ngClass]="{'auto-filled': isAutoFilled('MRFID')}">
                 <mat-error *ngIf="isFieldInvalid('MRFID')">This field is required</mat-error>
             </mat-form-field>
-        </section>
+        </section> -->
 
         <section>
             <p class="section-title">Timeline</p>
@@ -94,7 +94,7 @@
         </section>
 
         <section>
-            <p class="section-title">Market Information</p>
+            <p class="section-title">Select the Market market(s) benefiting from the service provider</p>
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Select Country </mat-label>
                 <mat-select formControlName="country" multiple [ngClass]="{'auto-filled': isAutoFilled('country')}">
@@ -108,18 +108,18 @@
                 <mat-label>Select Currency</mat-label>
                 <mat-select formControlName="currency" [ngClass]="{'auto-filled': isAutoFilled('currency')}">
                     <mat-option value="INR">INR</mat-option>
-                    <mat-option value="USD">USD</mat-option>
+                    <mat-option value="us">USD</mat-option>
                 </mat-select>
                 <mat-error *ngIf="isFieldInvalid('currency')">This field is required</mat-error>
             </mat-form-field>
         </section>
 
         <section>
-            <p class="section-title">Supplier Information</p>
-            <mat-form-field appearance="outline" class="full-width">
+            <!-- <p class="section-title">Supplier Information</p> -->
+            <!-- <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Select Role</mat-label>
                 <input matInput formControlName="selectRole" [ngClass]="{'auto-filled': isAutoFilled('selectRole')}">
-            </mat-form-field>
+            </mat-form-field> -->
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Supplier Legal Name </mat-label>
                 <input matInput formControlName="supplier_legal_name"
@@ -129,6 +129,7 @@
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Legal Name</mat-label>
                 <input matInput formControlName="legal_name" [ngClass]="{'auto-filled': isAutoFilled('legal_name')}">
+                <mat-error *ngIf="isFieldInvalid('legal_name')">This field is required</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
