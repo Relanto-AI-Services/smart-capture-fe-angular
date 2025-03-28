@@ -1,68 +1,83 @@
-  .stepper-container {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    justify-content: space-between;
-  }
+.stepper-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
 
-  .step-wrapper {
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
+.step-wrapper {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  position: relative;
+}
 
-  .step-circle {
-    width: 20px;
-    height: 20px;
-    font-size: 0.7rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    border-radius: 50%;
-    background-color: #69696B;
-    color: #F8F8FA;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
+/* ✅ Ensures the circle and text stay together */
+.step-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-  .step-circle.active {
-    background-color: #1C73DF;
-    color: white;
-  }
+/* Step Circle (Numbers inside) */
+.step-circle {
+  width: 20px;
+  height: 20px;
+  font-size: 0.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  border-radius: 50%;
+  background-color: #69696B;
+  color: #F8F8FA;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  z-index: 2;
+}
 
-  .step-circle.error {
-    background-color: red;
-    color: white;
-  }
+.step-circle.active {
+  background-color: #1C73DF;
+  color: white;
+}
 
-  .step-details {
-    display: flex;
-    flex-direction: column;
-    margin-left: 8px;
-  }
+.step-circle.error {
+  background-color: red;
+  color: white;
+}
 
-  .step-label {
-    font-size: 0.7rem;
-  }
+/* Step Labels */
+.step-details {
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+}
 
-  .step-sub-label {
-    font-size: 0.6rem;
-    color: #4285f4;
-    line-height: 0.6rem;
-  }
+.step-label {
+  font-size: 0.7rem;
+}
 
-  .step-error {
-    color: red;
-    font-size: 0.6rem;
-  }
+.step-sub-label {
+  font-size: 0.6rem;
+  color: #4285f4;
+  line-height: 0.6rem;
+}
 
-  .step-line {
-    height: 1px;
-    width: 8vw;
-    background-color: #80808078;
-    position: relative;
-    top: 50%;
-    right: 0px;
-    margin-left: 4px;
-  }
+.step-error {
+  color: red;
+  font-size: 0.6rem;
+}
+
+/* ✅ Finally Fixed the Horizontal Line */
+.step-line {
+  flex-grow: 1; /* ✅ This makes it stretch properly between steps */
+  height: 0.5px;
+  background-color: #80808078;
+  margin: 0 10px; /* ✅ This adds space on both sides */
+}
+
+/* Hide line for last step */
+.step-wrapper:last-child .step-line {
+  display: none;
+}

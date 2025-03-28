@@ -9,10 +9,10 @@
           </div>
     }
   </div> -->
-  <div class="stepper-container">
+  <!-- <div class="stepper-container">
     @for (step of tabs; track $index;let i = $index) {
       <div class="step-wrapper">
-        <!-- [ngClass]="{'active': activeTab === step?.value, 'error': step.hasError}"  -->
+      
         <div class="step-circle" 
              [ngClass]="{'active': activeTab === step?.value}" 
              (click)="selectStep(step?.value)">
@@ -34,7 +34,37 @@
         }
       </div>
     }
+  </div> -->
+
+  <div class="stepper-container">
+    @for (step of tabs; track $index; let i = $index) {
+      <div class="step-wrapper">
+        <div class="step-content">
+          <div class="step-circle" 
+               [ngClass]="{'active': activeTab === step?.value}" 
+               (click)="selectStep(step?.value)">
+            {{ i + 1 }}
+          </div>
+  
+          <div class="step-details">
+            <div class="step-label">{{ step.label }}</div>
+            @if (step.subLabel) {
+              <div class="step-sub-label">{{ step.subLabel }}</div>
+            }
+            @if (step.hasError) {
+              <div class="step-error">{{ step.errorMessage }}</div>
+            }
+          </div>
+        </div>
+  
+        <!-- ✅ Line is separate from text and will not overlap -->
+        @if (i < tabs.length - 1) {
+          <div class="step-line"></div>
+        }
+      </div>
+    }
   </div>
+  
   
   <!-- <div class="step-content">
     @switch (activeStep) {

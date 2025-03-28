@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'http://127.0.0.1:8000';
-  // private baseUrl = 'http://34.173.40.128:8080';
+  // private baseUrl = 'http://127.0.0.1:8000';
+  private baseUrl = 'http://34.173.40.128:8080';
 
   constructor(private http: HttpClient) {}
 
@@ -17,11 +17,11 @@ export class ApiService {
   ): Observable<any> {
     const url = `${this.baseUrl}/save_spend_request_tactic`;
 
-    const sessionId = localStorage.getItem('sid') || ''; // Ensure it's not null
+    const sessionId = localStorage.getItem('sid') || ''; 
 
     const headers = new HttpHeaders({
       accept: 'application/json',
-      'session-id': sessionId, // Use sessionId directly
+      'session-id': sessionId,
       'Content-Type': 'application/json',
     });
 
@@ -31,5 +31,19 @@ export class ApiService {
     };
 
     return this.http.post(url, body, { headers });
+  }
+
+
+  // getSpendRequestData(): Observable<any> {
+  //   return this.http.get<any>( `${this.baseUrl}/tactic_listing`);
+  // }
+
+  getSpendRequest() {
+    const sessionIdd = localStorage.getItem('sid') || '';
+    const headers = new HttpHeaders({
+      'session-id': sessionIdd, 
+    });
+
+    return this.http.get( `${this.baseUrl}/tactic_listing`, { headers });
   }
 }

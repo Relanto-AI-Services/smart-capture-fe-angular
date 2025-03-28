@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   loginWithGoogle() {
     this.openLoader();
     this.authService.logeInUser('/login').subscribe((res) => {
-      this.dialogRef.close()
+      this.dialogRef.close();
       this.router.navigate(['/spendRequest/createSpendRequest']);
     })
   }
@@ -41,6 +41,12 @@ export class LoginComponent implements OnInit {
       this.dialogRef = this.dialog.open(LoaderModalComponent, {
         disableClose: true,
         data: { page: 'login' },
+        restoreFocus: false,
       });
     }
+
+    onSubmit(event: Event) {
+      event.preventDefault(); // Prevents form from submitting and refreshing the page
+    }
+    
 }
