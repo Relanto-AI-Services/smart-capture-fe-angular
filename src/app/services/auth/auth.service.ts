@@ -14,7 +14,7 @@ export class AuthService {
   public userLog = this.userSession.asObservable();
 
   // public baseUrl = 'http://localhost:8000'
-  public baseUrl = 'http://34.173.40.128:8080'
+  public baseUrl = 'http://34.60.26.146:8080/'
   logeInUser(url: any): Observable<any> {
     const urls = this.baseUrl + url
     return this.http.get<any>(urls).pipe(
