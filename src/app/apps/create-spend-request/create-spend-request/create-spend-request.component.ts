@@ -54,25 +54,27 @@ export class CreateSpendRequestComponent {
 
   constructor(public commonService: CommonService, public authService: AuthService) { }
   ngOnInit() {
-    // const user = {
-    //   "email": "Mohammad.waliullah@relanto.ai",
-    //   "token": {
-    //     "token": "ya29.a0AeXRPp7q2d-uylajHlH60Ev43kRKnclBOemvlLhb2LzFkDxN9LI3eG1GgemBoW5z6is1mLLNxrN2-WloFzoK_rCE2D69_cXYTIkEiE5Bu3swCrwa7n31henEJDLDUTJDp8IMI1yK53XN0lCjgk93sREfXgIfGCaFW0PvLP5NzwaCgYKARsSARESFQHGX2MinmH9mxykQUCFchrb8bmezw0177",
-    //     "refresh_token": null,
-    //     "token_uri": "https://oauth2.googleapis.com/token",
-    //     "client_id": "580742443458-u11uev3eqo6sn1v5ohq9mbh6bq9mfm72.apps.googleusercontent.com",
-    //     "client_secret": "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"
-    //   },
-    //   "scopes": [
-    //     "https://www.googleapis.com/auth/drive",
-    //     "https://www.googleapis.com/auth/bigquery",
-    //     "https://www.googleapis.com/auth/documents.readonly"
-    //   ],
-    //   "session_id": "b412acb5-3a90-42a3-90d1-78b79e59b775",
-    //   "message": "Logged in successfully with this account: Mohammad.waliullah@relanto.ai"
-    // }
-    // localStorage.setItem('user', JSON.stringify(user))
-    // localStorage.setItem('sid', user?.session_id)
+    if(!localStorage.getItem('user')){
+      const user = {
+        "email": "Mohammad.waliullah@relanto.ai",
+        "token": {
+          "token": "ya29.a0AeXRPp7q2d-uylajHlH60Ev43kRKnclBOemvlLhb2LzFkDxN9LI3eG1GgemBoW5z6is1mLLNxrN2-WloFzoK_rCE2D69_cXYTIkEiE5Bu3swCrwa7n31henEJDLDUTJDp8IMI1yK53XN0lCjgk93sREfXgIfGCaFW0PvLP5NzwaCgYKARsSARESFQHGX2MinmH9mxykQUCFchrb8bmezw0177",
+          "refresh_token": null,
+          "token_uri": "https://oauth2.googleapis.com/token",
+          "client_id": "580742443458-u11uev3eqo6sn1v5ohq9mbh6bq9mfm72.apps.googleusercontent.com",
+          "client_secret": "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"
+        },
+        "scopes": [
+          "https://www.googleapis.com/auth/drive",
+          "https://www.googleapis.com/auth/bigquery",
+          "https://www.googleapis.com/auth/documents.readonly"
+        ],
+        "session_id": "b412acb5-3a90-42a3-90d1-78b79e59b775",
+        "message": "Logged in successfully with this account: Mohammad.waliullah@relanto.ai"
+      }
+      localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('sid', user?.session_id)
+    }
     this.commonService.messages$.subscribe((messages: any) => {
       this.messages = messages;
     });
