@@ -105,7 +105,7 @@
     </button>
     <button
       class="back-continue-button continue"
-      [ngClass]="{ active: isActive }"
+      [ngClass]="{ active: isActive && selectedData.length }"
       (click)="clickNext('continue')"
     >
       Continue
@@ -123,7 +123,7 @@
  
    
     <div>
-      <img src="" />
+      <!-- <img src="" />  Empty image   ?????/ -->
       <p>
         You are about to leave this page are you sure
       </p>

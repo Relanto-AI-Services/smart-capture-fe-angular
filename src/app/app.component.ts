@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/shared/header/header.component';
 import { CommonService } from './services/common/common.service';
 import { AuthService } from './services/auth/auth.service';
@@ -13,7 +13,15 @@ import { AuthService } from './services/auth/auth.service';
 export class AppComponent {
   title = 'Smart-Capture';
   public userSession :boolean = true
+  constructor(public authService:AuthService,private activatedRoute: ActivatedRoute, private router: Router){
+    if(localStorage.getItem('sid')){
+      this.userSession = true
+    }else{
+      this.userSession = false
+    }
+  }
   ngOnInit() {
+    
     this.authService.userLog.subscribe((res:any)=>{
       if(res){
         this.userSession = true
@@ -22,13 +30,6 @@ export class AppComponent {
       }
       console.log('login log res',res)
     })
-    if(localStorage.getItem('sid')){
-      this.userSession = true
-    }else{
-      this.userSession = false
-    }
-  }
-  constructor(public authService:AuthService){
     if(localStorage.getItem('sid')){
       this.userSession = true
     }else{

@@ -1,5 +1,5 @@
 <div class="layout">
-    <div class="create-content">
+    <div class="create-content" [style]="(chatVisible && activePage !=='Request Type')? {width:'78vw'} : {width:'95vw',margin: 'auto'}">
         <div class="create-spend-request-header-and-tab">
             <div class="header">
                 <img style="height: 1.5rem;margin-right: 1rem;" src="../../../../assets/images/lounch-point-logo.png" />
@@ -11,11 +11,7 @@
             </div>
             }
         </div>
-        <div class="body-content" style="display: flex;">
-
-            <div class="content">
-                <div
-                    [style]="(chatVisible && activePage !=='Request Type')? {width:'80vw'} : {width:'95vw',margin: 'auto'}">
+        <div class="body-content">
                     @if (activePage ==='Request Type') {
                     <app-request-type (cardClick)="requestType($event)"></app-request-type>
                     }
@@ -37,50 +33,54 @@
                     <app-submit-spend-request (finalSubmitionClick)="onFinalSubmitionClick($event)"
                         ngSkipHydration></app-submit-spend-request>
                     }
-                </div>
+        </div>
+    </div>
+    @if (chatVisible && activePage !=='Request Type') {
+    <div class="chat-container" [style]="chatVisible? {width:'20vw'} : {}">
+        <span class="close-icon" (click)="toggleChat()">&#10006;</span>
+        <div #chatContainer class="chat-body">
+            <div class="username">
+                <img class="chat-icon" src="../../../../assets/images/ai-icon.png" alt="AI">
+                <div class="name">{{this.userData?.email}}</div>
+                <p>I'm you AI assistant</p>
             </div>
-            @if (chatVisible && activePage !=='Request Type') {
-            <div class="chat-container" [style]="chatVisible? {width:'20%'} : {display:'none'}">
-                <div class="chat-header">
-                    <span class="chat-title">Hello, {{this.userData?.email}}</span>
-                    <span class="close-icon" (click)="toggleChat()">&#10006;</span>
+            @for (msg of messages?.messages; track $index;let i= $index) {
+            @if (msg.role === 'assistant') {
+            <div class="ai">
+                <div style="display: flex;">
+                    <img class="chat-icon" src="../../../../assets/images/ai-icon.png" alt="AI">
+                    <div class="chat-bubble ai-message" [innerHTML]="msg['content']"></div>
                 </div>
-                <div #chatContainer class="chat-body">
-                    @for (msg of messages?.messages; track $index;let i= $index) {
-                    @if (msg.role === 'assistant') {
-                    <div class="ai">
-                        <div style="display: flex;">
-                            <img class="chat-icon" src="../../../../assets/images/ai-icon.png" alt="AI">
-                            <div class="chat-bubble ai-message" [innerHTML]="msg['content']"></div>
-                        </div>
-                        @if (messages?.options && i === messages?.messages.length - 1) {
-                        <div class="options-container">
-                            @for (option of messages?.options; track $index) {
-                            <button class="option-button" (click)="selectOption(option)">{{ option }}</button>
-                            }
-                        </div>
-                        }
-                    </div>
-                    }
-                    @if (msg.role === 'user') {
-                    <div class="user" style="display: flex; justify-content: right;">
-                        <div class="chat-bubble user-message" [innerHTML]="msg.content"></div>
-                        <div class="avatar">{{userAvtarText}} </div>
-                        <!-- <img class="user-icon" src="../../../../assets/images/user-icon.png" alt="User"> -->
-                    </div>
-                    }
+                @if (messages?.options && i === messages?.messages.length - 1) {
+                <div class="options-container">
+                    @for (option of messages?.options; track $index) {
+                    <button class="option-button" (click)="selectOption(option)">{{ option }}</button>
                     }
                 </div>
-                <div class="chat-footer">
-                    <input type="text" [(ngModel)]="newMessage" (keydown.enter)="sendMessage()" placeholder="Type your message here ..." />
-                    <button (click)="sendMessage()">
-                        <img src="../../../../assets/images/send-icon.png" />
-                    </button>
-                </div>
+                }
             </div>
             }
+            @if (msg.role === 'user') {
+            <div class="user" style="display: flex; justify-content: right;">
+                <div class="chat-bubble user-message" [innerHTML]="msg.content"></div>
+                <div class="avatar">{{userAvtarText}} </div>
+                <!-- <img class="user-icon" src="../../../../assets/images/user-icon.png" alt="User"> -->
+            </div>
+            }
+            }
         </div>
-
+        <div class="chat-footer">
+            <input type="text" [(ngModel)]="newMessage" (keydown.enter)="sendMessage()" placeholder="Type your message here ..." />
+            <button (click)="sendMessage()">
+                <img src="../../../../assets/images/send-icon.png" />
+            </button>
+        </div>
     </div>
+    }
+    @else if(activePage !=='Request Type') {
+        <div class="chat-navigation-icon">
+            <img (click)="showChat()" class="chat-icon" src="../../../../assets/images/ai-icon.png" alt="AI">
+        </div>
+    }
 
 </div>

@@ -63,11 +63,16 @@ export class SowComponent {
 
   clickNext(type: any) {
     if (type === 'extract') {
-      this.shareAccess()
+      // this.sowClick.emit({data:this.sowForm.sowForm,type:'extract'});
+      if(this.selectedFiles.length === 0){
+        this.showSowForm = true // after extracting data
+      }else{
+        this.shareAccess()
+      }
     } else {
       this.sowForm.onSubmit();
       if (this.sowForm.isFormValid && this.extractedData) {
-        this.sowClick.emit(this.sowForm.sowForm);
+        this.sowClick.emit({data:this.sowForm.sowForm,type:'submit'});
       }
     }
   }
@@ -77,16 +82,22 @@ export class SowComponent {
       const payload = {
         "doc_links": [`https://docs.google.com/document/d/${id}/`],
         "roles": [this.accessType]
-        // "roles": ["writer"]
       }
       this.openLoader()
-      this.authService.postData('/share', payload).subscribe(res => {
-        let processPayload = {
-          urls: [res.shared_links[0].shared_link],
-          row_id: this.rowId
-        }
-        this.extractData(processPayload)
-      })
+      this.authService.postData('/share', payload).subscribe(
+        {
+          next: (res) => {
+            let processPayload = {
+              urls: [res.shared_links[0].shared_link],
+              row_id: this.rowId
+            }
+            this.extractData(processPayload)
+          },
+          error: (error) => {
+            console.error('Error Status:', error.status);
+            console.error('Error Message:', error.message);
+          }
+        })
     } catch (error) {
       console.error('error', error)
     }
@@ -96,22 +107,21 @@ export class SowComponent {
     try {
       this.authService.postData('/process_urls_for_extraction', payload).subscribe(proRes => {
         this.dialogRef.close()
-        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', proRes);
         this.extractedData = proRes
         this.showSowForm = true // after extracting data
-        this.pushToBigQuery({...proRes,extraction_results:proRes?.results})
+        this.pushToBigQuery({ ...proRes, extraction_results: proRes?.results })
       })
     } catch (error) {
       console.error('error', error)
     }
   }
-  pushToBigQuery(data:any){
+  pushToBigQuery(data: any) {
     delete data.total_processing_time
     delete data.results
     let payload = data;
-    this.authService.postData('/ingest_to_bigquery',payload).subscribe((res)=>{
-      console.log('Res',res);
-      
+    this.authService.postData('/ingest_to_bigquery', payload).subscribe((res) => {
+      console.log('Res', res);
+
     })
   }
   getSowFormData(event: any) {

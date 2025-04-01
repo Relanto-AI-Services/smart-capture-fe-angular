@@ -10,7 +10,7 @@ import { SubmitSpendRequestComponent } from '../submit-spend-request/submit-spen
 import { CommonService } from '../../../services/common/common.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { AllocatedBudgetComponent } from "../allocated-budget/allocated-budget.component";
-import { switchMap } from 'rxjs';
+import { filter, switchMap } from 'rxjs';
 import { setTimeout } from 'timers/promises';
 
 @Component({
@@ -36,56 +36,110 @@ export class CreateSpendRequestComponent {
   public activeTab: any = 'tactic'
   public activePage = 'Request Type'
   public user = localStorage.getItem('user')
-  public userData = JSON.parse(this.user ? this.user : '');
-  public userAvtarText = this.userData?.email.split('@')[0].split('.').map((word: any[]) => word[0]).join('').toUpperCase();
+  // public userData:any = JSON.parse(this.user ? this.user : "{email:'waliullah@test.com'}");
+  // public userAvtarText = this.userData?.email.split('@')[0].split('.').map((word: any[]) => word[0]).join('').toUpperCase();
+  public userData: any = {}
+  public userAvtarText: any = {}
   public rowId: any;
   public chatBoatEndPoint: string = '';
+  public messages: any = {
+    messages: [],
+    options: [],
+    session_id: "",
+    next_url: ""
+  };
+
+  newMessage: string = '';
+  chatVisible: boolean = true;
+
   constructor(public commonService: CommonService, public authService: AuthService) { }
   ngOnInit() {
+    // const user = {
+    //   "email": "Mohammad.waliullah@relanto.ai",
+    //   "token": {
+    //     "token": "ya29.a0AeXRPp7q2d-uylajHlH60Ev43kRKnclBOemvlLhb2LzFkDxN9LI3eG1GgemBoW5z6is1mLLNxrN2-WloFzoK_rCE2D69_cXYTIkEiE5Bu3swCrwa7n31henEJDLDUTJDp8IMI1yK53XN0lCjgk93sREfXgIfGCaFW0PvLP5NzwaCgYKARsSARESFQHGX2MinmH9mxykQUCFchrb8bmezw0177",
+    //     "refresh_token": null,
+    //     "token_uri": "https://oauth2.googleapis.com/token",
+    //     "client_id": "580742443458-u11uev3eqo6sn1v5ohq9mbh6bq9mfm72.apps.googleusercontent.com",
+    //     "client_secret": "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"
+    //   },
+    //   "scopes": [
+    //     "https://www.googleapis.com/auth/drive",
+    //     "https://www.googleapis.com/auth/bigquery",
+    //     "https://www.googleapis.com/auth/documents.readonly"
+    //   ],
+    //   "session_id": "b412acb5-3a90-42a3-90d1-78b79e59b775",
+    //   "message": "Logged in successfully with this account: Mohammad.waliullah@relanto.ai"
+    // }
+    // localStorage.setItem('user', JSON.stringify(user))
+    // localStorage.setItem('sid', user?.session_id)
+    this.commonService.messages$.subscribe((messages: any) => {
+      this.messages = messages;
+    });
+    let activeTab = {}
+    let res:any =[]
+    this.commonService.tabObserver.subscribe((resp:any)=>{
+      console.log('tabbbbbbbbbbbbbbbbbb', resp);
+      res = resp
+    })
+    activeTab = res.filter((el:any)=>{
+      if(el.subLabel.length !==0) return el
+    })
+    console.log('oooooooooooooooooooooooo',activeTab,res);
+    
   }
-  ngAfterViewChecked() {
+  ngAfterViewInit() {
     this.scrollToBottom();
   }
 
   scrollToBottom() {
-    const container = this.chatContainer.nativeElement;
-    container.scrollTop = container.scrollHeight;
+    window.setTimeout(() => {
+      if (this.chatContainer) {
+        console.log(this.chatContainer.nativeElement);
+        const container = this.chatContainer.nativeElement;
+        container.scrollTop = container.scrollHeight;
+      }
+    }, 1000);
   }
   tabClick(event: any) {
     this.activeTab = event
     this.commonService.resetTabs()
     this.commonService.setActiveTab(event);
-    // this.chatVisible = false
+    this.messages = {
+      messages: [],
+      options: [],
+      session_id: "",
+      next_url: ""
+    }
     switch (this.activeTab) {
       case 'tactic':
-        // this.chatVisible = true
         this.chatBoatEndPoint = '/tactic_chatbot_url'
-        this.loadMessages({ "messages": [] })
         break;
       case 'sow':
-        // this.chatVisible = true
-        this.messages = {}
         this.chatBoatEndPoint = '/spend_request_chatbot_url'
-        // window.setTimeout(() => {
-        // }, 1000);
-        this.loadMessages({ messages: [] });
         this.getPrimaryKey()
         break;
       default:
         console.log('wait')
-        this.messages = {}
+        // this.messages = {}
         break;
     }
+    this.loadMessages({ "messages": [] })
   }
   requestType(event: any) {
     this.activePage = 'Tactics'
     this.tabClick('tactic')
   }
   onTacticSelection(event: any) {
-    this.activePage = 'SOW'
-    this.tabClick('sow')
+    if (event?.type === 'continue') {
+      this.activePage = 'SOW'
+      this.tabClick('sow')
+    } else {
+      this.activePage = 'Request Type'
+    }
   }
   onSowSelection(event: any) {
+    console.log('sowwwwwwwwwwwwwwwwwwwww',event);
     this.activePage = 'Allocated Budget';
     console.log('form filled data of sow', event);
     this.tabClick('allocatedBudget')
@@ -115,11 +169,6 @@ export class CreateSpendRequestComponent {
   // ####################################
   //////////////////////////////////////////////////////// Chat functionality
 
-  public messages: any;
-
-  newMessage: string = '';
-  chatVisible: boolean = true;
-
   toggleChat() {
     this.chatVisible = !this.chatVisible;
   }
@@ -140,12 +189,13 @@ export class CreateSpendRequestComponent {
 
   loadMessages(message: any) {
     try {
-      const messages = message
+      const payload = message
       this.authService.getData(this.chatBoatEndPoint).pipe(
-        switchMap(firstResponse => this.authService.postData(`${firstResponse?.next_url}`, messages))
+        switchMap(firstResponse => this.authService.postData(`${firstResponse?.next_url}`, payload))
       ).subscribe({
         next: secondResponse => {
-          this.messages = secondResponse
+          // this.messages = secondResponse
+          this.commonService.updateMessages(secondResponse);
           console.log('Final Response:', this.messages)
         },
         error: error => console.error('Error:', error),
@@ -156,5 +206,10 @@ export class CreateSpendRequestComponent {
     }
 
   }
-  
+  showChat() {
+    if (!this.chatVisible) {
+      this.chatVisible = true
+    }
+  }
+
 }

@@ -113,7 +113,7 @@ warningAction: '',
     this.cs.value$.subscribe((newValue) => {
       this.conceptValue = newValue; 
     });
-    // this. fetchSpendRequestData()
+    this. fetchSpendRequestData()
   }
 
   fetchSpendRequestData() {
@@ -187,10 +187,12 @@ warningAction: '',
   //     console.log(row);
   //   }
   clickNext(type: any) {
-    if(type === 'continue' ){
+    if(type === 'continue' && this.selectedData.length){
       this.sendRequest([...this.selectedData])
+      this.tacticClick.emit({ ...this.selectedData, type: type });
+    }else{
+      this.tacticClick.emit({ ...this.selectedData, type: type });
     }
-    this.tacticClick.emit({ ...this.selectedData, type: type });
   }
  
 

@@ -48,20 +48,26 @@ export class AuthService {
   }
 
   private handleError(error: any): Observable<never> {
-    console.error('API Error:', error);
     let errorMessage = 'An unknown error occurred!';
-
+    
     if (error.error instanceof ErrorEvent) {
+      console.error('API Error iffffffffffffffff:', error);
+      // Client-side error
       errorMessage = `Client Error: ${error.error.message}`;
     } else {
+      console.error('API Error elseeeeeeeeee:', error?.status);
+      // Server-side error
       switch (error.status) {
         case 400:
           errorMessage = 'Bad Request: Invalid request sent to the server.';
           break;
         case 401:
-          localStorage.clear()
-          this.userSession.next('')
-          this.router.navigate(['/login'])
+          localStorage.clear();
+          this.userSession.next('');
+          // this.router.navigate(['/login']);
+          window.setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 0);
           errorMessage = 'Unauthorized: Access is denied due to invalid credentials.';
           break;
         case 403:
@@ -89,9 +95,11 @@ export class AuthService {
           errorMessage = `Error ${error.status}: ${error.message}`;
           break;
       }
-    }
-
-    console.error(`API Error [${error.status}]:`, errorMessage);
-    return throwError(() => new Error(errorMessage));
+    }  
+    return throwError(() => ({
+      status: error.status,
+      message: errorMessage
+    }));
   }
+  
 }

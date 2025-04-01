@@ -13,7 +13,8 @@
                     <mat-label>Purchase Name </mat-label>
                     <input matInput formControlName="purchase_name"
                         [ngClass]="{'auto-filled': isAutoFilled('purchase_name')}">
-                    <mat-error *ngIf="isFieldInvalid('purchase_name')">This field is required</mat-error>
+                    <mat-error *ngIf="isFieldInvalid('purchase_name') && !sowForm.get('purchase_name')?.hasError('pattern')">This field is required</mat-error>
+                    <mat-error *ngIf="sowForm.get('purchase_name')?.hasError('pattern')">Enter valid Purchase Name</mat-error>
                 </mat-form-field>
             </div>
         </div>
@@ -124,19 +125,24 @@
                 <mat-label>Supplier Legal Name </mat-label>
                 <input matInput formControlName="supplier_legal_name"
                     [ngClass]="{'auto-filled': isAutoFilled('supplier_legal_name')}">
-                <mat-error *ngIf="isFieldInvalid('supplier_legal_name')">This field is required</mat-error>
+                <mat-error *ngIf="isFieldInvalid('supplier_legal_name') && !sowForm.get('supplier_legal_name')?.hasError('pattern')">This field is required</mat-error>
+                <mat-error *ngIf="sowForm.get('supplier_legal_name')?.hasError('pattern')">Enter valid Supplier Legal Name</mat-error>
+
             </mat-form-field>
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Legal Name</mat-label>
                 <input matInput formControlName="legal_name" [ngClass]="{'auto-filled': isAutoFilled('legal_name')}">
-                <mat-error *ngIf="isFieldInvalid('legal_name')">This field is required</mat-error>
+                <mat-error *ngIf="isFieldInvalid('legal_name') && !sowForm.get('legal_name')?.hasError('pattern')">This field is required</mat-error>
+                <mat-error *ngIf="sowForm.get('legal_name')?.hasError('pattern')">Enter valid Legal Name</mat-error>
+
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Name of Supplier POC </mat-label>
                 <input matInput formControlName="supplier_poc_name"
                     [ngClass]="{'auto-filled': isAutoFilled('supplier_poc_name')}">
-                <mat-error *ngIf="isFieldInvalid('supplier_poc_name')">This field is required</mat-error>
+                <mat-error *ngIf="isFieldInvalid('supplier_poc_name') && !sowForm.get('supplier_poc_name')?.hasError('pattern')">This field is required</mat-error>
+                <mat-error *ngIf="sowForm.get('supplier_poc_name')?.hasError('pattern')">Enter valid Supplier Poc Name</mat-error>
             </mat-form-field>
         </section>
 

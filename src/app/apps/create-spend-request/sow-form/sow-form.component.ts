@@ -48,26 +48,8 @@ export class SowFormComponent {
 
   ngOnInit(): void {
     // this.commonService.resetTabs()
-    const jsonData = this.extractedData?.results[0]?.spend_request[0];
-    // const jsonData = {
-    //   purchase_name: 'Print Production Service',
-    //   spend_category: 'Learning',
-    //   spend_sub_category: 'Software Licensing',
-    //   purchase_description: 'Annual license for office productivity software (Word, Excel, PowerPoint).',
-    //   market_plan: '',
-    //   MRFID: '2025-SOFTWARE-12345',
-    //   work_start_date: '',
-    //   work_end_date: 'Mon Mar 17 2025 00:00:00',
-    //   country: 'USA', //
-    //   currency: 'USD',
-    //   selectRole: 'Project Manager', //
-    //   supplier_legal_name: 'Tech Innovations LLC',
-    //   legal_name: 'Tech Innovations LLC',
-    //   supplier_poc_name: 'John Doe, Account Manager'
-    // };
-
     this.sowForm = this.fb.group({
-      purchase_name: ['', Validators.required],
+      purchase_name: ['', [Validators.required,Validators.pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/)]],
       spend_category: ['', Validators.required],
       spend_sub_category: ['', Validators.required],
       purchase_description: ['', Validators.required],
@@ -78,16 +60,20 @@ export class SowFormComponent {
       country: [[], Validators.required], // ??? multi select
       currency: [, Validators.required],
       // selectRole: [, Validators.required], ref vaishnavi   // TBD
-      supplier_legal_name: ['', Validators.required],
-      legal_name: ['', Validators.required],
-      supplier_poc_name: ['', Validators.required]
+      supplier_legal_name: ['', [Validators.required,Validators.pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/)]],
+      legal_name: ['', [Validators.required,Validators.pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/)]],
+      supplier_poc_name: ['', [Validators.required,Validators.pattern(/^[A-Za-z]+(?: [A-Za-z]+)*$/)]]
     });
-    this.patchValueInForm(jsonData)
-    Object.keys(jsonData).forEach((key: string) => {
-      if ((jsonData as Record<string, string>)[key]) {
-        this.autoFilledFields[key] = true;
-      }
-    });
+    if(Object.keys(this.extractedData).length !==0){
+      const jsonData = this.extractedData?.results[0]?.spend_request[0];
+      this.patchValueInForm(jsonData)
+      Object.keys(jsonData).forEach((key: string) => {
+        if ((jsonData as Record<string, string>)[key]) {
+          this.autoFilledFields[key] = true;
+        }
+      });
+    }
+
     this.logFormStatus()
   }
 
@@ -96,7 +82,7 @@ export class SowFormComponent {
   }
 
   isFieldInvalid(field: string): boolean {
-    return this.sowForm.controls[field].invalid && (this.sowForm.controls[field].dirty || this.sowForm.controls[field].touched);
+    return this.sowForm.controls[field].invalid && (this.sowForm.controls[field].dirty);
   }
   convertsToDate(dateString: string): Date | null {
     if (!dateString) return null;
@@ -105,18 +91,18 @@ export class SowFormComponent {
   }
   patchValueInForm(jsonData: any) {
     this.sowForm.patchValue({
-      purchase_name: jsonData?.purchase_name,
-      spend_category: jsonData?.spend_category,
-      spend_sub_category: jsonData?.spend_sub_category,
-      purchase_description: jsonData?.purchase_description,
-      work_start_date: this.convertsToDate(jsonData?.work_start_date),
-      work_end_date: this.convertsToDate(jsonData?.work_end_date),
-      country: jsonData?.markets_benifited_from_the_serviece,
-      currency: jsonData?.currency,
+      purchase_name: jsonData?.purchase_name ? jsonData?.purchase_name:'',
+      spend_category: jsonData?.spend_category ? jsonData?.spend_category:'',
+      spend_sub_category: jsonData?.spend_sub_category ? jsonData?.spend_sub_category:'',
+      purchase_description: jsonData?.purchase_description ? jsonData?.purchase_description:'',
+      work_start_date:jsonData?.work_start_date? this.convertsToDate(jsonData?.work_start_date):'',
+      work_end_date: jsonData?.work_end_date? this.convertsToDate(jsonData?.work_end_date): '',
+      country: jsonData?.markets_benifited_from_the_serviece? jsonData?.markets_benifited_from_the_serviece :[],
+      currency: jsonData?.currency? jsonData?.currency:'',
       // selectRole: jsonData?.selectRole,
-      supplier_legal_name: jsonData?.supplier_legal_name,
-      legal_name: jsonData?.legal_name,
-      supplier_poc_name: jsonData?.supplier_poc_name
+      supplier_legal_name: jsonData?.supplier_legal_name? jsonData?.supplier_legal_name:'',
+      legal_name: jsonData?.legal_name? jsonData?.legal_name: '',
+      supplier_poc_name: jsonData?.supplier_poc_name? jsonData?.supplier_poc_name: ''
     });
   }
   onSubmit(): void {
@@ -151,7 +137,6 @@ export class SowFormComponent {
     console.log('Errors in Form:', errorCount);
     console.log('Total input in Form:', totalFieldCount);
     this.commonService.updateTabsValue(localStorage.getItem('activeTab'), `AI pre-filled ${filledCount} of ${totalFieldCount} questions`, this.isFormValid ? false : true, `${errorCount} error`)
-    console.log(this.sowForm)
   }
 
 }

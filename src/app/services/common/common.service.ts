@@ -74,4 +74,11 @@ export class CommonService {
   getValue() {
     return this.concept.value;
   }
+
+  private messagesSource = new BehaviorSubject<any>({ messages: [], options: [] ,session_id:"",next_url:""});
+  messages$ = this.messagesSource.asObservable();
+
+  updateMessages(newMessages: any) {
+    this.messagesSource.next(newMessages);
+  }
 }
