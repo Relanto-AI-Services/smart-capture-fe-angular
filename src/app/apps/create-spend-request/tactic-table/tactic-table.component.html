@@ -60,7 +60,7 @@
                 <input
                   type="checkbox"
                   class="custom-checkbox"
-                  [disabled]="row.warning"
+                  [disabled]="row.warning === 'P0 - In budget'"
                   (change)="toggleSelection($event, row)"
                 />
               </td>
@@ -93,6 +93,9 @@
           </tbody>
         </table>
       </div>
+
+
+      
 
      
    
