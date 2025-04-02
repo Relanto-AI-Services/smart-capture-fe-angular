@@ -66,14 +66,16 @@ export class SowComponent {
       // this.sowClick.emit({data:this.sowForm.sowForm,type:'extract'});
       if(this.selectedFiles.length === 0){
         this.showSowForm = true // after extracting data
+        window.setTimeout(() => {
+          this.sowClick.emit({data:this.sowForm?.sowForm?.value,type:'extract'});
+        }, 500);
       }else{
         this.shareAccess()
       }
-      this.sowClick.emit({data:{chatMessage:''},type:'extract'});
     } else {
       this.sowForm.onSubmit();
       if (this.sowForm.isFormValid && this.extractedData) {
-        this.sowClick.emit({data:this.sowForm.sowForm,type:'submit'});
+        this.sowClick.emit({data:this.sowForm?.sowForm,type:'submit'});
       }
     }
   }
@@ -111,6 +113,9 @@ export class SowComponent {
         this.extractedData = proRes
         this.showSowForm = true // after extracting data
         this.pushToBigQuery({ ...proRes, extraction_results: proRes?.results })
+        window.setTimeout(() => {
+          this.sowClick.emit({data:this.sowForm?.sowForm?.value,type:'extract'});
+        }, 500);
       })
     } catch (error) {
       console.error('error', error)
