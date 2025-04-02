@@ -35,8 +35,8 @@ export class CreateSpendRequestComponent {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
   public activeTab: any = 'tactic'
   public activePage = 'Request Type'
-  public user = localStorage.getItem('user')
-  // public userData:any = JSON.parse(this.user ? this.user : "{email:'waliullah@test.com'}");
+  public user: any //localStorage.getItem('user')
+  // public userData:any = JSON.parse(this.user ? this.user : "");
   // public userAvtarText = this.userData?.email.split('@')[0].split('.').map((word: any[]) => word[0]).join('').toUpperCase();
   public userData: any = {}
   public userAvtarText: any = {}
@@ -54,7 +54,7 @@ export class CreateSpendRequestComponent {
 
   constructor(public commonService: CommonService, public authService: AuthService) { }
   ngOnInit() {
-    if(!localStorage.getItem('user')){
+    if (!localStorage.getItem('user')) {
       const user = {
         "email": "Mohammad.waliullah@relanto.ai",
         "token": {
@@ -75,20 +75,12 @@ export class CreateSpendRequestComponent {
       localStorage.setItem('user', JSON.stringify(user))
       localStorage.setItem('sid', user?.session_id)
     }
+    this.user = localStorage.getItem('user')
+    this.userData = JSON.parse(this.user ? this.user : "");
+    this.userAvtarText = this.userData?.email.split('@')[0].split('.').map((word: any[]) => word[0]).join('').toUpperCase();
     this.commonService.messages$.subscribe((messages: any) => {
       this.messages = messages;
     });
-    let activeTab = {}
-    let res:any =[]
-    this.commonService.tabObserver.subscribe((resp:any)=>{
-      console.log('tabbbbbbbbbbbbbbbbbb', resp);
-      res = resp
-    })
-    activeTab = res.filter((el:any)=>{
-      if(el.subLabel.length !==0) return el
-    })
-    console.log('oooooooooooooooooooooooo',activeTab,res);
-    
   }
   ngAfterViewInit() {
     this.scrollToBottom();
@@ -141,10 +133,22 @@ export class CreateSpendRequestComponent {
     }
   }
   onSowSelection(event: any) {
-    console.log('sowwwwwwwwwwwwwwwwwwwww',event);
     this.activePage = 'Allocated Budget';
-    console.log('form filled data of sow', event);
-    this.tabClick('allocatedBudget')
+    if (event.type === 'extract') {
+      let filterData: any = []
+      window.setTimeout(() => {
+        let res: any = []
+        this.commonService.tabObserver.subscribe((resp: any) => {
+          res = resp
+        })
+        filterData = res.filter((el: any) => {
+          if (el.subLabel !== "") return el
+        })
+        this.messages['messages'].push({ content: filterData[0]['subLabel'], role: 'assistant' });
+      }, 1000);
+    } else {
+      this.tabClick('allocatedBudget')
+    }
   }
   onAllocatedBidgetSelection(event: any) {
     this.activePage = 'Risk Assessment';

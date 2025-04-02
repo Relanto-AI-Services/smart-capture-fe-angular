@@ -69,6 +69,7 @@ export class SowComponent {
       }else{
         this.shareAccess()
       }
+      this.sowClick.emit({data:{chatMessage:''},type:'extract'});
     } else {
       this.sowForm.onSubmit();
       if (this.sowForm.isFormValid && this.extractedData) {

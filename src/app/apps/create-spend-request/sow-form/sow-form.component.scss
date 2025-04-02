@@ -120,3 +120,24 @@ mat-chip {
   border-radius: 16px;
   cursor: pointer;
 }
+
+
+////////////////category poc 
+.search-box {
+  width: 100%;
+  
+  .mat-icon {
+    cursor: pointer;
+  }
+
+  .option-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .right-content {
+    text-align: right;
+  }
+}

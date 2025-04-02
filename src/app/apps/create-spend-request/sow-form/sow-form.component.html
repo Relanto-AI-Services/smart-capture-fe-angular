@@ -13,17 +13,44 @@
                     <mat-label>Purchase Name </mat-label>
                     <input matInput formControlName="purchase_name"
                         [ngClass]="{'auto-filled': isAutoFilled('purchase_name')}">
-                    <mat-error *ngIf="isFieldInvalid('purchase_name') && !sowForm.get('purchase_name')?.hasError('pattern')">This field is required</mat-error>
-                    <mat-error *ngIf="sowForm.get('purchase_name')?.hasError('pattern')">Enter valid Purchase Name</mat-error>
+                    <mat-error *ngIf="isFieldInvalid('purchase_name')">This field is required</mat-error>
                 </mat-form-field>
             </div>
         </div>
 
         <section>
             <!-- <p class="section-title">Spend Details</p> -->
+            <!-- <mat-form-field class="search-box full-width" appearance="outline">
+                <mat-label>Spend Category *</mat-label>
+                <input type="text" matInput [formControl]="searchControl" [matAutocomplete]="auto"
+                    placeholder="Search..." />
+                <mat-icon matSuffix>search</mat-icon>
+
+                <mat-autocomplete #auto="matAutocomplete">
+                    <mat-option *ngIf="categoryPOCFilteredOption.length" disabled>
+                        {{categoryPOCFilteredOption.length}} Results
+                    </mat-option>
+                    <ng-container *ngFor="let item of categoryPOCFilteredOption">
+                        <mat-option (click)="selectCategoryItem(item)">
+                            <div class="option-content" style="display: flex!important;font-size: 0.7rem;">
+                                <div>
+                                    <b>{{ item.title }}</b>
+                                    <p>{{ item.description }}</p>
+                                </div>
+                                <div class="right-content">
+                                    <b>{{ item.example }}</b>
+                                    <p>{{ item.subscription }}</p>
+                                </div>
+                            </div>
+                        </mat-option>
+                    </ng-container>
+                </mat-autocomplete>
+            </mat-form-field> -->
+
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Spend Category </mat-label>
-                <mat-select formControlName="spend_category" [ngClass]="{'auto-filled': isAutoFilled('spend_category')}">
+                <mat-select formControlName="spend_category"
+                    [ngClass]="{'auto-filled': isAutoFilled('spend_category')}">
                     @for (item of spendCategory; track $index) {
                     <mat-option [value]="item">{{item}}</mat-option>
                     }
@@ -33,7 +60,8 @@
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Spend Sub Category </mat-label>
-                <mat-select formControlName="spend_sub_category" [ngClass]="{'auto-filled': isAutoFilled('spend_sub_category')}">
+                <mat-select formControlName="spend_sub_category"
+                    [ngClass]="{'auto-filled': isAutoFilled('spend_sub_category')}">
                     @for (item of spendSubCategory; track $index) {
                     <mat-option [value]="item">{{item}}</mat-option>
                     }
@@ -45,7 +73,8 @@
         <section>
             <p class="section-title">Purchase Description</p>
             <p class="section-subtitle">Provide a detailed description of the good and/or service that the supplier will
-                provide, and any other relevant project information. If applicable, include the project objective of deliverable </p>
+                provide, and any other relevant project information. If applicable, include the project objective of
+                deliverable </p>
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Purchase Description </mat-label>
                 <textarea matInput formControlName="purchase_description" rows="3"
@@ -96,6 +125,32 @@
 
         <section>
             <p class="section-title">Select the Market market(s) benefiting from the service provider</p>
+            <!-- <mat-form-field class="example-chip-list full-width" appearance="outline">
+                <mat-label>Select Country</mat-label>
+                <mat-chip-grid #chipGrid aria-label="Country selection">
+                    {{countries() | json}}
+                    @for (country of countries(); track $index) {
+                        @if (country !=='') {
+                            <mat-chip-row (removed)="removeCountry(country)">
+                                {{country}}
+                                <button matChipRemove [attr.aria-label]="'remove ' + country">
+                                    <mat-icon>cancel</mat-icon>
+                                </button>
+                            </mat-chip-row>
+                        }
+                    }
+                </mat-chip-grid>
+                <input name="currentCountry" placeholder="New Country..." #countryInput [(ngModel)]="currentCountry"
+                    [matChipInputFor]="chipGrid" [matAutocomplete]="autoCountry"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addCountry($event)" />
+                <mat-autocomplete #autoCountry="matAutocomplete"
+                    (optionSelected)="selected($event); countryInput.value = ''">
+                    @for (country of allFruits; track country) {
+                    <mat-option [value]="country">{{country}}</mat-option>
+                    }
+                </mat-autocomplete>
+            </mat-form-field> -->
+
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Select Country </mat-label>
                 <mat-select formControlName="country" multiple [ngClass]="{'auto-filled': isAutoFilled('country')}">
@@ -104,7 +159,7 @@
                 </mat-select>
                 <mat-error *ngIf="isFieldInvalid('country')">This field is required</mat-error>
             </mat-form-field>
-            
+
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Select Currency</mat-label>
                 <mat-select formControlName="currency" [ngClass]="{'auto-filled': isAutoFilled('currency')}">
@@ -125,24 +180,19 @@
                 <mat-label>Supplier Legal Name </mat-label>
                 <input matInput formControlName="supplier_legal_name"
                     [ngClass]="{'auto-filled': isAutoFilled('supplier_legal_name')}">
-                <mat-error *ngIf="isFieldInvalid('supplier_legal_name') && !sowForm.get('supplier_legal_name')?.hasError('pattern')">This field is required</mat-error>
-                <mat-error *ngIf="sowForm.get('supplier_legal_name')?.hasError('pattern')">Enter valid Supplier Legal Name</mat-error>
-
+                <mat-error *ngIf="isFieldInvalid('supplier_legal_name')">This field is required</mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Legal Name</mat-label>
                 <input matInput formControlName="legal_name" [ngClass]="{'auto-filled': isAutoFilled('legal_name')}">
-                <mat-error *ngIf="isFieldInvalid('legal_name') && !sowForm.get('legal_name')?.hasError('pattern')">This field is required</mat-error>
-                <mat-error *ngIf="sowForm.get('legal_name')?.hasError('pattern')">Enter valid Legal Name</mat-error>
-
+                <mat-error *ngIf="isFieldInvalid('legal_name')">This field is required</mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Name of Supplier POC </mat-label>
                 <input matInput formControlName="supplier_poc_name"
                     [ngClass]="{'auto-filled': isAutoFilled('supplier_poc_name')}">
-                <mat-error *ngIf="isFieldInvalid('supplier_poc_name') && !sowForm.get('supplier_poc_name')?.hasError('pattern')">This field is required</mat-error>
-                <mat-error *ngIf="sowForm.get('supplier_poc_name')?.hasError('pattern')">Enter valid Supplier Poc Name</mat-error>
+                <mat-error *ngIf="isFieldInvalid('supplier_poc_name')">This field is required</mat-error>
             </mat-form-field>
         </section>
 
