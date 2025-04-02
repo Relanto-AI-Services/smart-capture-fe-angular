@@ -2,9 +2,12 @@ import { CommonModule,  } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject, ChangeDetectorRef, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { MatDialog } from '@angular/material/dialog';
-// import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { DragDropModule, CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonService } from '../../../services/common/common.service';
 import { ApiService } from '../../../services/api.service';
+import { MatDialog } from '@angular/material/dialog';
+import { LoaderModalComponent } from '../../../components/shared/loader-modal/loader-modal.component';
+
 
 @Component({
   selector: 'app-tactic-table',
@@ -24,90 +27,16 @@ export class TacticTableComponent implements OnInit {
   private cdr= inject(ChangeDetectorRef);
   cs = inject(CommonService)
 
-  data = [
-{
-id: 'SCA12696',
-tacticName: 'Cloud Summit',
-subTitle: 'Multiple Events - Central: 1P SMB Webinars',
-program: 'Program',
-type: 'Events & Experiences: Multiple Events',
-startDate: '1/1/2025',
-endDate: '12/29/2025',
-costCenter: '1P8: Touched Center - Traditional',
-warning: '',
-warningAction: '',
-},
-{
-id: 'GLO24352',
-tacticName: 'Leaders Connect',
-subTitle: 'Single Event - Cloud Summit JAPAC',
-program: 'Vendor',
-type: 'Events & Experiences: Single Event',
-startDate: '1/1/2025',
-endDate: '12/29/2025',
-costCenter: '095: Cloud Summit - JAPAC',
-warning: '',
-warningAction: '',
-},
-{
-id: 'GLO63746',
-tacticName: 'webinars',
-subTitle: 'Multiple Events',
-program: 'Program',
-type: 'Events & Experiences: Multiple Events',
-startDate: '1/1/2025',
-endDate: '12/29/2025',
-costCenter: '095: Cloud Summit - JAPAC APAC',
-warning: 'Missing Basic Details',
-warningAction: 'Edit Tactic',
-},
-{
-id: 'SCA12696',
-tacticName: 'Event & Experience',
-subTitle: 'Multiple Events - Mumbai Leaders Connect',
-program: 'vendor',
-type: 'Events & Experiences: Multiple Events',
-startDate: '1/1/2025',
-endDate: '12/29/2025',
-costCenter: '095: Cloud Summit - EMEA',
-warning: '',
-warningAction: '',
-},
-{
-id: 'GLO34526',
-tacticName: 'Event & Experience',
-subTitle: 'Single Event',
-program: 'vendor',
-type: 'Events & Experiences: multiple Event',
-startDate: '1/1/2025',
-endDate: '12/29/2025',
-costCenter: '095: Cloud Summit - JAPAC',
-warning: 'Missing Basic Details',
-warningAction: 'Edit Tactic',
-},
-{
-id: 'SCA23432',
-tacticName: 'Event & Experience',
-subTitle: 'Single Event - Sydney Summit',
-program: 'Program',
-type: 'Events & Experiences: Multiple Events',
-startDate: '1/1/2025',
-endDate: '12/29/2025',
-costCenter: '095: Cloud Summit - JAPAC APAC',
-warning: '',
-warningAction: '',
-},
-
-];
+  data : any[] = []
   droppedItems: any[] = [];
 
-  filteredData = [...this.data];
+  filteredData : any[] = [];
 
   selectedData: any[] = [];
   conceptValue: boolean = false;
   editPopUp: boolean = false;
-  // spendRequestData: any;
-  constructor(private apiService: ApiService) {}
+  dialogRef: any;
+  constructor(private apiService: ApiService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.cs.value$.subscribe((newValue) => {
@@ -117,27 +46,41 @@ warningAction: '',
   }
 
   fetchSpendRequestData() {
+    this.openLoader()
     this.apiService.getSpendRequest().subscribe({
-      next: (data :any) => {
-        this.data = data;
-        this.data = data.map((item: any) => ({
-          id: item["Tactic ID"],           
-          tacticName: item["Tactic title"], 
-          program: item["PV"],              
-          type: item["Tactic Type"],        
-          startDate: item["Start date"],   
-          endDate: item["End date"],        
-          costCenter: item["Primary CC"],  
-          warning: item["Priority"], 
+      next: (response: any) => {
+        console.log("Raw API Response:", response);
+  
+        // Ensure response.data exists and is an array
+        if (!response?.data || !Array.isArray(response.data)) {
+          console.error("API response does not contain a valid data array:", response);
+          return;
+        }
+  
+        this.data = response.data.map((item: any) => ({
+          id: item["Tactic ID"] || "N/A",
+          tacticName: item["Tactic title"] || "No Title",
+          program: item["PV"] || "Unknown",
+          type: item["Tactic Type"] || "N/A",
+          startDate: item["Start date"] || "N/A",
+          endDate: item["End date"] || "N/A",
+          costCenter: item["Primary CC"] || "N/A",
+          warning: item["Priority"] || "",
         }));
-        this.filteredData = this.data;
-        console.log("Filtered Data:", this.filteredData);
+  
+        this.filteredData = [...this.data]; // Copy to filteredData for display
+        console.log("Processed Data:", this.filteredData);
+        this.dialogRef.close()
       },
       error: (error) => {
-        console.error('Error fetching spend request data:', error);
+        console.error("Error fetching spend request data:", error);
       },
+    
     });
+   
   }
+  
+  
 
   toggleSelection(event: any, row: any) {
     this.isActive = true;
@@ -225,6 +168,45 @@ warningAction: '',
 
   closePopup() {
     this.editPopUp = false;
+  }
+
+
+   openLoader(): void {
+      this.dialogRef = this.dialog.open(LoaderModalComponent, {
+        disableClose: true,
+        data: { page: 'tactic' },
+      });
+    }
+
+    tableDropListId = 'tableDropList';
+  sidePanelDropListId = 'sidePanelDropList';
+
+  onDrop(event: CdkDragDrop<any[]>) {
+    if (event.previousContainer === event.container) {
+      // Reorder within the same list
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      // Transfer between lists
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
+    }
+  }
+
+  returnItem(item: any) {
+    const index = this.droppedItems.indexOf(item);
+    if (index > -1) {
+      this.droppedItems.splice(index, 1);
+      this.filteredData.push(item);
+      // this.filteredData.sort((a, b) => a.id - b.id);
+    }
+  }
+
+  trackById(index: number, item: any): number {
+    return item.id;
   }
 
 
