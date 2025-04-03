@@ -47,7 +47,7 @@
                         <span class="budget-title">{{ budget.title }}</span>
                     </mat-panel-title>
                     <mat-panel-title>
-                        <mat-select style="width: 10vw;" (click)="$event.stopPropagation()"
+                        <mat-select [disabled]="true" style="width: 10vw;font-size: 0.7rem;" (click)="$event.stopPropagation()"
                             [(ngModel)]="budget.selectedPeriod">
                             <mat-option *ngFor="let period of budget.periods" [value]="period">{{ period }}</mat-option>
                         </mat-select>
@@ -96,8 +96,8 @@
 
 
     <div class="Create-spend-request-button-div">
-        <button class="back-continue-button back">Back</button>
+        <button class="back-continue-button back"  (click)="clickNext('back')">Back</button>
         <button class="back-continue-button continue" [ngClass]="{'active':isActive}"
-            (click)="clickNext('')">Continue</button>
+            (click)="clickNext('continue')">Continue</button>
     </div>
 </div>

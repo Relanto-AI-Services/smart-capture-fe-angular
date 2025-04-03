@@ -163,8 +163,9 @@
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Select Currency</mat-label>
                 <mat-select formControlName="currency" [ngClass]="{'auto-filled': isAutoFilled('currency')}">
-                    <mat-option value="INR">INR</mat-option>
-                    <mat-option value="us">USD</mat-option>
+                    @for (cur of countryCurrencyList; track cur) {
+                        <mat-option [value]="cur?.currency">{{cur?.currency}}</mat-option>
+                        }
                 </mat-select>
                 <mat-error *ngIf="isFieldInvalid('currency')">This field is required</mat-error>
             </mat-form-field>

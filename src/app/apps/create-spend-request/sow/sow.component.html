@@ -49,7 +49,7 @@
   }
   <hr />
     <div class="Create-spend-request-button-div">
-        <button class="back-continue-button back">Back</button>
+        <button class="back-continue-button back" (click)="clickNext('back')">Back</button>
         @if (!showSowForm) {
           <button class="back-continue-button continue" [ngClass]="{'active':isActive}" (click)="clickNext('extract')">Continue</button>
         }

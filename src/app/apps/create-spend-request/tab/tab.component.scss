@@ -12,14 +12,12 @@
   position: relative;
 }
 
-/* ✅ Ensures the circle and text stay together */
 .step-content {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* Step Circle (Numbers inside) */
 .step-circle {
   width: 20px;
   height: 20px;
@@ -31,7 +29,7 @@
   border-radius: 50%;
   background-color: #69696B;
   color: #F8F8FA;
-  cursor: pointer;
+  // cursor: pointer;
   transition: all 0.3s ease;
   flex-shrink: 0;
   z-index: 2;

@@ -40,7 +40,7 @@ export class AllocatedBudgetComponent {
   @Output() allocatedBudgetSubmit = new EventEmitter<any>();
   @Input() sowFormSubmitedData!: any;
   isActive:boolean=true
-  totalSpend: number = 20000;
+  totalSpend: number = 0;
   eventId: any = '';
   selectedCurrency:any=''
   forecastBudget = [
@@ -77,9 +77,18 @@ export class AllocatedBudgetComponent {
       ],
     },
   ];
+  public sowExtractedData:any={}
   constructor(public authservice:AuthService){}
+
   ngOnInit() {
     this.selectedCurrency = this.sowFormSubmitedData.value.currency
+    const extractedData = localStorage.getItem("extractedData");
+    if (extractedData) {
+      const parsedData = JSON.parse(extractedData);
+      this.totalSpend = parsedData?.total_amount 
+      this.getFormData(parsedData?.row_id) 
+      console.log(parsedData); 
+    }
     console.log('sowFormData',this.sowFormSubmitedData.value);
 
   }
@@ -112,9 +121,9 @@ export class AllocatedBudgetComponent {
   toggleExpand(index: number) {
     this.forecastBudget[index].expanded = !this.forecastBudget[index].expanded;
   }
-  getFormData(){
+  getFormData(id:any){
     try {
-      this.authservice.getData('').subscribe((res:any)=>{
+      this.authservice.postData('/get_spend_request_tactic_data',{spend_request_id:id}).subscribe((res:any)=>{
         console.log(res);
       })
     } catch (error) {
@@ -146,12 +155,18 @@ export class AllocatedBudgetComponent {
     if (!this.validateForm()) {
       alert("Please fill all required fields correctly.");
       return;
+    }else{
+      this.allocatedBudgetSubmit.emit({data:'',type:'continue'});
     }
     // Proceed with form submission logic
   }
   
   clickNext(type:any) {
-    this.allocatedBudgetSubmit.emit('');
+    if(type === 'continue'){
+      this.onSubmit()
+    }else{
+      this.allocatedBudgetSubmit.emit({data:'',type:'back'});
+    }
   }
 
 }

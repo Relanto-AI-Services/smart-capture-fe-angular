@@ -75,11 +75,13 @@ export class SowComponent {
       }else{
         this.shareAccess()
       }
-    } else {
+    } else if(type === 'submit') {
       this.sowForm.onSubmit();
       if (this.sowForm.isFormValid && this.extractedData) {
         this.sowClick.emit({data:this.sowForm?.sowForm,type:'submit'});
       }
+    }else{
+      this.sowClick.emit({data:this.sowForm?.sowForm,type:'back'});
     }
   }
   shareAccess() {
@@ -115,6 +117,7 @@ export class SowComponent {
         this.dialogRef.close()
         this.extractedData = proRes?.results[0]?.spend_request[0]
         this.showSowForm = true // after extracting data
+        localStorage.setItem("extractedData", JSON.stringify(this.extractedData));
         this.pushToBigQuery({ ...proRes, extraction_results: proRes?.results })
         window.setTimeout(() => {
           this.sowClick.emit({data:this.sowForm?.sowForm?.value,type:'extract'});

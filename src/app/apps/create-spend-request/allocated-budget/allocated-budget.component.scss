@@ -5,6 +5,8 @@
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: 55vw;
+    height: 65Vh;
+    overflow-y: scroll;
 }
 
 .forecast-budget-container {
@@ -76,7 +78,7 @@
     }
 
     .budget-title {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         color: #333;
         font-weight: 500;
         flex-grow: 1;
@@ -88,7 +90,7 @@
     }
 
     .budget-remaining {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         color: #333;
     }
 

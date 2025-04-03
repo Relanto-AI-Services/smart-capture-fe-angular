@@ -153,14 +153,22 @@ export class CreateSpendRequestComponent {
           this.messages['messages'].push({ content: filterData[0]['subLabel'], role: 'assistant' });
         }
       }, 1000);
-    } else {
+    } else if(event.type === 'submit') {
       this.activePage = 'Allocated Budget';
       this.tabClick('allocatedBudget')
+    }else{
+      this.activePage = 'Tactic';
+      this.tabClick('tactic')
     }
   }
   onAllocatedBidgetSelection(event: any) {
-    this.activePage = 'Risk Assessment';
-    this.tabClick('riskAssessment')
+    if(event.type === 'continue'){
+      this.activePage = 'Risk Assessment';
+      this.tabClick('riskAssessment')
+    }else{
+      this.activePage = 'SOW'
+      this.tabClick('sow')
+    }
   }
   onRiskAssessmentSelection(event: any) {
     this.activePage = 'Review And Submit'
