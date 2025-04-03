@@ -111,6 +111,11 @@ export class CreateSpendRequestComponent {
         this.chatBoatEndPoint = '/spend_request_chatbot_url'
         this.getPrimaryKey()
         break;
+        case 'allocatedBudget':
+        // this.chatBoatEndPoint = '/spend_request_chatbot_url'
+        break;
+      case 'riskAssessment':
+        break;
       default:
         console.log('wait')
         // this.messages = {}
@@ -143,7 +148,10 @@ export class CreateSpendRequestComponent {
         filterData = res.filter((el: any) => {
           if (el.subLabel !== "") return el
         })
-        this.messages['messages'].push({ content: filterData[0]['subLabel'], role: 'assistant' });
+        
+        if(filterData.length>0){
+          this.messages['messages'].push({ content: filterData[0]['subLabel'], role: 'assistant' });
+        }
       }, 1000);
     } else {
       this.activePage = 'Allocated Budget';

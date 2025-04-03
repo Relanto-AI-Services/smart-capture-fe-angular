@@ -49,6 +49,59 @@ export class SowFormComponent {
 
   isFormValid: boolean = true;
   @Input() extractedData: any = {}
+  public countryCurrencyList:any =[
+    {
+      "name": "United States",
+      "currency": "USD",
+      "flag": "https://flagcdn.com/w320/us.png"
+    },
+    {
+      "name": "United Kingdom",
+      "currency": "GBP",
+      "flag": "https://flagcdn.com/w320/gb.png"
+    },
+    {
+      "name": "Canada",
+      "currency": "CAD",
+      "flag": "https://flagcdn.com/w320/ca.png"
+    },
+    {
+      "name": "Australia",
+      "currency": "AUD",
+      "flag": "https://flagcdn.com/w320/au.png"
+    },
+    {
+      "name": "Germany",
+      "currency": "EUR",
+      "flag": "https://flagcdn.com/w320/de.png"
+    },
+    {
+      "name": "France",
+      "currency": "EUR",
+      "flag": "https://flagcdn.com/w320/fr.png"
+    },
+    {
+      "name": "Japan",
+      "currency": "JPY",
+      "flag": "https://flagcdn.com/w320/jp.png"
+    },
+    {
+      "name": "India",
+      "currency": "INR",
+      "flag": "https://flagcdn.com/w320/in.png"
+    },
+    {
+      "name": "Brazil",
+      "currency": "BRL",
+      "flag": "https://flagcdn.com/w320/br.png"
+    },
+    {
+      "name": "South Africa",
+      "currency": "ZAR",
+      "flag": "https://flagcdn.com/w320/za.png"
+    }
+  ]
+  
   public spendCategory: any = ["PRODUCTION", "CONTENT LICENSING RIGHTS", "PRINT PRODUCTION - SERVICE", "PRINT PRODUCTION - GOOD", "PHOTOGRAPHY", "FILM & ANIMATION", "GLOBAL ADAPTATION", "LICENSING & RIGHTS MANAGEMENT", "GROWTH MARKETING", "GROWTH CAMPAIGN ACTIVATION - ENGAGEMENT", "GROWTH CAMPAIGN GOVERNANCE & OPERATIONS", "GROWTH CAMPAIGN ACTIVATION - ACQUISITION", "GROWTH CAMPAIGN ACTIVATION - FULL FUNNEL", "GROWTH CAMPAIGN ACTIVATION - RETENTION", "GROWTH CAMPAIGN MEASUREMENT", "GROWTH CAMPAIGN STRATEGY", "CREATIVE DESIGN", "CREATIVE STRATEGY", "CONTENT STRATEGY & CREATION", "CREATIVE DEVELOPMENT", "INTERACTIVE PRODUCTION", "BRAND STRATEGY", "BRAND ARCHITECTURE & NAMING", "BRAND IDENTITY (VISUAL, BRAND VOICE)", "BRAND STRATEGY & POSITIONING", "SPONSORSHIPS", "SPORTS / MUSIC / ENTERTAINMENT SPONSORSHIPS", "COMMUNITY I EDUCATIONAL / NON PROFIT SPONSORSHIPS", "TALENT", "CELEBRITY TALENT ENDORSEMENT", "TALENT FOR CREATIVE PRODUCTION", "TALENT FOR EVENT APPEARANCE", "SOCIAL MARKETING", "SOCIAL CONTENT CREATION & PRODUCTION", "SOCIAL INSIGHTS & MEASUREMENT", "COMMUNITY MANAGEMENT & ENGAGEMENT", "SOCIAL CONTENT & PLATFORM STRATEGY", "SOCIAL CHANNEL MANAGEMENT", "INFLUENCER & CREATOR MANAGEMENT", "EVENTS & EXPERIENCES", "EVENT VENUE & ACCOMMODATION", "EVENT MANAGEMENT & PRODUCTION", "PROMOTIONAL GOODS", "PROMOTIONAL GOODS - CLIENT & CUSTOMER", "PROMOTIONAL GOODS - EMPLOYEE", "MARKET RESEARCH & INSIGHTS", "RESEARCH - SYNDICATED", "RESEARCH - CUSTOM", "PARTNER MARKETING/CO-MARKETING", "MEDIA", "MEDIA AGENCY FEES", "MEDIA PASSTHROUGH", "MARKETING TECHNOLOGY", "PLATFORM & TOOLS MANAGEMENT", "PLATFORM & TOOLS PILOTS & PROTOTYPING", "PLATFORM & TOOLS DEVELOPMENT & INTEGRATION", "MEASUREMENT, ANALYTICS, ACCOUNTABILITY & IMPACT", "CREATIVE TESTING", "MEDIA MIX MODELING", "ANALYTICS", "PRODUCT SERVICES", "UX", "UX RESEARCH", "UX WRITING", "UX DESIGN", "SALES SUPPORT SERVICES", "FIELD SALES / SALES SUPPORT", "FIELD RETAIL OPERATIONS", "PARTNER PRODUCT TRAINING", "NON PROCURABLE", "DUES & SUBSCRIPTIONS", "DUES./ MEMBERSHIP FEES - NON TAXABLE", "DUES / MEMBERSHIP FEES - TAXABLE", "MAGAZINES / NEWSPAPERS / PERIODICALS", "DUES & SUBSCRIPTIONS", "ENTERPRISE SERVICES", "CONSULTING SERVICES", "STRATEGY CONSULTING", "HUMAN RESOURCE SERVICES", "TRAINING, LEARNING, & DEVELOPMENT"]
   public spendSubCategory: any = ["NON STREAMING - PRODUCT & SERVICE DESIGN", "ROYALTIES - NON STREAMING - US", "ROYALTIES - OTHER - US", "NON STREAMING - CONTENT & DATA - SEARCH CONTENT / METADATA", "ROYALTIES - MUSIC - US", "NON STREAMING - AD CAMPAIGN / FULL SERVICE", "NON STREAMING - DIGITAL OPTIMIZATION (DNU)", "ORIGINAL CONTENT LICENSE - MUSIC - NON US", "ROYALTIES - OTHER - NON US", "NON STREAMING - CONTENT & DATA - TRAVEL", "ROYALTIES - GAMING - NON US", "ORIGINAL CONTENT LICENSE - OTHER - US"]
   constructor(private fb: FormBuilder, public commonService: CommonService) {
@@ -74,7 +127,7 @@ export class SowFormComponent {
       // MRFID: [jsonData?.MRFID, Validators.required],
       work_start_date: [null, Validators.required],
       work_end_date: [null, Validators.required],
-      country: [[], Validators.required], // ??? multi select
+      country: [['India'], Validators.required], // ??? multi select
       currency: [, Validators.required],
       // selectRole: [, Validators.required], ref vaishnavi   // TBD
       // supplier_legal_name: ['', [Validators.required]],
@@ -82,7 +135,6 @@ export class SowFormComponent {
       // supplier_poc_name: ['', [Validators.required]]
     });
     if (Object.keys(this.extractedData).length !== 0) {
-      // const jsonData = (typeof this.extractedData === 'object' )?this.extractedData:this.extractedData?.results[0]?.spend_request[0];
       const jsonData = this.extractedData;
       this.patchValueInForm(jsonData)
       Object.keys(jsonData).forEach((key: string) => {
@@ -118,13 +170,16 @@ export class SowFormComponent {
       purchase_description: jsonData?.purchase_description ? jsonData?.purchase_description : '',
       work_start_date: jsonData?.work_start_date ? this.convertsToDate(jsonData?.work_start_date) : '',
       work_end_date: jsonData?.work_end_date ? this.convertsToDate(jsonData?.work_end_date) : '',
-      country: jsonData?.markets_benifited_from_the_serviece ? jsonData?.markets_benifited_from_the_serviece : [],
+      country: jsonData?.markets_benifited_from_the_serviece ? jsonData?.markets_benifited_from_the_serviece : [],      
       currency: jsonData?.currency ? jsonData?.currency : '',
       // selectRole: jsonData?.selectRole,
       // supplier_legal_name: jsonData?.supplier_legal_name ? jsonData?.supplier_legal_name : '',
       // legal_name: jsonData?.legal_name ? jsonData?.legal_name : '',
       // supplier_poc_name: jsonData?.supplier_poc_name ? jsonData?.supplier_poc_name : ''
     });
+    jsonData?.markets_benifited_from_the_serviece ?this.countries.update((val: any) => jsonData?.markets_benifited_from_the_serviece)  : []
+    // this.countries.update((val: any) => []);
+
   }
   
   onSubmit(): void {
@@ -175,45 +230,52 @@ export class SowFormComponent {
     this.searchControl.setValue(item.title);
     console.log('selected category item', this.searchControl.value);
   }
+
+  
   separatorKeysCodes: number[] = [ENTER, COMMA];
   currentCountry = model('');
   countries = signal(['']);
-  allFruits: string[] = ['USA', 'China', 'Uk', 'UAE', 'Nepal'];
-  filteredFruits = computed(() => {
-    const currentCountry = this.currentCountry().toLowerCase();
-    return currentCountry
-      ? this.allFruits.filter(country => country.toLowerCase().includes(currentCountry))
-      : this.allFruits.slice();
-  });
-
+  allCountries: string[] = ['USA', 'China', 'Uk', 'UAE', 'India'];
   announcer = inject(LiveAnnouncer);
+  // filteredFruits = computed(() => {
+  //   const currentCountry = this.currentCountry().toLowerCase();
+  //   return currentCountry
+  //     ? this.allCountries.filter(country => country.toLowerCase().includes(currentCountry))
+  //     : this.allCountries.slice();
+  // });
+
 
   addCountry(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
-    // Add our country
-    if (value) {
+    if (value && value !== '' && !this.countries().includes(value)) { // ✅ Avoid empty & duplicates
       this.countries.update((val: any) => [...val, value]);
+      this.sowForm.patchValue({ country: this.countries().filter(c => c !== '') }); // ✅ Remove empty
     }
-    // Clear the input value
     this.currentCountry.set('');
   }
-
+  
   removeCountry(country: string): void {
-    this.countries.update((el: any) => {
-      const index = el.indexOf(country);
-      if (index < 0) {
-        return el;
-      }
-
-      el.splice(index, 1);
-      this.announcer.announce(`Removed ${country}`);
-      return [...el];
-    });
+    this.countries.update((el: any) => el.filter((c:any) => c !== country && c !== '')); // ✅ Remove empty
+    this.announcer.announce(`Removed ${country}`);
+    this.sowForm.patchValue({ country: this.countries() });
   }
-
+  
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.countries.update((countries: any) => [...countries, event.option.viewValue]);
+    const selectedCountry = event.option.viewValue;
+    if (selectedCountry && selectedCountry !== '' && !this.countries().includes(selectedCountry)) { // ✅ Avoid empty & duplicates
+      this.countries.update((countries: any) => [...countries, selectedCountry]);
+      this.sowForm.patchValue({ country: this.countries().filter(c => c !== '') }); // ✅ Remove empty
+    }
     this.currentCountry.set('');
     event.option.deselect();
   }
+  getCountryFlag(countryName: string): string | null {
+    if (!countryName) return null;  // Handle empty cases
+    const country = this.countryCurrencyList.find((c: any) => 
+      c.name === countryName
+    );
+    return country ? country.flag : null;
+  }
+  
+  
 }

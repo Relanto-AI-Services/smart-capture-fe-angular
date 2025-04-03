@@ -1,83 +1,103 @@
 <div class="container">
     <div class="forecast-budget-container">
         <p class="section-title">Share your spend request amount by tactic(s)</p>
-        
+
         <div class="input-group">
-          <mat-form-field appearance="outline">
-            <mat-label>Total Spend Request *</mat-label>
-            <input matInput type="number" [(ngModel)]="totalSpend" />
-          </mat-form-field>
-          
-          <mat-form-field appearance="outline">
-            <mat-label>Select Currency</mat-label>
-            <input matInput type="text" value="CAD" disabled />
-          </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Total Spend Request *</mat-label>
+                <input matInput type="number" min="0" [(ngModel)]="totalSpend" #totalSpendRef="ngModel" required />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Select Currency</mat-label>
+                <input matInput type="text" value="CAD" [(ngModel)]="selectedCurrency" disabled />
+            </mat-form-field>
         </div>
-      
+
         <p class="sub-title">What’s your Event ID? (If applicable)</p>
-        <p class="description">Required if you selected an Event & Experiences Spend Category. For internal or external events greater than or equal to 20,000 USD, you need an Event ID. To get an Event ID, go to MyEventHub (go/myEventHub). Event ID needs to include 2 letters then 6-8 degits. </p>
+        <p class="description">Required if you selected an Event & Experiences Spend Category. For internal or external
+            events greater than or equal to 20,000 USD, you need an Event ID. To get an Event ID, go to MyEventHub
+            (go/myEventHub). Event ID needs to include 2 letters then 6-8 degits. </p>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>EVENT ID</mat-label>
-          <input matInput type="text" pattern="^[A-Za-z]{2}\d{6,8}$" [(ngModel)]="eventId" #eventIdInput="ngModel" />
-          <mat-error *ngIf="eventIdInput.invalid && eventIdInput.touched">
-            Invalid Event ID
-          </mat-error>
+            <mat-label>EVENT ID</mat-label>
+            <input matInput type="text" #eventIdRef="ngModel" pattern="^[A-Za-z]{2}\d{6,8}$" required [(ngModel)]="eventId" #eventIdInput="ngModel" />
+            <mat-error *ngIf="eventIdInput.invalid && eventIdInput.touched">
+                Invalid Event ID
+            </mat-error>
         </mat-form-field>
-      
+
         <p class="sub-title">Financial Details</p>
-        <p class="description">Provide a timeline of when the planned costs will take place. Keep in mind that budget allocated to each tactic. Note
-            that the cost assigned to each cost center and tactic, will be used to calculate ROI metrics for that tactic. </p>
-      
+        <p class="description">Provide a timeline of when the planned costs will take place. Keep in mind that budget
+            allocated to each tactic. Note
+            that the cost assigned to each cost center and tactic, will be used to calculate ROI metrics for that
+            tactic. </p>
+
         <div class="forecast-header">
-          <p>Forecast & Budget</p>
-          <button mat-raised-button color="primary" class="distribute-button" (click)="distributeTotalSpend()">Distribute Total Spend</button>
+            <p>Forecast & Budget</p>
+            <button mat-raised-button color="primary" class="distribute-button"
+                (click)="distributeTotalSpend()">Distribute Total Spend</button>
         </div>
-        
+
         <mat-accordion class="budget-accordion">
-          <mat-expansion-panel *ngFor="let budget of forecastBudget; let i = index" [(expanded)]="budget.expanded">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <span class="expand-icon" [innerHTML]="budget.expanded ? '&#8722;' : '&#43;'" ></span>
-                <span class="budget-title">{{ budget.title }}</span>
-              </mat-panel-title>
-              <!-- <mat-panel-description>
-                <mat-form-field appearance="fill" class="period-dropdown">
-                  <mat-select [(ngModel)]="budget.selectedPeriod">
-                    <mat-option *ngFor="let period of budget.periods" [value]="period">{{ period }}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-            </mat-panel-description> -->
-            <span class="budget-remaining">Available Budget Remaining: <b>${{ budget.budgetRemaining.toLocaleString() }}</b></span>
-            </mat-expansion-panel-header>
-      
-            <div *ngFor="let detail of budget.details" class="detail-item">
-              <div class="detail-title">
-                <span class="detail-name">{{ detail.name }}</span>
-                <span class="detail-description">{{ detail.description }}</span>
-              </div>
-              <div class="detail-inputs">
-                <mat-form-field appearance="outline">
-                  <mat-label>Q1 FY</mat-label>
-                  <input matInput type="number" [(ngModel)]="detail.q1" />
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                  <mat-label>Q2 FY</mat-label>
-                  <input matInput type="number" [(ngModel)]="detail.q2" />
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                  <mat-label>All Periods</mat-label>
-                  <input matInput type="number" [(ngModel)]="detail.allPeriods" />
-                </mat-form-field>
-              </div>
-            </div>
-          </mat-expansion-panel>
+            <!-- [(expanded)]="budget.expanded" -->
+            <mat-expansion-panel *ngFor="let budget of forecastBudget; let i = index" [(expanded)]="budget.expanded">
+                <mat-expansion-panel-header style="display: flex;justify-content: space-between;">
+                    <mat-panel-title>
+                        <span class="expand-icon" [innerHTML]="budget.expanded ? '&#8722;' : '&#43;'"></span>
+                        <span class="budget-title">{{ budget.title }}</span>
+                    </mat-panel-title>
+                    <mat-panel-title>
+                        <mat-select style="width: 10vw;" (click)="$event.stopPropagation()"
+                            [(ngModel)]="budget.selectedPeriod">
+                            <mat-option *ngFor="let period of budget.periods" [value]="period">{{ period }}</mat-option>
+                        </mat-select>
+                    </mat-panel-title>
+                    <span class="budget-remaining">Available Budget Remaining: <b>${{
+                            budget.budgetRemaining.toLocaleString() }}</b></span>
+                </mat-expansion-panel-header>
+
+                <div *ngFor="let detail of budget.details" class="detail-item">
+                    <div class="detail-title">
+                        <span class="detail-name"><strong>{{ detail.name }}</strong></span>
+                        <span class="detail-description">{{ detail.description }}</span>
+                    </div>
+                    <div class="detail-inputs">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Q1 FY</mat-label>
+                            <input matInput type="number" min="0" [(ngModel)]="detail.q1" #q1Ref="ngModel" required />
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Q2 FY</mat-label>
+                            <input matInput type="number" min="0" [(ngModel)]="detail.q2" #q2Ref="ngModel" required />
+                        </mat-form-field>
+                        <mat-form-field appearance="outline">
+                            <mat-label>All Periods</mat-label>
+                            <input matInput type="number" min="0" [(ngModel)]="detail.allPeriods" #allPeriodsRef="ngModel" required />
+                        </mat-form-field>
+                    </div>
+                </div>
+            </mat-expansion-panel>
         </mat-accordion>
-      </div>
-      
-      
-      
+        <div class="all-cc-total">
+            <div class="total-row">
+                <div class="total-label">All CC Total</div>
+                <div class="total-sub-row">
+                    <div class="total-value">$10,000</div>
+                    <div class="total-sub-value">($7,500 USD)</div>
+                </div>
+                <div class="total-sub-row">
+                    <div class="total-value">$10,000</div>
+                    <div class="total-sub-value">($7,500 USD)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <div class="Create-spend-request-button-div">
         <button class="back-continue-button back">Back</button>
-        <button class="back-continue-button continue" [ngClass]="{'active':isActive}" (click)="clickNext('')">Continue</button>
+        <button class="back-continue-button continue" [ngClass]="{'active':isActive}"
+            (click)="clickNext('')">Continue</button>
     </div>
 </div>

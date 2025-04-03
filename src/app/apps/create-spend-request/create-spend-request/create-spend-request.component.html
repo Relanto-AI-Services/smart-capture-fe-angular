@@ -22,7 +22,7 @@
                     <app-sow (sowClick)="onSowSelection($event)" [rowId]="rowId" (sowFormDataChange)="getSowFormData($event)"  [formData]="sowFormData" ngSkipHydration></app-sow>
                     }
                     @else if (activeTab === 'allocatedBudget' ) {
-                    <app-allocated-budget (allocatedBudgetSubmit)="onAllocatedBidgetSelection($event)"
+                    <app-allocated-budget [sowFormSubmitedData]="sowFormData" (allocatedBudgetSubmit)="onAllocatedBidgetSelection($event)"
                         ngSkipHydration></app-allocated-budget>
                     }
                     @else if (activeTab === 'riskAssessment' ) {

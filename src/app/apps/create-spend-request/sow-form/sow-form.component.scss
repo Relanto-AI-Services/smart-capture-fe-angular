@@ -6,11 +6,12 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 55vw;
 
-  .formDiv{
-  height: 65Vh;
-  overflow-y: scroll;
+  .formDiv {
+    height: 65Vh;
+    overflow-y: scroll;
 
-}
+  }
+
   .form-title {
     font-size: 1.1rem;
     margin-bottom: 10px;
@@ -125,7 +126,7 @@ mat-chip {
 ////////////////category poc 
 .search-box {
   width: 100%;
-  
+
   .mat-icon {
     cursor: pointer;
   }
@@ -140,4 +141,10 @@ mat-chip {
   .right-content {
     text-align: right;
   }
+}
+
+.countryFlag {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
 }

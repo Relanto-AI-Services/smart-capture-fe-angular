@@ -125,13 +125,13 @@
 
         <section>
             <p class="section-title">Select the Market market(s) benefiting from the service provider</p>
-            <!-- <mat-form-field class="example-chip-list full-width" appearance="outline">
+            <mat-form-field class="example-chip-list full-width" appearance="outline">
                 <mat-label>Select Country</mat-label>
                 <mat-chip-grid #chipGrid aria-label="Country selection">
-                    {{countries() | json}}
                     @for (country of countries(); track $index) {
                         @if (country !=='') {
                             <mat-chip-row (removed)="removeCountry(country)">
+                                <img class="countryFlag" *ngIf="getCountryFlag(country)" [src]="getCountryFlag(country)" alt="Country Flag" width="50">
                                 {{country}}
                                 <button matChipRemove [attr.aria-label]="'remove ' + country">
                                     <mat-icon>cancel</mat-icon>
@@ -140,25 +140,25 @@
                         }
                     }
                 </mat-chip-grid>
-                <input name="currentCountry" placeholder="New Country..." #countryInput [(ngModel)]="currentCountry"
+                <input formControlName="country" placeholder="New Country..." #countryInput
                     [matChipInputFor]="chipGrid" [matAutocomplete]="autoCountry"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addCountry($event)" />
                 <mat-autocomplete #autoCountry="matAutocomplete"
                     (optionSelected)="selected($event); countryInput.value = ''">
-                    @for (country of allFruits; track country) {
-                    <mat-option [value]="country">{{country}}</mat-option>
+                    @for (country of countryCurrencyList; track country) {
+                    <mat-option [value]="country?.name"><img class="countryFlag" *ngIf="country?.flag" [src]="country?.flag" alt="Country Flag" width="50">{{country?.name}}</mat-option>
                     }
                 </mat-autocomplete>
-            </mat-form-field> -->
+            </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
+            <!-- <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Select Country </mat-label>
                 <mat-select formControlName="country" multiple [ngClass]="{'auto-filled': isAutoFilled('country')}">
                     <mat-option value="USA">United States</mat-option>
                     <mat-option value="India">India</mat-option>
                 </mat-select>
                 <mat-error *ngIf="isFieldInvalid('country')">This field is required</mat-error>
-            </mat-form-field>
+            </mat-form-field> -->
 
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Select Currency</mat-label>
