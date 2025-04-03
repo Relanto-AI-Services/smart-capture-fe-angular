@@ -45,7 +45,7 @@
      </div>
   }
   @else {
-      <app-sow-form [extractedData]="extractedData" (sendFormdata)="getSowFormData($event)" />
+      <app-sow-form [extractedData]="extractedData" (sendFormdata)="getSowFormData($event)" (formDataChange)="onFormChange($event)" />
   }
   <hr />
     <div class="Create-spend-request-button-div">

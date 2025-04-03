@@ -28,6 +28,8 @@ export class SowComponent {
   @Output() sowClick = new EventEmitter<any>();
   @ViewChild(SowFormComponent) sowForm!: SowFormComponent;
   @Input() rowId!: string;
+  @Output() sowFormDataChange = new EventEmitter<any>();
+  @Input() formData!: any;
 
   isActive: boolean = true
   data: any = {}
@@ -37,12 +39,13 @@ export class SowComponent {
   selectedFiles: any[] = [];
   oauthToken: string = this.userData?.token?.client_id;
   showSowForm: boolean = false;
-  extractedData: any = {}
+  extractedData: any = this.formData
   userName: string = 'John Doe';
   firstLetter: string = this.userData?.email.charAt(0).toUpperCase();
   dialogRef: any;
   constructor(public authService: AuthService, private googleDriveService: GoogleDriveService, public commonService: CommonService, private dialog: MatDialog) {
-
+    console.log(this.formData);
+    
   }
   ngOnInit() {
     this.selectedFiles = []
@@ -110,7 +113,7 @@ export class SowComponent {
     try {
       this.authService.postData('/process_urls_for_extraction', payload).subscribe(proRes => {
         this.dialogRef.close()
-        this.extractedData = proRes
+        this.extractedData = proRes?.results[0]?.spend_request[0]
         this.showSowForm = true // after extracting data
         this.pushToBigQuery({ ...proRes, extraction_results: proRes?.results })
         window.setTimeout(() => {
@@ -138,5 +141,11 @@ export class SowComponent {
       disableClose: true,
       data: { page: 'sow' },
     });
+  }
+  onFormChange(data: any) {
+    this.notifycreateSpendRequest(data);
+  }
+  notifycreateSpendRequest(data: any) {
+    this.sowFormDataChange.emit(data);
   }
 }

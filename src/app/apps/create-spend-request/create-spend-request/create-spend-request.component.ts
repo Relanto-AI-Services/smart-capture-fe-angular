@@ -10,8 +10,6 @@ import { SubmitSpendRequestComponent } from '../submit-spend-request/submit-spen
 import { CommonService } from '../../../services/common/common.service';
 import { AuthService } from '../../../services/auth/auth.service';
 import { AllocatedBudgetComponent } from "../allocated-budget/allocated-budget.component";
-import { filter, switchMap } from 'rxjs';
-import { setTimeout } from 'timers/promises';
 
 @Component({
   selector: 'app-create-spend-request',
@@ -51,7 +49,7 @@ export class CreateSpendRequestComponent {
 
   newMessage: string = '';
   chatVisible: boolean = true;
-
+  public sowFormData: any = {}
   constructor(public commonService: CommonService, public authService: AuthService) { }
   ngOnInit() {
     // if (!localStorage.getItem('user')) {
@@ -133,9 +131,8 @@ export class CreateSpendRequestComponent {
     }
   }
   onSowSelection(event: any) {
-    this.activePage = 'Allocated Budget';
     console.log(event.data);
-    
+    this.sowFormData = event.data
     if (event.type === 'extract') {
       window.setTimeout(() => {
         let filterData: any = []
@@ -149,6 +146,7 @@ export class CreateSpendRequestComponent {
         this.messages['messages'].push({ content: filterData[0]['subLabel'], role: 'assistant' });
       }, 1000);
     } else {
+      this.activePage = 'Allocated Budget';
       this.tabClick('allocatedBudget')
     }
   }
@@ -197,27 +195,36 @@ export class CreateSpendRequestComponent {
 
   loadMessages(message: any) {
     try {
-      const payload = message
-      this.authService.getData(this.chatBoatEndPoint).pipe(
-        switchMap(firstResponse => this.authService.postData(`${firstResponse?.next_url}`, payload))
-      ).subscribe({
-        next: secondResponse => {
-          // this.messages = secondResponse
-          this.commonService.updateMessages(secondResponse);
-          console.log('Final Response:', this.messages)
-        },
-        error: error => console.error('Error:', error),
-        complete: () => console.log('API calls completed')
+      this.authService.getData(this.chatBoatEndPoint).subscribe((res: any) => {
+        this.getMessages(res.next_url, message)
       });
     } catch (error) {
       console.error('error', error)
     }
 
   }
+  getMessages(url: any, message: any) {
+    let payload: any = {...message}
+    if(this.activeTab === 'sow'){
+      payload = { ...payload, sow_form: this.sowFormData ? this.sowFormData : {} }
+    }
+
+    this.authService.postData(url, payload).subscribe({
+      next: secondResponse => {
+        // this.messages = secondResponse
+        this.commonService.updateMessages(secondResponse);
+      },
+      error: error => console.error('Error:', error),
+      complete: () => console.log('Chat API calls completed')
+    });
+  }
   showChat() {
     if (!this.chatVisible) {
       this.chatVisible = true
     }
   }
-
+  getSowFormData(event: any) {
+    this.sowFormData = { ...this.sowFormData, ...event }
+    console.log('sow from data change ', this.sowFormData);
+  }
 }

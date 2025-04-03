@@ -45,6 +45,8 @@ export class SowFormComponent {
   sowForm!: FormGroup;
   autoFilledFields: any = {};
   @Output() sendFormdata = new EventEmitter<any>();
+  @Output() formDataChange = new EventEmitter<any>();
+
   isFormValid: boolean = true;
   @Input() extractedData: any = {}
   public spendCategory: any = ["PRODUCTION", "CONTENT LICENSING RIGHTS", "PRINT PRODUCTION - SERVICE", "PRINT PRODUCTION - GOOD", "PHOTOGRAPHY", "FILM & ANIMATION", "GLOBAL ADAPTATION", "LICENSING & RIGHTS MANAGEMENT", "GROWTH MARKETING", "GROWTH CAMPAIGN ACTIVATION - ENGAGEMENT", "GROWTH CAMPAIGN GOVERNANCE & OPERATIONS", "GROWTH CAMPAIGN ACTIVATION - ACQUISITION", "GROWTH CAMPAIGN ACTIVATION - FULL FUNNEL", "GROWTH CAMPAIGN ACTIVATION - RETENTION", "GROWTH CAMPAIGN MEASUREMENT", "GROWTH CAMPAIGN STRATEGY", "CREATIVE DESIGN", "CREATIVE STRATEGY", "CONTENT STRATEGY & CREATION", "CREATIVE DEVELOPMENT", "INTERACTIVE PRODUCTION", "BRAND STRATEGY", "BRAND ARCHITECTURE & NAMING", "BRAND IDENTITY (VISUAL, BRAND VOICE)", "BRAND STRATEGY & POSITIONING", "SPONSORSHIPS", "SPORTS / MUSIC / ENTERTAINMENT SPONSORSHIPS", "COMMUNITY I EDUCATIONAL / NON PROFIT SPONSORSHIPS", "TALENT", "CELEBRITY TALENT ENDORSEMENT", "TALENT FOR CREATIVE PRODUCTION", "TALENT FOR EVENT APPEARANCE", "SOCIAL MARKETING", "SOCIAL CONTENT CREATION & PRODUCTION", "SOCIAL INSIGHTS & MEASUREMENT", "COMMUNITY MANAGEMENT & ENGAGEMENT", "SOCIAL CONTENT & PLATFORM STRATEGY", "SOCIAL CHANNEL MANAGEMENT", "INFLUENCER & CREATOR MANAGEMENT", "EVENTS & EXPERIENCES", "EVENT VENUE & ACCOMMODATION", "EVENT MANAGEMENT & PRODUCTION", "PROMOTIONAL GOODS", "PROMOTIONAL GOODS - CLIENT & CUSTOMER", "PROMOTIONAL GOODS - EMPLOYEE", "MARKET RESEARCH & INSIGHTS", "RESEARCH - SYNDICATED", "RESEARCH - CUSTOM", "PARTNER MARKETING/CO-MARKETING", "MEDIA", "MEDIA AGENCY FEES", "MEDIA PASSTHROUGH", "MARKETING TECHNOLOGY", "PLATFORM & TOOLS MANAGEMENT", "PLATFORM & TOOLS PILOTS & PROTOTYPING", "PLATFORM & TOOLS DEVELOPMENT & INTEGRATION", "MEASUREMENT, ANALYTICS, ACCOUNTABILITY & IMPACT", "CREATIVE TESTING", "MEDIA MIX MODELING", "ANALYTICS", "PRODUCT SERVICES", "UX", "UX RESEARCH", "UX WRITING", "UX DESIGN", "SALES SUPPORT SERVICES", "FIELD SALES / SALES SUPPORT", "FIELD RETAIL OPERATIONS", "PARTNER PRODUCT TRAINING", "NON PROCURABLE", "DUES & SUBSCRIPTIONS", "DUES./ MEMBERSHIP FEES - NON TAXABLE", "DUES / MEMBERSHIP FEES - TAXABLE", "MAGAZINES / NEWSPAPERS / PERIODICALS", "DUES & SUBSCRIPTIONS", "ENTERPRISE SERVICES", "CONSULTING SERVICES", "STRATEGY CONSULTING", "HUMAN RESOURCE SERVICES", "TRAINING, LEARNING, & DEVELOPMENT"]
@@ -66,7 +68,7 @@ export class SowFormComponent {
     this.sowForm = this.fb.group({
       purchase_name: ['', [Validators.required]],
       spend_category: ['', Validators.required],
-      spend_sub_category: ['', Validators.required],
+      // spend_sub_category: ['', Validators.required],
       purchase_description: ['', Validators.required],
       // market_plan: [jsonData?.market_plan],   ref Kajal 
       // MRFID: [jsonData?.MRFID, Validators.required],
@@ -75,12 +77,13 @@ export class SowFormComponent {
       country: [[], Validators.required], // ??? multi select
       currency: [, Validators.required],
       // selectRole: [, Validators.required], ref vaishnavi   // TBD
-      supplier_legal_name: ['', [Validators.required]],
-      legal_name: ['', [Validators.required]],
-      supplier_poc_name: ['', [Validators.required]]
+      // supplier_legal_name: ['', [Validators.required]],
+      // legal_name: ['', [Validators.required]],
+      // supplier_poc_name: ['', [Validators.required]]
     });
     if (Object.keys(this.extractedData).length !== 0) {
-      const jsonData = this.extractedData?.results[0]?.spend_request[0];
+      // const jsonData = (typeof this.extractedData === 'object' )?this.extractedData:this.extractedData?.results[0]?.spend_request[0];
+      const jsonData = this.extractedData;
       this.patchValueInForm(jsonData)
       Object.keys(jsonData).forEach((key: string) => {
         if ((jsonData as Record<string, string>)[key]) {
@@ -90,6 +93,9 @@ export class SowFormComponent {
     }
 
     this.logFormStatus()
+    this.sowForm.valueChanges.subscribe((value:any) => {
+      this.formDataChange.emit(value);
+    });
   }
 
   isAutoFilled(field: string): boolean {
@@ -108,18 +114,19 @@ export class SowFormComponent {
     this.sowForm.patchValue({
       purchase_name: jsonData?.purchase_name ? jsonData?.purchase_name : '',
       spend_category: jsonData?.spend_category ? jsonData?.spend_category : '',
-      spend_sub_category: jsonData?.spend_sub_category ? jsonData?.spend_sub_category : '',
+      // spend_sub_category: jsonData?.spend_sub_category ? jsonData?.spend_sub_category : '',
       purchase_description: jsonData?.purchase_description ? jsonData?.purchase_description : '',
       work_start_date: jsonData?.work_start_date ? this.convertsToDate(jsonData?.work_start_date) : '',
       work_end_date: jsonData?.work_end_date ? this.convertsToDate(jsonData?.work_end_date) : '',
       country: jsonData?.markets_benifited_from_the_serviece ? jsonData?.markets_benifited_from_the_serviece : [],
       currency: jsonData?.currency ? jsonData?.currency : '',
       // selectRole: jsonData?.selectRole,
-      supplier_legal_name: jsonData?.supplier_legal_name ? jsonData?.supplier_legal_name : '',
-      legal_name: jsonData?.legal_name ? jsonData?.legal_name : '',
-      supplier_poc_name: jsonData?.supplier_poc_name ? jsonData?.supplier_poc_name : ''
+      // supplier_legal_name: jsonData?.supplier_legal_name ? jsonData?.supplier_legal_name : '',
+      // legal_name: jsonData?.legal_name ? jsonData?.legal_name : '',
+      // supplier_poc_name: jsonData?.supplier_poc_name ? jsonData?.supplier_poc_name : ''
     });
   }
+  
   onSubmit(): void {
     if (this.sowForm.valid) {
       this.isFormValid = true

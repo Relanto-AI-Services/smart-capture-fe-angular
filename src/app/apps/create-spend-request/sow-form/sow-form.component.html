@@ -58,7 +58,7 @@
                 <mat-error *ngIf="isFieldInvalid('spend_category')">This field is required</mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
+            <!-- <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Spend Sub Category </mat-label>
                 <mat-select formControlName="spend_sub_category"
                     [ngClass]="{'auto-filled': isAutoFilled('spend_sub_category')}">
@@ -67,7 +67,7 @@
                     }
                 </mat-select>
                 <mat-error *ngIf="isFieldInvalid('spend_sub_category')">This field is required</mat-error>
-            </mat-form-field>
+            </mat-form-field> -->
         </section>
 
         <section>
@@ -170,13 +170,13 @@
             </mat-form-field>
         </section>
 
-        <section>
+        <!-- <section> -->
             <!-- <p class="section-title">Supplier Information</p> -->
             <!-- <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Select Role</mat-label>
                 <input matInput formControlName="selectRole" [ngClass]="{'auto-filled': isAutoFilled('selectRole')}">
             </mat-form-field> -->
-            <mat-form-field appearance="outline" class="full-width">
+            <!-- <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Supplier Legal Name </mat-label>
                 <input matInput formControlName="supplier_legal_name"
                     [ngClass]="{'auto-filled': isAutoFilled('supplier_legal_name')}">
@@ -193,8 +193,8 @@
                 <input matInput formControlName="supplier_poc_name"
                     [ngClass]="{'auto-filled': isAutoFilled('supplier_poc_name')}">
                 <mat-error *ngIf="isFieldInvalid('supplier_poc_name')">This field is required</mat-error>
-            </mat-form-field>
-        </section>
+            </mat-form-field> -->
+        <!-- </section> -->
 
         <!-- <button mat-raised-button color="primary" type="submit" class="submit-btn">Submit</button> -->
     </div>

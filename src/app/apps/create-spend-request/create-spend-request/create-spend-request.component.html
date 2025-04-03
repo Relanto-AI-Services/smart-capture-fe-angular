@@ -19,7 +19,7 @@
                     <app-tactic-table (tacticClick)="onTacticSelection($event)" ngSkipHydration></app-tactic-table>
                     }
                     @else if (activeTab === 'sow' ) {
-                    <app-sow (sowClick)="onSowSelection($event)" [rowId]="rowId" ngSkipHydration></app-sow>
+                    <app-sow (sowClick)="onSowSelection($event)" [rowId]="rowId" (sowFormDataChange)="getSowFormData($event)"  [formData]="sowFormData" ngSkipHydration></app-sow>
                     }
                     @else if (activeTab === 'allocatedBudget' ) {
                     <app-allocated-budget (allocatedBudgetSubmit)="onAllocatedBidgetSelection($event)"
