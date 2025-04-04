@@ -145,8 +145,8 @@
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addCountry($event)" />
                 <mat-autocomplete #autoCountry="matAutocomplete"
                     (optionSelected)="selected($event); countryInput.value = ''">
-                    @for (country of countryCurrencyList; track country) {
-                    <mat-option [value]="country?.name"><img class="countryFlag" *ngIf="country?.flag" [src]="country?.flag" alt="Country Flag" width="50">{{country?.name}}</mat-option>
+                    @for (country of getUniqueCountriesByName(countryCurrencyNewList); track country) {
+                    <mat-option [value]="country?.country_name"><img class="countryFlag" *ngIf="country?.country_flag" [src]="country?.country_flag" alt="Country Flag" width="50">{{country?.country_name}}</mat-option>
                     }
                 </mat-autocomplete>
                 <mat-error *ngIf="(sowForm.controls['country'].invalid && sowForm.controls['country'].touched)">This field is required</mat-error>
@@ -163,8 +163,8 @@
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Select Currency</mat-label>
                 <mat-select formControlName="currency" [ngClass]="{'auto-filled': isAutoFilled('currency')}">
-                    @for (cur of countryCurrencyList; track cur) {
-                        <mat-option [value]="cur?.currency">{{cur?.currency}}</mat-option>
+                    @for (cur of getUniqueCurrencyByName(countryCurrencyNewList); track cur) {
+                        <mat-option [value]="cur?.country_currency">{{cur?.country_currency}}</mat-option>
                         }
                 </mat-select>
                 <mat-error *ngIf="isFieldInvalid('currency')">This field is required</mat-error>
