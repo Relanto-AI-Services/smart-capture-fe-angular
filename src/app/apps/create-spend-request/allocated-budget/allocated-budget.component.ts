@@ -92,11 +92,11 @@ export class AllocatedBudgetComponent {
     }
     console.log('sowFormData',this.sowFormSubmitedData.value);
     this.commonService.getFormData$().subscribe(data => {
-      console.log('Combined Form Data:', data);
       let isFormFilled = this.isAnyValueFilled(data?.budgetFormData)
       if(isFormFilled){
-        alert("Done ")
-        // this.patchValueInForm(data?.budgetFormData);
+        this.eventId = data?.budgetFormData?.eventId
+        this.selectedCurrency = data?.budgetFormData?.selectedCurrency
+        this.forecastBudget = data?.budgetFormData?.forecastBudget
       }
     });
     

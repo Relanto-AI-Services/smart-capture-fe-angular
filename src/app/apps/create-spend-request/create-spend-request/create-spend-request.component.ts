@@ -251,6 +251,5 @@ export class CreateSpendRequestComponent {
   }
   getSowFormData(event: any) {
     this.sowFormData = { ...this.sowFormData, ...event }
-    console.log('sow from data change ', this.sowFormData);
   }
 }

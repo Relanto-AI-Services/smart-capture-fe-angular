@@ -86,7 +86,7 @@ export class CommonService {
   private formDataSubject = new BehaviorSubject<any>({});
 
   setFormData(data: any): void {
-    const currentData = this.formDataSubject;
+    const currentData = this.formDataSubject.value;
     this.formDataSubject.next({ ...currentData, ...data });
   }
 

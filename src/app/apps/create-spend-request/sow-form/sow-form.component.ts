@@ -155,7 +155,15 @@ export class SowFormComponent {
     }
 
     this.sowForm.valueChanges.subscribe((value: any) => {
+      console.log('value',value?.country);
       this.formDataChange.emit(value);
+    });
+    this.commonService.messages$.subscribe((messages: any) => {
+      console.log('messages',messages);
+      if(this.isAnyValueFilled(messages?.sow_form)){
+        this.patchValueInForm(messages?.sow_form);
+      }
+
     });
   }
 
@@ -164,6 +172,11 @@ export class SowFormComponent {
       Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
     );
   }; 
+  isAnyValueFilled = (obj: Record<string, any>): boolean => {
+    return Object.values(obj).some(value =>
+      Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
+    );
+  };
   isAutoFilled(field: string): boolean {
     return !!this.autoFilledFields[field];
   }
