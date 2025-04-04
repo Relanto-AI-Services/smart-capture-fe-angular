@@ -231,7 +231,7 @@ export class CreateSpendRequestComponent {
     this.messages['messages'].push({ content: option, role: 'user' });
     if(this.activeTab === 'riskAssessment'){
       this.loadMessages({
-        "messages": [],
+        "messages":this.messages['messages'],
         "context": {"vendor_name":"quantum software solutions"}, //change here
         "risk_form": {},
         "sow_form": {}}
@@ -274,7 +274,7 @@ export class CreateSpendRequestComponent {
       complete: () => console.log('Chat API calls completed')
     });
   }
-  
+
   showChat() {
     if (!this.chatVisible) {
       this.chatVisible = true

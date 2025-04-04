@@ -43,7 +43,7 @@ export class TabComponent {
   }
 
   selectStep(stepValue: any) {
-    // return
+    return
     if(this.activeTab === stepValue){
       return
     }
