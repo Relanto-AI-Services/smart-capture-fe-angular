@@ -114,7 +114,9 @@ export class SowComponent {
             ...this.allExtractedData.results[0],
             ...dataExtract
           }
-        ], country_name: this.sowForm?.sowForm?.value['country'], country_code: selectedCountryCode
+        ], 
+        country_names: this.sowForm?.sowForm?.value['country'], 
+        country_codes: selectedCountryCode
       }
       this.authService.postData('/ingest_sow_page', payload).subscribe((res: any) => {
         console.log("response on saving sow fom", res);
