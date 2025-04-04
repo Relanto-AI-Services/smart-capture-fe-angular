@@ -28,6 +28,18 @@ input {
   font-family: "Roboto";
 }
 
+.tactic-refresh{
+  display: flex;
+  justify-content: space-between;
+  p{
+    font-size: 10px;
+  }
+  .refresh{
+    color: #0b57d0;
+    cursor: pointer;
+    
+  }
+}
 .edit-tactic {
   color: #0b57d0;
   cursor: pointer;
@@ -241,4 +253,102 @@ th {
       color: #fff;
     }
   }
+}
+
+
+tr.cdk-drag {
+  cursor: grab;
+}
+
+.side-panel {
+  min-width: 200px; /* Set a fixed width */
+  max-width: 200px; /* Prevent resizing */
+  max-height: 300px; /* Set a minimum height */
+  border: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.side-panel h3 {
+  margin-top: 0;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 0.2rem;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.empty-message {
+  color: #666;
+  text-align: center;
+  padding: 1rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.dropped-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.dropped-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.dropped-item button {
+  background: none;
+  border: none;
+  color: #ff4444;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+}
+
+.cdk-drag-placeholder {
+  visibility: hidden; /* Keeps the space without showing */
+  height: 40px;
+}
+
+.cdk-drag-preview {
+  width: 50vw !important; /* Set a reasonable width */
+  min-width: 100px;
+  max-width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  background: white;
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  border: 1px solid #0b57d0;
+  font-size: 0.5rem;
+}
+
+.custom-drag-preview {
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 200px; /* Adjust width */
+  text-align: center;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+[cdkDragDisabled] {
+  cursor: not-allowed !important;
+  opacity: 0.6;
 }
