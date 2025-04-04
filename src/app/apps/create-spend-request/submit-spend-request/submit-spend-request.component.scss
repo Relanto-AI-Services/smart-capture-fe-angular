@@ -1,0 +1,59 @@
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    font-size: 10px;
+  }
+  
+  .section-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  mat-card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  .edit-link {
+    text-decoration: none;
+    color: #007bff;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .edit-link mat-icon {
+    font-size: 18px;
+  }
+  
+  mat-card-content {
+    padding: 10px 0;
+  }
+  
+  p {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  h4 {
+    margin-top: 15px;
+    color: #333;
+  }
+  
+  .budget-group {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+  }
+  
+  
