@@ -171,12 +171,22 @@ export class CreateSpendRequestComponent {
     }
   }
   onRiskAssessmentSelection(event: any) {
-    this.activePage = 'Review And Submit'
-    this.tabClick('reviewAndSubmit')
+    if(event.type === 'continue'){
+      this.activePage = 'Review And Submit'
+      this.tabClick('reviewAndSubmit')
+    }else{
+      this.activePage = 'Risk Assessment';
+      this.tabClick('riskAssessment')
+    }
   }
   onFinalSubmitionClick(event: any) {
-    this.activePage = 'Review And Submit'
-    this.tabClick('reviewAndSubmit')
+    if(event.type === 'continue'){
+      this.activePage = 'Review And Submit'
+      this.tabClick('reviewAndSubmit')
+    }else{
+      this.activePage = 'Risk Assessment';
+      this.tabClick('riskAssessment')
+    }
   }
 
   getPrimaryKey() {

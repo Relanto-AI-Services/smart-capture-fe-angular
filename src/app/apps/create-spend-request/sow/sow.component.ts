@@ -45,7 +45,7 @@ export class SowComponent {
   dialogRef: any;
   constructor(public authService: AuthService, private googleDriveService: GoogleDriveService, public commonService: CommonService, private dialog: MatDialog) {
     console.log(this.formData);
-    
+
   }
   ngOnInit() {
     this.selectedFiles = []
@@ -53,9 +53,18 @@ export class SowComponent {
       this.selectedFiles = files;
       console.log("fileeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", this.selectedFiles);
     });
-
+    this.commonService.getFormData$().subscribe(data => {
+      let isFormFilled = this.isObjectFilled(data?.sowFormData)
+      if (isFormFilled) {
+        this.showSowForm = true
+      }
+    });
   }
-
+  isObjectFilled = (obj: Record<string, any>): boolean => {
+    return Object.values(obj).every(value =>
+      Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
+    );
+  };
   openGoogleDrivePicker() {
     this.googleDriveService.openPicker();
   }
@@ -67,21 +76,21 @@ export class SowComponent {
   clickNext(type: any) {
     if (type === 'extract') {
       // this.sowClick.emit({data:this.sowForm.sowForm,type:'extract'});
-      if(this.selectedFiles.length === 0){
+      if (this.selectedFiles.length === 0) {
         this.showSowForm = true // after extracting data
         window.setTimeout(() => {
-          this.sowClick.emit({data:this.sowForm?.sowForm?.value,type:'extract'});
+          this.sowClick.emit({ data: this.sowForm?.sowForm?.value, type: 'extract' });
         }, 500);
-      }else{
+      } else {
         this.shareAccess()
       }
-    } else if(type === 'submit') {
+    } else if (type === 'submit') {
       this.sowForm.onSubmit();
       if (this.sowForm.isFormValid && this.extractedData) {
-        this.sowClick.emit({data:this.sowForm?.sowForm,type:'submit'});
+        this.sowClick.emit({ data: this.sowForm?.sowForm, type: 'submit' });
       }
-    }else{
-      this.sowClick.emit({data:this.sowForm?.sowForm,type:'back'});
+    } else {
+      this.sowClick.emit({ data: this.sowForm?.sowForm, type: 'back' });
     }
   }
   shareAccess() {
@@ -116,11 +125,12 @@ export class SowComponent {
       this.authService.postData('/process_urls_for_extraction', payload).subscribe(proRes => {
         this.dialogRef.close()
         this.extractedData = proRes?.results[0]?.spend_request[0]
+        this.commonService.setFormData({extractedSowFormData: proRes?.results[0]?.spend_request[0]})
         this.showSowForm = true // after extracting data
         localStorage.setItem("extractedData", JSON.stringify(this.extractedData));
         this.pushToBigQuery({ ...proRes, extraction_results: proRes?.results })
         window.setTimeout(() => {
-          this.sowClick.emit({data:this.sowForm?.sowForm?.value,type:'extract'});
+          this.sowClick.emit({ data: this.sowForm?.sowForm?.value, type: 'extract' });
         }, 500);
       })
     } catch (error) {

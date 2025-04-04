@@ -49,7 +49,7 @@ export class SowFormComponent {
 
   isFormValid: boolean = true;
   @Input() extractedData: any = {}
-  public countryCurrencyList:any =[
+  public countryCurrencyList: any = [
     {
       "name": "United States",
       "currency": "USD",
@@ -101,12 +101,11 @@ export class SowFormComponent {
       "flag": "https://flagcdn.com/w320/za.png"
     }
   ]
-  
+
   public spendCategory: any = ["PRODUCTION", "CONTENT LICENSING RIGHTS", "PRINT PRODUCTION - SERVICE", "PRINT PRODUCTION - GOOD", "PHOTOGRAPHY", "FILM & ANIMATION", "GLOBAL ADAPTATION", "LICENSING & RIGHTS MANAGEMENT", "GROWTH MARKETING", "GROWTH CAMPAIGN ACTIVATION - ENGAGEMENT", "GROWTH CAMPAIGN GOVERNANCE & OPERATIONS", "GROWTH CAMPAIGN ACTIVATION - ACQUISITION", "GROWTH CAMPAIGN ACTIVATION - FULL FUNNEL", "GROWTH CAMPAIGN ACTIVATION - RETENTION", "GROWTH CAMPAIGN MEASUREMENT", "GROWTH CAMPAIGN STRATEGY", "CREATIVE DESIGN", "CREATIVE STRATEGY", "CONTENT STRATEGY & CREATION", "CREATIVE DEVELOPMENT", "INTERACTIVE PRODUCTION", "BRAND STRATEGY", "BRAND ARCHITECTURE & NAMING", "BRAND IDENTITY (VISUAL, BRAND VOICE)", "BRAND STRATEGY & POSITIONING", "SPONSORSHIPS", "SPORTS / MUSIC / ENTERTAINMENT SPONSORSHIPS", "COMMUNITY I EDUCATIONAL / NON PROFIT SPONSORSHIPS", "TALENT", "CELEBRITY TALENT ENDORSEMENT", "TALENT FOR CREATIVE PRODUCTION", "TALENT FOR EVENT APPEARANCE", "SOCIAL MARKETING", "SOCIAL CONTENT CREATION & PRODUCTION", "SOCIAL INSIGHTS & MEASUREMENT", "COMMUNITY MANAGEMENT & ENGAGEMENT", "SOCIAL CONTENT & PLATFORM STRATEGY", "SOCIAL CHANNEL MANAGEMENT", "INFLUENCER & CREATOR MANAGEMENT", "EVENTS & EXPERIENCES", "EVENT VENUE & ACCOMMODATION", "EVENT MANAGEMENT & PRODUCTION", "PROMOTIONAL GOODS", "PROMOTIONAL GOODS - CLIENT & CUSTOMER", "PROMOTIONAL GOODS - EMPLOYEE", "MARKET RESEARCH & INSIGHTS", "RESEARCH - SYNDICATED", "RESEARCH - CUSTOM", "PARTNER MARKETING/CO-MARKETING", "MEDIA", "MEDIA AGENCY FEES", "MEDIA PASSTHROUGH", "MARKETING TECHNOLOGY", "PLATFORM & TOOLS MANAGEMENT", "PLATFORM & TOOLS PILOTS & PROTOTYPING", "PLATFORM & TOOLS DEVELOPMENT & INTEGRATION", "MEASUREMENT, ANALYTICS, ACCOUNTABILITY & IMPACT", "CREATIVE TESTING", "MEDIA MIX MODELING", "ANALYTICS", "PRODUCT SERVICES", "UX", "UX RESEARCH", "UX WRITING", "UX DESIGN", "SALES SUPPORT SERVICES", "FIELD SALES / SALES SUPPORT", "FIELD RETAIL OPERATIONS", "PARTNER PRODUCT TRAINING", "NON PROCURABLE", "DUES & SUBSCRIPTIONS", "DUES./ MEMBERSHIP FEES - NON TAXABLE", "DUES / MEMBERSHIP FEES - TAXABLE", "MAGAZINES / NEWSPAPERS / PERIODICALS", "DUES & SUBSCRIPTIONS", "ENTERPRISE SERVICES", "CONSULTING SERVICES", "STRATEGY CONSULTING", "HUMAN RESOURCE SERVICES", "TRAINING, LEARNING, & DEVELOPMENT"]
   public spendSubCategory: any = ["NON STREAMING - PRODUCT & SERVICE DESIGN", "ROYALTIES - NON STREAMING - US", "ROYALTIES - OTHER - US", "NON STREAMING - CONTENT & DATA - SEARCH CONTENT / METADATA", "ROYALTIES - MUSIC - US", "NON STREAMING - AD CAMPAIGN / FULL SERVICE", "NON STREAMING - DIGITAL OPTIMIZATION (DNU)", "ORIGINAL CONTENT LICENSE - MUSIC - NON US", "ROYALTIES - OTHER - NON US", "NON STREAMING - CONTENT & DATA - TRAVEL", "ROYALTIES - GAMING - NON US", "ORIGINAL CONTENT LICENSE - OTHER - US"]
   constructor(private fb: FormBuilder, public commonService: CommonService) {
-    ///////////poc
-
+    ///////////poc    
     this.searchControl.valueChanges
       .pipe(startWith(''), debounceTime(300))
       .subscribe((value: any) => {
@@ -127,16 +126,27 @@ export class SowFormComponent {
       // MRFID: [jsonData?.MRFID, Validators.required],
       work_start_date: [null, Validators.required],
       work_end_date: [null, Validators.required],
-      country: [['India'], Validators.required], // ??? multi select
+      country: [[], Validators.required], // ??? multi select
       currency: [, Validators.required],
       // selectRole: [, Validators.required], ref vaishnavi   // TBD
       // supplier_legal_name: ['', [Validators.required]],
       // legal_name: ['', [Validators.required]],
       // supplier_poc_name: ['', [Validators.required]]
     });
-    if (Object.keys(this.extractedData).length !== 0) {
+    this.commonService.getFormData$().subscribe(data => {
+      console.log('Combined Form Data:', data);
+      let isFormFilled = this.isObjectFilled(data?.sowFormData)
+      console.log('isFormFilled',isFormFilled);
+      if(isFormFilled){
+        this.patchValueInForm(data?.sowFormData);
+        this.countries.update((val: any) => [...val, data?.sowFormData?.country]);
+        this.sendFormdata.emit(this.sowForm.value)
+      }
+    });
+    this.logFormStatus()
+    if (this.extractedData && Object.keys(this.extractedData).length !== 0) {
       const jsonData = this.extractedData;
-      this.patchValueInForm(jsonData)
+      this.patchValueInForm(jsonData);
       Object.keys(jsonData).forEach((key: string) => {
         if ((jsonData as Record<string, string>)[key]) {
           this.autoFilledFields[key] = true;
@@ -144,19 +154,20 @@ export class SowFormComponent {
       });
     }
 
-    this.logFormStatus()
-    this.sowForm.valueChanges.subscribe((value:any) => {
+    this.sowForm.valueChanges.subscribe((value: any) => {
       this.formDataChange.emit(value);
     });
   }
 
+  isObjectFilled = (obj: Record<string, any>): boolean => {
+    return Object.values(obj).every(value =>
+      Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
+    );
+  }; 
   isAutoFilled(field: string): boolean {
     return !!this.autoFilledFields[field];
   }
 
-  isFieldInvalid(field: string): boolean {
-    return this.sowForm.controls[field].invalid && (this.sowForm.controls[field].dirty);
-  }
   convertsToDate(dateString: string): Date | null {
     if (!dateString) return null;
     const formattedDate = moment.default(dateString, 'DD-MM-YYYY', true);
@@ -170,20 +181,24 @@ export class SowFormComponent {
       purchase_description: jsonData?.purchase_description ? jsonData?.purchase_description : '',
       work_start_date: jsonData?.work_start_date ? this.convertsToDate(jsonData?.work_start_date) : '',
       work_end_date: jsonData?.work_end_date ? this.convertsToDate(jsonData?.work_end_date) : '',
-      country: jsonData?.markets_benifited_from_the_serviece ? jsonData?.markets_benifited_from_the_serviece : [],      
+      country: jsonData?.markets_benifited_from_the_serviece ? jsonData?.markets_benifited_from_the_serviece : jsonData?.country,
       currency: jsonData?.currency ? jsonData?.currency : '',
       // selectRole: jsonData?.selectRole,
       // supplier_legal_name: jsonData?.supplier_legal_name ? jsonData?.supplier_legal_name : '',
       // legal_name: jsonData?.legal_name ? jsonData?.legal_name : '',
       // supplier_poc_name: jsonData?.supplier_poc_name ? jsonData?.supplier_poc_name : ''
     });
-    jsonData?.markets_benifited_from_the_serviece ?this.countries.update((val: any) => jsonData?.markets_benifited_from_the_serviece)  : []
+    jsonData?.markets_benifited_from_the_serviece ? this.countries.update((val: any) => jsonData?.markets_benifited_from_the_serviece) : []
     // this.countries.update((val: any) => []);
 
   }
-  
+
   onSubmit(): void {
+    this.sowForm.get('country')?.markAsTouched();
+    this.sowForm.get('country')?.updateValueAndValidity();
+    this.sowForm.markAllAsTouched();
     if (this.sowForm.valid) {
+      this.commonService.setFormData({sowFormData:this.sowForm.value})
       this.isFormValid = true
       this.sendFormdata.emit(this.sowForm.value)
     } else {
@@ -231,11 +246,11 @@ export class SowFormComponent {
     console.log('selected category item', this.searchControl.value);
   }
 
-  
+
   separatorKeysCodes: number[] = [ENTER, COMMA];
   currentCountry = model('');
   countries = signal(['']);
-  allCountries: string[] = ['USA', 'China', 'Uk', 'UAE', 'India'];
+  // allCountries: string[] = ['USA', 'China', 'Uk', 'UAE', 'India'];
   announcer = inject(LiveAnnouncer);
   // filteredFruits = computed(() => {
   //   const currentCountry = this.currentCountry().toLowerCase();
@@ -247,35 +262,40 @@ export class SowFormComponent {
 
   addCountry(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
-    if (value && value !== '' && !this.countries().includes(value)) { // ✅ Avoid empty & duplicates
+    if (value && value !== '' && !this.countries().includes(value)) { // Avoid empty & duplicates
       this.countries.update((val: any) => [...val, value]);
-      this.sowForm.patchValue({ country: this.countries().filter(c => c !== '') }); // ✅ Remove empty
+      // this.sowForm.patchValue({ country: this.countries().filter(c => c !== '') }); // Remove empty
+      this.sowForm.get('country')?.setValue([...this.countries().filter(c => c !== '')]);
+      this.sowForm.get('country')?.updateValueAndValidity(); // Trigger validation update
     }
     this.currentCountry.set('');
   }
-  
+
   removeCountry(country: string): void {
-    this.countries.update((el: any) => el.filter((c:any) => c !== country && c !== '')); // ✅ Remove empty
+    this.countries.update((el: any) => el.filter((c: any) => c !== country && c !== '')); // Remove empty
     this.announcer.announce(`Removed ${country}`);
     this.sowForm.patchValue({ country: this.countries() });
+    this.sowForm.get('country')?.updateValueAndValidity(); // Trigger validation update
   }
-  
+
   selected(event: MatAutocompleteSelectedEvent): void {
     const selectedCountry = event.option.viewValue;
-    if (selectedCountry && selectedCountry !== '' && !this.countries().includes(selectedCountry)) { // ✅ Avoid empty & duplicates
+    if (selectedCountry && selectedCountry !== '' && !this.countries().includes(selectedCountry)) { // Avoid empty & duplicates
       this.countries.update((countries: any) => [...countries, selectedCountry]);
-      this.sowForm.patchValue({ country: this.countries().filter(c => c !== '') }); // ✅ Remove empty
+      this.sowForm.patchValue({ country: this.countries().filter(c => c !== '') }); // Remove empty
+      this.sowForm.get('country')?.updateValueAndValidity(); // Trigger validation update
     }
     this.currentCountry.set('');
     event.option.deselect();
   }
   getCountryFlag(countryName: string): string | null {
     if (!countryName) return null;  // Handle empty cases
-    const country = this.countryCurrencyList.find((c: any) => 
+    const country = this.countryCurrencyList.find((c: any) =>
       c.name === countryName
     );
     return country ? country.flag : null;
   }
-  
-  
+  isFieldInvalid(field: string): boolean {
+    return this.sowForm.controls[field].invalid && (this.sowForm.controls[field].dirty || this.sowForm.controls[field].touched);
+  }
 }

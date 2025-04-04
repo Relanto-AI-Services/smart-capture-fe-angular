@@ -140,7 +140,7 @@
                         }
                     }
                 </mat-chip-grid>
-                <input formControlName="country" placeholder="New Country..." #countryInput
+                <input formControlName="country" #countryInput
                     [matChipInputFor]="chipGrid" [matAutocomplete]="autoCountry"
                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addCountry($event)" />
                 <mat-autocomplete #autoCountry="matAutocomplete"
@@ -149,8 +149,8 @@
                     <mat-option [value]="country?.name"><img class="countryFlag" *ngIf="country?.flag" [src]="country?.flag" alt="Country Flag" width="50">{{country?.name}}</mat-option>
                     }
                 </mat-autocomplete>
+                <mat-error *ngIf="(sowForm.controls['country'].invalid && sowForm.controls['country'].touched)">This field is required</mat-error>
             </mat-form-field>
-
             <!-- <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Select Country </mat-label>
                 <mat-select formControlName="country" multiple [ngClass]="{'auto-filled': isAutoFilled('country')}">

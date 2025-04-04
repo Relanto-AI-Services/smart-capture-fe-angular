@@ -6,6 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { AuthService } from '../../../services/auth/auth.service';
+import { CommonService } from '../../../services/common/common.service';
 
 interface BudgetDetail {
   name: string;
@@ -78,7 +79,7 @@ export class AllocatedBudgetComponent {
     },
   ];
   public sowExtractedData:any={}
-  constructor(public authservice:AuthService){}
+  constructor(public authservice:AuthService,public commonService:CommonService){}
 
   ngOnInit() {
     this.selectedCurrency = this.sowFormSubmitedData.value.currency
@@ -90,7 +91,15 @@ export class AllocatedBudgetComponent {
       console.log(parsedData); 
     }
     console.log('sowFormData',this.sowFormSubmitedData.value);
-
+    this.commonService.getFormData$().subscribe(data => {
+      console.log('Combined Form Data:', data);
+      let isFormFilled = this.isAnyValueFilled(data?.budgetFormData)
+      if(isFormFilled){
+        alert("Done ")
+        // this.patchValueInForm(data?.budgetFormData);
+      }
+    });
+    
   }
   distributeTotalSpend() {
     if (!this.totalSpend || this.forecastBudget.length === 0) {
@@ -142,7 +151,7 @@ export class AllocatedBudgetComponent {
   validateForm(): boolean {
     return (
       this.totalSpend &&
-      this.eventId?.match(/^[A-Za-z]{2}\d{6,8}$/) &&
+      (this.eventId?.match(/^[A-Za-z]{2}\d{6,8}$/) || this.eventId === "") &&
       this.forecastBudget.every(budget =>
         budget.details.every(detail =>
           detail.q1 !== null && detail.q2 !== null && detail.allPeriods !== null
@@ -156,6 +165,13 @@ export class AllocatedBudgetComponent {
       alert("Please fill all required fields correctly.");
       return;
     }else{
+      let budgetFormData = {
+        totalSpend:this.totalSpend,
+        eventId:this.eventId,
+        selectedCurrency:this.selectedCurrency,
+        forecastBudget:this.forecastBudget
+      }
+      this.commonService.setFormData({budgetFormData:budgetFormData})
       this.allocatedBudgetSubmit.emit({data:'',type:'continue'});
     }
     // Proceed with form submission logic
@@ -168,5 +184,10 @@ export class AllocatedBudgetComponent {
       this.allocatedBudgetSubmit.emit({data:'',type:'back'});
     }
   }
-
+  isAnyValueFilled = (obj: Record<string, any>): boolean => {
+    return Object.values(obj).some(value =>
+      Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
+    );
+  };
+  
 }
