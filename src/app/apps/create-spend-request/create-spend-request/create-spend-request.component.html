@@ -16,7 +16,7 @@
                     <app-request-type (cardClick)="requestType($event)"></app-request-type>
                     }
                     @else if (activeTab === 'tactic' ) {
-                    <app-tactic-table (tacticClick)="onTacticSelection($event)" ngSkipHydration></app-tactic-table>
+                    <app-tactic-table [rowId]="rowId" (tacticClick)="onTacticSelection($event)" ngSkipHydration></app-tactic-table>
                     }
                     @else if (activeTab === 'sow' ) {
                     <app-sow (sowClick)="onSowSelection($event)" [rowId]="rowId" (sowFormDataChange)="getSowFormData($event)"  [formData]="sowFormData" ngSkipHydration></app-sow>

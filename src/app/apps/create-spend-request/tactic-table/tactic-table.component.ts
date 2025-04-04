@@ -152,7 +152,7 @@ export class TacticTableComponent implements OnInit {
   //     console.log(row);
   //   }
   clickNext(type: any) {
-    if(type === 'continue' && this.selectedData.length){
+    if(type === 'continue' && this.droppedItems.length){
       this.sendRequest([...this.selectedData])
       this.tacticClick.emit({ ...this.selectedData, type: type });
     }else{
@@ -164,7 +164,7 @@ export class TacticTableComponent implements OnInit {
   sendRequest(arr: Array<any>) {
     console.log(arr)
     const spendRequestId = this.rowId || this.generateRandomString(10);
-    const tacticNames = arr.map((dt) => {
+    const tacticNames = this.droppedItems.map((dt) => {
       return dt.id + '-' +dt.tacticName
     })
    

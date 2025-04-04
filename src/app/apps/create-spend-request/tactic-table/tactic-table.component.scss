@@ -104,7 +104,11 @@ th {
 // }
 
 .half-table {
-  display: flex;
+  // display: flex;
+  // justify-content: space-between;
+  display: grid;
+  grid-template-columns: 75% 25%;
+  gap: 10px;
 }
 
 .table-container {
