@@ -8,12 +8,12 @@
     <form [formGroup]="riskForm" (ngSubmit)="submitForm()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Supplier Legal Name *</mat-label>
-        <input matInput formControlName="supplierLegalName" [disabled] = true />
+        <input matInput formControlName="supplier_legal_name" [disabled] = true />
       </mat-form-field>
   
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Legal Name</mat-label>
-        <input matInput formControlName="legalName" />
+        <input matInput formControlName="legal_name" />
       </mat-form-field>
   
       <mat-form-field appearance="outline" class="full-width">
@@ -26,25 +26,22 @@
         <input matInput formControlName="primaryContactEmail" type="email" />
       </mat-form-field>
   
-      <!-- <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Supplier Legal Name *</mat-label>
-        <input matInput formControlName="secondSupplierLegalName" required />
-      </mat-form-field> -->
+    
 
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Supplier POC *</mat-label>
-        <input matInput formControlName="supplierPOC" />
+        <input matInput formControlName="supplier_poc_name" />
       </mat-form-field>
   
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Supplier POC Email *</mat-label>
-        <input matInput formControlName="supplierPOCEmail" type="email" />
+        <input matInput formControlName="supplier_poc_email" type="email" />
       </mat-form-field>
   
-      <mat-form-field appearance="outline" class="full-width">
+      <!-- <mat-form-field appearance="outline" class="full-width">
         <mat-label>Marketing Garage Exception ID [*]</mat-label>
         <input matInput formControlName="marketingGarageID" />
-      </mat-form-field>
+      </mat-form-field> -->
   
       <h3>Additional Details</h3>
       <p>Please review and update any additional details to ensure completeness and accuracy.</p>
@@ -57,9 +54,8 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Do you need to supervise the worker's activities? *</mat-label>
         <mat-select formControlName="supervisionRequired" multiple>
-          <mat-option *ngFor="let option of supervisionOptions" [value]="option">
-            {{ option }}
-          </mat-option>
+          <mat-option value="yes">Yes</mat-option>
+          <mat-option value="no">No</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -172,18 +168,17 @@
     </mat-select>
   </mat-form-field>
   
-      <button mat-raised-button color="primary" type="submit" [disabled]="riskForm.invalid">
+      <!-- <button mat-raised-button color="primary" type="submit" [disabled]="riskForm.invalid">
         Submit
-      </button>
+      </button> -->
     </form>
   </div>
   
 
 
-<!-- <div class="container">
-    <h1 class="text-center">Risk Assessment</h1>
+<div class="container">
     <div class="Create-spend-request-button-div">
-        <button class="back-continue-button back">Back</button>
-        <button class="back-continue-button continue" [ngClass]="{'active':isActive}" (click)="clickNext()">Continue</button>
+        <button class="back-continue-button back" (click)="clickNext('back')">Back</button>
+        <button class="back-continue-button continue" [ngClass]="{'active':isActive}" (click)="clickNext('continue')">Continue</button>
     </div>
-</div> -->
+</div>

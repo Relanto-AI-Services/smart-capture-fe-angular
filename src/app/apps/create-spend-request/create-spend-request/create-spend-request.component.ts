@@ -216,16 +216,35 @@ export class CreateSpendRequestComponent {
   }
 
   sendMessage() {
+    
     if (this.newMessage.trim()) {
       this.messages['messages'].push({ content: this.newMessage, role: 'user' });
       this.newMessage = '';
+     
       this.loadMessages({ "messages": this.messages['messages'] })
+
+      
     }
   }
 
   selectOption(option: string) {
     this.messages['messages'].push({ content: option, role: 'user' });
-    this.loadMessages({ "messages": this.messages['messages'] })
+    if(this.activeTab === 'riskAssessment'){
+      this.loadMessages({
+        "messages": [],
+        "context": {"vendor_name":"quantum software solutions"}, //change here
+        "risk_form": {},
+        "sow_form": {}}
+      )
+      }else{
+      this.loadMessages({ "messages": this.messages['messages'] })
+
+      }
+
+   
+
+
+    
 
   }
 
@@ -237,8 +256,9 @@ export class CreateSpendRequestComponent {
     } catch (error) {
       console.error('error', error)
     }
-
   }
+
+
   getMessages(url: any, message: any) {
     let payload: any = {...message}
     if(this.activeTab === 'sow'){
@@ -254,6 +274,7 @@ export class CreateSpendRequestComponent {
       complete: () => console.log('Chat API calls completed')
     });
   }
+  
   showChat() {
     if (!this.chatVisible) {
       this.chatVisible = true
