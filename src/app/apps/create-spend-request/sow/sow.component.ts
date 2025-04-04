@@ -43,8 +43,9 @@ export class SowComponent {
   userName: string = 'John Doe';
   firstLetter: string = this.userData?.email.charAt(0).toUpperCase();
   dialogRef: any;
+  allExtractedData: any;
   constructor(public authService: AuthService, private googleDriveService: GoogleDriveService, public commonService: CommonService, private dialog: MatDialog) {
-    console.log(this.formData);
+    // console.log(this.formData);
 
   }
   ngOnInit() {
@@ -87,11 +88,59 @@ export class SowComponent {
     } else if (type === 'submit') {
       this.sowForm.onSubmit();
       if (this.sowForm.isFormValid && this.extractedData) {
-        this.sowClick.emit({ data: this.sowForm?.sowForm, type: 'submit' });
+        this.submitSowForm()
       }
     } else {
       this.sowClick.emit({ data: this.sowForm?.sowForm, type: 'back' });
     }
+  }
+  submitSowForm() {
+    try {
+      this.commonService.getFormData$
+      let dataExtract = {
+        purchase_name: this.sowForm?.sowForm?.value?.purchase_name,
+        spend_category: this.sowForm?.sowForm?.value['spend_category'],
+        purchase_description: this.sowForm?.sowForm?.value['purchase_description'],
+        work_start_date: this.sowForm?.sowForm?.value['work_start_date'],
+        work_end_date: this.sowForm?.sowForm?.value['work_end_date'],
+        currency: this.sowForm?.sowForm?.value['currency'],
+        markets_benifited_from_the_serviece: this.sowForm?.sowForm?.value['country']
+      }
+      delete this.allExtractedData.total_processing_time
+      let selectedCountryCode = this.getselectedCountryCode(this.sowForm?.sowForm?.value['country'])
+      let payload = {
+        ...this.allExtractedData, extraction_results: [
+          {
+            ...this.allExtractedData.results[0],
+            ...dataExtract
+          }
+        ], country_name: this.sowForm?.sowForm?.value['country'], country_code: selectedCountryCode
+      }
+      this.authService.postData('/ingest_sow_page', payload).subscribe((res: any) => {
+        console.log("response on saving sow fom", res);
+
+        this.sowClick.emit({ data: this.sowForm?.sowForm, type: 'submit' });
+      })
+    } catch (error) {
+      console.error('error', error)
+    }
+  }
+  getselectedCountryCode(country: any) {
+    let code: any = []
+    this.commonService.getFormData$().subscribe(data => {
+      console.log('Combined Form Data:', data?.countryCurrencyCode);
+      country.map((c: any) => {
+        data?.countryCurrencyCode.filter((el: any) => {
+          if (el?.country_name === c) {
+            code.push(el.country_code)
+          }
+        })
+      })
+    })
+    return code
+    // return ['AFG']
+    // console.log('Selected country name ', country);
+
   }
   shareAccess() {
     try {
@@ -124,8 +173,9 @@ export class SowComponent {
     try {
       this.authService.postData('/process_urls_for_extraction', payload).subscribe(proRes => {
         this.dialogRef.close()
+        this.allExtractedData = proRes
         this.extractedData = proRes?.results[0]?.spend_request[0]
-        this.commonService.setFormData({extractedSowFormData: proRes?.results[0]?.spend_request[0]})
+        this.commonService.setFormData({ extractedSowFormData: proRes?.results[0]?.spend_request[0] })
         this.showSowForm = true // after extracting data
         localStorage.setItem("extractedData", JSON.stringify(this.extractedData));
         this.pushToBigQuery({ ...proRes, extraction_results: proRes?.results })
@@ -141,7 +191,7 @@ export class SowComponent {
     delete data.total_processing_time
     delete data.results
     let payload = data;
-    this.authService.postData('/ingest_to_bigquery', payload).subscribe((res) => {
+    this.authService.postData('/ingest_to_log_table', payload).subscribe((res) => {
       console.log('Res', res);
 
     })

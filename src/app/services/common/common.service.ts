@@ -87,7 +87,9 @@ export class CommonService {
 
   setFormData(data: any): void {
     const currentData = this.formDataSubject.value;
-    this.formDataSubject.next({ ...currentData, ...data });
+    if(data){
+      this.formDataSubject.next({ ...currentData, ...data });
+    }
   }
 
   getFormData$() {

@@ -18,6 +18,7 @@ import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/ma
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { AuthService } from '../../../services/auth/auth.service';
 @Component({
   selector: 'app-sow-form',
   standalone: true,
@@ -104,7 +105,8 @@ export class SowFormComponent {
 
   public spendCategory: any = ["PRODUCTION", "CONTENT LICENSING RIGHTS", "PRINT PRODUCTION - SERVICE", "PRINT PRODUCTION - GOOD", "PHOTOGRAPHY", "FILM & ANIMATION", "GLOBAL ADAPTATION", "LICENSING & RIGHTS MANAGEMENT", "GROWTH MARKETING", "GROWTH CAMPAIGN ACTIVATION - ENGAGEMENT", "GROWTH CAMPAIGN GOVERNANCE & OPERATIONS", "GROWTH CAMPAIGN ACTIVATION - ACQUISITION", "GROWTH CAMPAIGN ACTIVATION - FULL FUNNEL", "GROWTH CAMPAIGN ACTIVATION - RETENTION", "GROWTH CAMPAIGN MEASUREMENT", "GROWTH CAMPAIGN STRATEGY", "CREATIVE DESIGN", "CREATIVE STRATEGY", "CONTENT STRATEGY & CREATION", "CREATIVE DEVELOPMENT", "INTERACTIVE PRODUCTION", "BRAND STRATEGY", "BRAND ARCHITECTURE & NAMING", "BRAND IDENTITY (VISUAL, BRAND VOICE)", "BRAND STRATEGY & POSITIONING", "SPONSORSHIPS", "SPORTS / MUSIC / ENTERTAINMENT SPONSORSHIPS", "COMMUNITY I EDUCATIONAL / NON PROFIT SPONSORSHIPS", "TALENT", "CELEBRITY TALENT ENDORSEMENT", "TALENT FOR CREATIVE PRODUCTION", "TALENT FOR EVENT APPEARANCE", "SOCIAL MARKETING", "SOCIAL CONTENT CREATION & PRODUCTION", "SOCIAL INSIGHTS & MEASUREMENT", "COMMUNITY MANAGEMENT & ENGAGEMENT", "SOCIAL CONTENT & PLATFORM STRATEGY", "SOCIAL CHANNEL MANAGEMENT", "INFLUENCER & CREATOR MANAGEMENT", "EVENTS & EXPERIENCES", "EVENT VENUE & ACCOMMODATION", "EVENT MANAGEMENT & PRODUCTION", "PROMOTIONAL GOODS", "PROMOTIONAL GOODS - CLIENT & CUSTOMER", "PROMOTIONAL GOODS - EMPLOYEE", "MARKET RESEARCH & INSIGHTS", "RESEARCH - SYNDICATED", "RESEARCH - CUSTOM", "PARTNER MARKETING/CO-MARKETING", "MEDIA", "MEDIA AGENCY FEES", "MEDIA PASSTHROUGH", "MARKETING TECHNOLOGY", "PLATFORM & TOOLS MANAGEMENT", "PLATFORM & TOOLS PILOTS & PROTOTYPING", "PLATFORM & TOOLS DEVELOPMENT & INTEGRATION", "MEASUREMENT, ANALYTICS, ACCOUNTABILITY & IMPACT", "CREATIVE TESTING", "MEDIA MIX MODELING", "ANALYTICS", "PRODUCT SERVICES", "UX", "UX RESEARCH", "UX WRITING", "UX DESIGN", "SALES SUPPORT SERVICES", "FIELD SALES / SALES SUPPORT", "FIELD RETAIL OPERATIONS", "PARTNER PRODUCT TRAINING", "NON PROCURABLE", "DUES & SUBSCRIPTIONS", "DUES./ MEMBERSHIP FEES - NON TAXABLE", "DUES / MEMBERSHIP FEES - TAXABLE", "MAGAZINES / NEWSPAPERS / PERIODICALS", "DUES & SUBSCRIPTIONS", "ENTERPRISE SERVICES", "CONSULTING SERVICES", "STRATEGY CONSULTING", "HUMAN RESOURCE SERVICES", "TRAINING, LEARNING, & DEVELOPMENT"]
   public spendSubCategory: any = ["NON STREAMING - PRODUCT & SERVICE DESIGN", "ROYALTIES - NON STREAMING - US", "ROYALTIES - OTHER - US", "NON STREAMING - CONTENT & DATA - SEARCH CONTENT / METADATA", "ROYALTIES - MUSIC - US", "NON STREAMING - AD CAMPAIGN / FULL SERVICE", "NON STREAMING - DIGITAL OPTIMIZATION (DNU)", "ORIGINAL CONTENT LICENSE - MUSIC - NON US", "ROYALTIES - OTHER - NON US", "NON STREAMING - CONTENT & DATA - TRAVEL", "ROYALTIES - GAMING - NON US", "ORIGINAL CONTENT LICENSE - OTHER - US"]
-  constructor(private fb: FormBuilder, public commonService: CommonService) {
+  countryCurrencyNewList: any=[];
+  constructor(private fb: FormBuilder, public commonService: CommonService,public authService: AuthService) {
     ///////////poc    
     this.searchControl.valueChanges
       .pipe(startWith(''), debounceTime(300))
@@ -116,6 +118,7 @@ export class SowFormComponent {
   }
 
   ngOnInit(): void {
+    this.getCountryCurrencyList()
     // this.commonService.resetTabs()
     this.sowForm = this.fb.group({
       purchase_name: ['', [Validators.required]],
@@ -139,7 +142,8 @@ export class SowFormComponent {
       console.log('isFormFilled',isFormFilled);
       if(isFormFilled){
         this.patchValueInForm(data?.sowFormData);
-        this.countries.update((val: any) => [...val, data?.sowFormData?.country]);
+        this.sowForm.get('country')?.setValue([...this.countries().filter(c => c !== '')]);
+        this.countries.update((val: any) => [...val, data?.sowFormData?.country().filter((c:any) => c !== '')]);
         this.sendFormdata.emit(this.sowForm.value)
       }
     });
@@ -147,6 +151,7 @@ export class SowFormComponent {
     if (this.extractedData && Object.keys(this.extractedData).length !== 0) {
       const jsonData = this.extractedData;
       this.patchValueInForm(jsonData);
+      this.countries.update((val: any) => [...val, jsonData?.markets_benifited_from_the_serviece().filter((c:any) => c !== '')]);
       Object.keys(jsonData).forEach((key: string) => {
         if ((jsonData as Record<string, string>)[key]) {
           this.autoFilledFields[key] = true;
@@ -303,12 +308,44 @@ export class SowFormComponent {
   }
   getCountryFlag(countryName: string): string | null {
     if (!countryName) return null;  // Handle empty cases
-    const country = this.countryCurrencyList.find((c: any) =>
-      c.name === countryName
+    const country = this.countryCurrencyNewList.find((c: any) =>
+      c.country_name === countryName
     );
-    return country ? country.flag : null;
+    return country ? country.country_flag : null;
   }
   isFieldInvalid(field: string): boolean {
     return this.sowForm.controls[field].invalid && (this.sowForm.controls[field].dirty || this.sowForm.controls[field].touched);
+  }
+  getCountryCurrencyList(){
+    try {
+      this.authService.getData('/countries_consume').subscribe((res)=>{
+        console.log(res)
+        this.countryCurrencyNewList = res?.countries_with_currencies
+        this.commonService.setFormData({countryCurrencyCode: res?.countries_with_currencies})
+      })
+    } catch (error) {
+      console.error('error',error)
+    }
+  }
+  getUniqueCountriesByName(countries: any[]): any[] {
+    const seen = new Set<string>();
+    return countries.filter(country => {
+      if (!seen.has(country.country_name)) {
+        seen.add(country.country_name);
+        return true;
+      }
+      return false;
+    });
+  }
+  
+  getUniqueCurrencyByName(currency: any[]): any[] {
+    const seen = new Set<string>();
+    return currency.filter(curr => {
+      if (!seen.has(curr.country_currency)) {
+        seen.add(curr.country_currency);
+        return true;
+      }
+      return false;
+    });
   }
 }

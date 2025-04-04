@@ -154,7 +154,8 @@ export class AllocatedBudgetComponent {
       (this.eventId?.match(/^[A-Za-z]{2}\d{6,8}$/) || this.eventId === "") &&
       this.forecastBudget.every(budget =>
         budget.details.every(detail =>
-          detail.q1 !== null && detail.q2 !== null && detail.allPeriods !== null
+          detail.q1 !== null && detail.q2 !== null 
+          // detail.q1 !== null && detail.q2 !== null && detail.allPeriods !== null
         )
       )
     );
@@ -171,8 +172,21 @@ export class AllocatedBudgetComponent {
         selectedCurrency:this.selectedCurrency,
         forecastBudget:this.forecastBudget
       }
+      let payload ={
+        "spend_request_id": "2b2d9e13-6f9b-438f-af9c-98904144c96e",
+        "tactic_code": "26197",
+        "tactic_spend_code": "26197 | SR001_SC",
+        "grandchild_cc_code": "1Q1: C14: GC21",
+        "tactic_spend_cc_code": "26197 | SR001_SC | 1Q1: C14: GC21",
+        "forecast": 200,
+        "tactic_id": "TID001",
+        "cc_name": "Cost Center A"
+    }
+      this.authservice.postData('/ingest_to_budget_forecast',payload).subscribe((res:any)=>{
+        console.log(res)
+        this.allocatedBudgetSubmit.emit({data:'',type:'continue'});
+      })
       this.commonService.setFormData({budgetFormData:budgetFormData})
-      this.allocatedBudgetSubmit.emit({data:'',type:'continue'});
     }
     // Proceed with form submission logic
   }
