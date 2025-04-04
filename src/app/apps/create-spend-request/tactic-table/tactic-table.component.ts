@@ -12,13 +12,16 @@ import { LoaderModalComponent } from '../../../components/shared/loader-modal/lo
 @Component({
   selector: 'app-tactic-table',
   imports: [FormsModule, ReactiveFormsModule, CommonModule,
-    //  DragDropModule 
+     DragDropModule 
     ],
   templateUrl: './tactic-table.component.html',
   styleUrl: './tactic-table.component.scss',
 })
 export class TacticTableComponent implements OnInit {
+
+  // test
   @Output() tacticClick = new EventEmitter<any>();
+  @Input() rowId!: string;
   selectedFilter = 'Cost Center';
   searchText = '';
   filters = ['Name', 'ID', 'Cost Center', 'Type', 'Program'];
@@ -40,9 +43,14 @@ export class TacticTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.cs.value$.subscribe((newValue) => {
-      this.conceptValue = newValue; 
+      this.conceptValue = true; 
     });
     this. fetchSpendRequestData()
+  }
+
+  refreshTactic(){
+
+    this.fetchSpendRequestData();
   }
 
   fetchSpendRequestData() {
@@ -58,17 +66,17 @@ export class TacticTableComponent implements OnInit {
         }
   
         this.data = response.data.map((item: any) => ({
-          id: item["Tactic ID"] || "N/A",
-          tacticName: item["Tactic title"] || "No Title",
+          id: item["Tactic_ID"] || "N/A",
+          tacticName: item["Tactic_title"] || "No Title",
           program: item["PV"] || "Unknown",
-          type: item["Tactic Type"] || "N/A",
-          startDate: item["Start date"] || "N/A",
-          endDate: item["End date"] || "N/A",
-          costCenter: item["Primary CC"] || "N/A",
+          type: item["Tactic_Type"] || "N/A",
+          startDate: item["Start_date"] || "N/A",
+          endDate: item["End_date"] || "N/A",
+          costCenter: item["Primary_CC"] || "N/A",
           warning: item["Priority"] || "",
         }));
   
-        this.filteredData = [...this.data]; // Copy to filteredData for display
+        this.filteredData = [...this.data]; 
         console.log("Processed Data:", this.filteredData);
         this.dialogRef.close()
       },
@@ -82,14 +90,30 @@ export class TacticTableComponent implements OnInit {
   
   
 
+  // toggleSelection(event: any, row: any) {
+  //   this.isActive = true;
+  //   if (event.target.checked) {
+  //     this.selectedData.push(row);
+  //   } else {
+  //     this.selectedData = this.selectedData.filter((item) => item !== row);
+  //   }
+  // }
+
   toggleSelection(event: any, row: any) {
     this.isActive = true;
+  
     if (event.target.checked) {
       this.selectedData.push(row);
+  
+      this.filteredData = this.filteredData.filter(item => item !== row);
+      this.droppedItems.push(row);
     } else {
-      this.selectedData = this.selectedData.filter((item) => item !== row);
+      this.selectedData = this.selectedData.filter(item => item !== row);
+      this.droppedItems = this.droppedItems.filter(item => item !== row);
+      this.filteredData.push(row);
     }
   }
+  
 
   performAction(action: string) {
     this.editPopUp  = true;
@@ -130,7 +154,7 @@ export class TacticTableComponent implements OnInit {
   //     console.log(row);
   //   }
   clickNext(type: any) {
-    if(type === 'continue' && this.selectedData.length){
+    if(type === 'continue' && this.droppedItems.length){
       this.sendRequest([...this.selectedData])
       this.tacticClick.emit({ ...this.selectedData, type: type });
     }else{
@@ -141,8 +165,8 @@ export class TacticTableComponent implements OnInit {
 
   sendRequest(arr: Array<any>) {
     console.log(arr)
-    const spendRequestId = this.generateRandomString(10);
-    const tacticNames = arr.map((dt) => {
+    const spendRequestId = this.rowId || this.generateRandomString(10);
+    const tacticNames = this.droppedItems.map((dt) => {
       return dt.id + '-' +dt.tacticName
     })
    

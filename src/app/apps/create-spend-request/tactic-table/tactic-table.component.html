@@ -34,10 +34,19 @@
       </div>
     </div>
 
-    <h4>Select the tactic(s) your spend request is funding</h4>
-    <div>
+    <div class="tactic-refresh">
+      <h4>Select the tactic(s) your spend request is funding</h4>
+      <p>Can't find your tactis? <span class="refresh" (click)="refreshTactic()"><img />refresh the list</span></p>
+    </div>
+    
+    <div [ngClass]="{'full-table': !conceptValue, 'half-table': conceptValue}">
       <div class="table-container">
         <table
+        cdkDropList
+           [id]="tableDropListId"
+           [cdkDropListData]="filteredData"
+           [cdkDropListConnectedTo]="[sidePanelDropListId]"
+           (cdkDropListDropped)="onDrop($event)"
         
         >
           <thead>
@@ -45,22 +54,26 @@
               <th></th>
               <th style="width: 20vw">Tactic Name</th>
               <th>Program / Vendor</th>
-              <th>Tactic Type</th>
+              <!-- <th>Tactic Type</th> -->
               <th>Start Date</th>
-              <th>End date</th>
+              <!-- <th>End date</th> -->
               <th>Cost Center</th>
             </tr>
           </thead>
           <tbody>
             <tr
               *ngFor="let row of filteredData"
+              cdkDrag
+              [cdkDragData]="row"
               [ngClass]="{ 'warning-background': row?.warning }"
+              cdkDragPreviewClass="drag-preview"
+              [cdkDragDisabled]="row.warning !== 'P0 - In budget'"
             >
               <td class="check-container">
                 <input
                   type="checkbox"
                   class="custom-checkbox"
-                  [disabled]="row.warning === 'P0 - In budget'"
+                  [disabled]="row.warning !== 'P0 - In budget'"
                   (change)="toggleSelection($event, row)"
                 />
               </td>
@@ -71,23 +84,23 @@
                 </div>
                 <div class="tactic-subtitle">{{ row?.subTitle }}</div>
                 <div class="warning-container">
-                  <span class="warning-text" *ngIf="row?.warning">
+                  <span class="warning-text" *ngIf="row?.warning !== 'P0 - In budget'">
                     <img src="../../../../assets/images/warning-icon.png" />
-                    {{ row?.warning }}
+                    {{ 'No (P0) Planned Spend' }}
                   </span>
                   <span
                     class="edit-tactic"
-                    *ngIf="row?.warningAction"
+                    *ngIf="row?.warning !== 'P0 - In budget'"
                     (click)="performAction(row.warningAction)"
                   >
-                    {{ row?.warningAction }}
+                    {{ 'Edit Tactic' }}
                   </span>
                 </div>
               </td>
               <td>{{ row?.program }}</td>
-              <td>{{ row?.type }}</td>
+              <!-- <td>{{ row?.type }}</td> -->
               <td>{{ row?.startDate }}</td>
-              <td>{{ row?.endDate }}</td>
+              <!-- <td>{{ row?.endDate }}</td> -->
               <td>{{ row?.costCenter }}</td>
             </tr>
           </tbody>
@@ -95,7 +108,34 @@
       </div>
 
 
-      
+      <div *ngIf="conceptValue == true"
+      cdkDropList
+      [id]="sidePanelDropListId"
+      [cdkDropListData]="droppedItems"
+      [cdkDropListConnectedTo]="[tableDropListId]"
+      (cdkDropListDropped)="onDrop($event)"
+      class="side-panel"
+    >
+      <h3>Selected Items</h3>
+
+      <div *ngIf="droppedItems.length === 0" class="empty-message">
+        Drag items here from the table
+      </div>
+
+      <div *ngIf="droppedItems.length > 0" class="dropped-items-list">
+        <div
+          *ngFor="let item of droppedItems"
+          class="dropped-item"
+          cdkDrag
+          [cdkDragData]="item"
+        >
+          <span>{{ item.tacticName }}</span>
+          <button (click)="returnItem(item)">×</button>
+        </div>
+      </div>
+
+      <!--  -->
+    </div>
 
      
    
@@ -133,9 +173,10 @@
     </div>
    
     <div class="botton-buttons">
-      <button class="btn-1">Cancle</button>
+      <button class="btn-1">Cancel</button>
       <button class="btn-2">Continue</button>
 
     </div>
   </div>
 </div>
+  
