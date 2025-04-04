@@ -18,6 +18,8 @@ import { LoaderModalComponent } from '../../../components/shared/loader-modal/lo
   styleUrl: './tactic-table.component.scss',
 })
 export class TacticTableComponent implements OnInit {
+
+  // test
   @Output() tacticClick = new EventEmitter<any>();
   @Input() rowId!: string;
   selectedFilter = 'Cost Center';
@@ -74,7 +76,7 @@ export class TacticTableComponent implements OnInit {
           warning: item["Priority"] || "",
         }));
   
-        this.filteredData = [...this.data]; // Copy to filteredData for display
+        this.filteredData = [...this.data]; 
         console.log("Processed Data:", this.filteredData);
         this.dialogRef.close()
       },
