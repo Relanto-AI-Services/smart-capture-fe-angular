@@ -106,22 +106,32 @@ export class CreateSpendRequestComponent {
     switch (this.activeTab) {
       case 'tactic':
         this.chatBoatEndPoint = '/tactic_chatbot_url'
+        this.getPrimaryKey();
+        this.loadMessages({ "messages": [] })
         break;
       case 'sow':
         this.chatBoatEndPoint = '/spend_request_chatbot_url'
-        this.getPrimaryKey()
+        this.getPrimaryKey();
+        this.loadMessages({ "messages": [] })
         break;
         case 'allocatedBudget':
         // this.chatBoatEndPoint = '/spend_request_chatbot_url'
         break;
       case 'riskAssessment':
+        this.chatBoatEndPoint = '/risk_field_chatbot_url'
+        this.loadMessages({
+          "messages": [],
+          "context": {"vendor_name":"quantum software solutions"}, //change here
+          "risk_form": {},
+          "sow_form": {}
+        })
+
         break;
       default:
         console.log('wait')
         // this.messages = {}
         break;
     }
-    this.loadMessages({ "messages": [] })
   }
   requestType(event: any) {
     this.activePage = 'Tactics'
