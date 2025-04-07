@@ -12,13 +12,13 @@ import { AuthService } from './services/auth/auth.service';
 })
 export class AppComponent {
   title = 'Smart-Capture';
-  public userSession :boolean = true
+  public userSession :boolean = false
   constructor(public authService:AuthService,private activatedRoute: ActivatedRoute, private router: Router){
-    if(localStorage.getItem('sid')){
-      this.userSession = true
-    }else{
-      this.userSession = false
-    }
+    // if(localStorage.getItem('sid')){
+    //   this.userSession = true
+    // }else{
+    //   this.userSession = false
+    // }
   }
   ngOnInit() {
     
@@ -30,11 +30,11 @@ export class AppComponent {
       }
       console.log('login log res',res)
     })
-    if(localStorage.getItem('sid')){
-      this.userSession = true
-    }else{
-      this.userSession = false
-    }
+    // if(localStorage.getItem('sid')){
+    //   this.userSession = true
+    // }else{
+    //   this.userSession = false
+    // }
   }
   // ngOnChange(){
   //   console.log('change, change, change, change, change')

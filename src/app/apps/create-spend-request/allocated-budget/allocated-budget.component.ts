@@ -88,9 +88,7 @@ export class AllocatedBudgetComponent {
       const parsedData = JSON.parse(extractedData);
       this.totalSpend = parsedData?.total_amount 
       this.getFormData(parsedData?.row_id) 
-      console.log(parsedData); 
     }
-    console.log('sowFormData',this.sowFormSubmitedData.value);
     this.commonService.getFormData$().subscribe(data => {
       let isFormFilled = this.isAnyValueFilled(data?.budgetFormData)
       if(isFormFilled){
@@ -199,9 +197,12 @@ export class AllocatedBudgetComponent {
     }
   }
   isAnyValueFilled = (obj: Record<string, any>): boolean => {
+    if (!obj || typeof obj !== 'object') return false;
+  
     return Object.values(obj).some(value =>
       Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
     );
   };
+  
   
 }
