@@ -159,6 +159,32 @@ th {
   }
 }
 
+.no-data-cell {
+  text-align: center;
+  padding: 40px 20px;
+  background-color: #fafafa;
+}
+
+.no-data-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #666;
+}
+
+.no-data-icon {
+  width: 80px;
+  height: auto;
+  margin-bottom: 12px;
+  opacity: 0.7;
+}
+
+.no-data-text {
+  font-size: 0.5rem;
+  font-weight: 400;
+}
+
+
 .search-container {
   display: grid;
   grid-template-columns: 95% 5%;

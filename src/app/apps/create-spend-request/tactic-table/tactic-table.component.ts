@@ -50,7 +50,42 @@ export class TacticTableComponent implements OnInit {
 
   refreshTactic(){
 
-    this.fetchSpendRequestData();
+    this.refreshSpendRequestData();
+  }
+
+  refreshSpendRequestData() {
+    this.openLoader()
+    this.apiService.refreshSpendRequest().subscribe({
+      next: (response: any) => {
+        console.log("Raw API Response:", response);
+  
+        // Ensure response.data exists and is an array
+        if (!response?.data || !Array.isArray(response.data)) {
+          console.error("API response does not contain a valid data array:", response);
+          return;
+        }
+  
+        this.data = response.data.map((item: any) => ({
+          id: item["Tactic_ID"] || "N/A",
+          tacticName: item["Tactic_title"] || "No Title",
+          program: item["PV"] || "Unknown",
+          type: item["Tactic_Type"] || "N/A",
+          startDate: item["Start_date"] || "N/A",
+          endDate: item["End_date"] || "N/A",
+          costCenter: item["Primary_CC"] || "N/A",
+          warning: item["Priority"] || "",
+        }));
+  
+        this.filteredData = [...this.data]; 
+        console.log("Processed Data:", this.filteredData);
+        this.dialogRef.close()
+      },
+      error: (error) => {
+        console.error("Error fetching spend request data:", error);
+      },
+    
+    });
+   
   }
 
   fetchSpendRequestData() {
@@ -155,10 +190,10 @@ export class TacticTableComponent implements OnInit {
   //   }
   clickNext(type: any) {
     if(type === 'continue' && this.droppedItems.length){
-      this.sendRequest([...this.selectedData])
-      this.tacticClick.emit({ ...this.selectedData, type: type });
+      this.sendRequest([...this.droppedItems])
+      this.tacticClick.emit({ ...this.droppedItems, type: type });
     }else{
-      this.tacticClick.emit({ ...this.selectedData, type: type });
+      this.tacticClick.emit({ ...this.droppedItems, type: type });
     }
   }
  
@@ -166,12 +201,30 @@ export class TacticTableComponent implements OnInit {
   sendRequest(arr: Array<any>) {
     console.log(arr)
     const spendRequestId = this.rowId || this.generateRandomString(10);
-    const tacticNames = this.droppedItems.map((dt) => {
-      return dt.id + '-' +dt.tacticName
+    const tacticDetails = this.droppedItems.map((dt) => {
+      let obj = {
+        "tactic_id": "",
+      "tactic_name": "",
+      "tactic_type": "",
+      "tactic_code": "",
+      "primary_cost_center": "",
+      "cost_center_code":"12"
+      }
+      obj['tactic_id'] = dt.id;
+      obj['tactic_name'] = dt.tacticName;
+      obj['tactic_type'] = dt.type;
+      obj['tactic_code'] = '';
+      obj['primary_cost_center'] = dt.costCenter;
+      obj['cost_center_code'] = '';
+
+
+      return obj
     })
+
+   
    
 
-    this.apiService.saveSpendRequestTactic(spendRequestId, tacticNames).subscribe({
+    this.apiService.saveSpendRequestTactic(spendRequestId, tacticDetails).subscribe({
       next: (response) => console.log('Success:', response),
       error: (error) => console.error('Error:', error)
     });

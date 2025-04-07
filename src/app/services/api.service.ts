@@ -13,7 +13,7 @@ export class ApiService {
 
   saveSpendRequestTactic(
     spendRequestId: string,
-    tacticNames: string[]
+    tacticDetails: Array<any>
   ): Observable<any> {
     const url = `${this.baseUrl}/save_spend_request_tactic`;
 
@@ -27,7 +27,7 @@ export class ApiService {
 
     const body = {
       spend_request_id: spendRequestId,
-      tactic_names: tacticNames,
+      tactic_details: tacticDetails,
     };
 
     return this.http.post(url, body, { headers });
@@ -45,5 +45,14 @@ export class ApiService {
     });
 
     return this.http.get( `${this.baseUrl}/tactic_listing`, { headers });
+  }
+
+  refreshSpendRequest() {
+    const sessionIdd = localStorage.getItem('sid') || '';
+    const headers = new HttpHeaders({
+      'session-id': sessionIdd, 
+    });
+
+    return this.http.get( `${this.baseUrl}/tactics_refresh`, { headers });
   }
 }
