@@ -13,8 +13,8 @@ export class AuthService {
   public userSession = new BehaviorSubject<Boolean>(false);
   public userLog = this.userSession.asObservable();
 
-  public baseUrl = 'http://localhost:8000'
-  // public baseUrl = 'http://34.173.40.128:8080'
+  // public baseUrl = 'http://localhost:8000'
+  public baseUrl = 'http://34.173.40.128:8080'
   logeInUser(url: any): Observable<any> {
     const urls = this.baseUrl + url
     return this.http.get<any>(urls).pipe(
