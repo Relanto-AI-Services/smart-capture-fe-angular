@@ -58,7 +58,7 @@ export class RiskAssessmentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.openLoader();
+   
     this.commonService.getFormData$().subscribe(data => {
       console.log('Combined Form Data:', data);
     });
@@ -69,12 +69,11 @@ export class RiskAssessmentComponent implements OnInit {
   }
 
   riskPatch(){
-
+    this.openLoader();
     this.commonService.messages$.subscribe(data => {
      
       console.log("risk data", data);
       this.populateForm(data)
-      this.dialogRef.close()
     })
     
 
@@ -84,7 +83,7 @@ export class RiskAssessmentComponent implements OnInit {
 
   populateForm(jsonData: any) {
     const result = jsonData.context.results[0];
-    const riskFormData = jsonData.risk_form.risk_form;
+    const riskFormData = jsonData.risk_form.risk_fields;
   
     // Fill static fields from context
     this.riskForm.patchValue({
@@ -107,6 +106,7 @@ export class RiskAssessmentComponent implements OnInit {
         });
       }
     });
+    this.dialogRef.close()
   }
   
 
