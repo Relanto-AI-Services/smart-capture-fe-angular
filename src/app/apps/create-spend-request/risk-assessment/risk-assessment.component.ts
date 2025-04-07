@@ -63,19 +63,21 @@ export class RiskAssessmentComponent implements OnInit {
       console.log('Combined Form Data:', data);
     });
 
-    this.riskPatch();
+    this.commonService.getMessage().subscribe(data => {
+     
+      console.log("risk data", data);
+      this.riskPatch(data)
+    })
+
+   
    
  
   }
 
-  riskPatch(){
-    this.openLoader();
-    this.commonService.messages$.subscribe(data => {
-     
-      console.log("risk data", data);
-      this.populateForm(data)
-    })
-    
+  riskPatch(data: any){
+    // this.openLoader();
+  
+    this.populateForm(data)
 
 
   }
@@ -106,7 +108,7 @@ export class RiskAssessmentComponent implements OnInit {
         });
       }
     });
-    this.dialogRef.close()
+    // this.dialogRef.close()
   }
   
 
