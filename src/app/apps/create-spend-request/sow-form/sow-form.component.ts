@@ -45,7 +45,6 @@ import { AuthService } from '../../../services/auth/auth.service';
 export class SowFormComponent {
   sowForm!: FormGroup;
   autoFilledFields: any = {};
-  @Output() sendFormdata = new EventEmitter<any>();
   @Output() formDataChange = new EventEmitter<any>();
 
   isFormValid: boolean = true;
@@ -143,7 +142,6 @@ export class SowFormComponent {
         this.patchValueInForm(data?.sowFormData);
         // this.sowForm.get('country')?.setValue([...this.countries().filter(c => c !== '')]);
         // this.countries.update((val: any) => [...val, data?.sowFormData?.country.filter((c:any) => c !== '')]);
-        this.sendFormdata.emit(this.sowForm.value)
       }
     });
     this.logFormStatus()
@@ -164,7 +162,7 @@ export class SowFormComponent {
       console.log('value',value?.country);
       this.formDataChange.emit(value);
     });
-    this.commonService.messages$.subscribe((messages: any) => {
+    this.commonService.getMessage().subscribe((messages: any) => {
       console.log('messages',messages);
       if(this.isAnyValueFilled(messages?.sow_form)){
         this.patchValueInForm(messages?.sow_form);
@@ -222,7 +220,6 @@ export class SowFormComponent {
       let value = {...this.sowForm.value, country:this.sowForm.value.country.filter((item:any) => typeof item === 'string' && item !== '')}
       this.commonService.setFormData({sowFormData:value})
       this.isFormValid = true
-      this.sendFormdata.emit(value)
     } else {
       this.isFormValid = false
       this.sowForm.markAllAsTouched();

@@ -121,9 +121,10 @@ export class SowComponent {
         country_names: this.sowForm?.sowForm?.value['country'].filter((item:any) => Array.isArray(item) ? item.length > 0 : true), 
         country_codes: selectedCountryCode
       }
+      this.openLoader()
       this.authService.postData('/ingest_sow_page', payload).subscribe((res: any) => {
         console.log("response on saving sow fom", res);
-
+        this.dialogRef.close()
         this.sowClick.emit({ data: this.sowForm?.sowForm, type: 'submit' });
       })
     } catch (error) {
@@ -199,9 +200,6 @@ export class SowComponent {
       console.log('Res', res);
 
     })
-  }
-  getSowFormData(event: any) {
-    this.data = event //form data from sow
   }
   openLoader(): void {
     this.dialogRef = this.dialog.open(LoaderModalComponent, {

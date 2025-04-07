@@ -82,6 +82,9 @@ export class CommonService {
     this.messagesSource.next(newMessages);
   }
 
+  getMessage(){
+    return this.messagesSource.asObservable();
+  }
 //////////////////////////////for getting form saved data
   private formDataSubject = new BehaviorSubject<any>({});
 

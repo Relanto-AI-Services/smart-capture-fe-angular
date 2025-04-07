@@ -8,22 +8,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { AuthService } from '../../../services/auth/auth.service';
 import { CommonService } from '../../../services/common/common.service';
 
-interface BudgetDetail {
-  name: string;
-  description: string;
-  q1: number;
-  q2: number;
-  allPeriods: number;
-}
-
-interface ForecastBudget {
-  title: string;
-  selectedPeriod: string;
-  periods: string[];
-  budgetRemaining: number;
-  details: BudgetDetail[];
-  expanded: boolean;
-}
 @Component({
   selector: 'app-allocated-budget',
   imports: [CommonModule,

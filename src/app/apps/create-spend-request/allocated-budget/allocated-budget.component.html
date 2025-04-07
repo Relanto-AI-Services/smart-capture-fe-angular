@@ -40,7 +40,7 @@
 
         <mat-accordion class="budget-accordion">
             <!-- [(expanded)]="budget.expanded" -->
-            <mat-expansion-panel *ngFor="let budget of forecastBudget; let i = index" [(expanded)]="budget.expanded">
+            <mat-expansion-panel *ngFor="let budget of forecastBudget; let i = index" >
                 <mat-expansion-panel-header style="display: flex;justify-content: space-between;">
                     <mat-panel-title>
                         <span class="expand-icon" [innerHTML]="budget.expanded ? '&#8722;' : '&#43;'"></span>
