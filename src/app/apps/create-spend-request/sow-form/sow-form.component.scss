@@ -50,7 +50,7 @@
 
   .auto-filled {
     color: #4285f4 !important;
-    font-size: 0.83rem;
+    // font-size: 0.83rem;
   }
 
   .mat-error {
@@ -147,4 +147,11 @@ mat-chip {
   height: 1rem;
   width: 1rem;
   border-radius: 50%;
+}
+
+.countrt{
+  ::ng-deep .mat-mdc-text-field-wrapper{
+    border: 1px solid red!important;
+      border-radius: 4px!important;
+  }
 }

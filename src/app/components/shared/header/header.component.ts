@@ -17,8 +17,8 @@ constructor(public authService:AuthService,public router:Router, private cs: Com
 logout(){
   try {
     this.authService.getData('/logout').subscribe((res:any)=>{
-      this.router.navigate(['login'])
-      this.authService.userSession.next('')
+      this.router.navigate(['/login'])
+      this.authService.updateUserSession(false)
       localStorage.clear()
       console.log(res);
     })

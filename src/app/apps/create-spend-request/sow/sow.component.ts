@@ -62,10 +62,13 @@ export class SowComponent {
     });
   }
   isObjectFilled = (obj: Record<string, any>): boolean => {
+    if (!obj || typeof obj !== 'object') return false;
+  
     return Object.values(obj).every(value =>
       Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
     );
   };
+  
   openGoogleDrivePicker() {
     this.googleDriveService.openPicker();
   }
@@ -107,18 +110,21 @@ export class SowComponent {
         markets_benifited_from_the_serviece: this.sowForm?.sowForm?.value['country']
       }
       delete this.allExtractedData.total_processing_time
-      let selectedCountryCode = this.getselectedCountryCode(this.sowForm?.sowForm?.value['country'])
+      let selectedCountryCode = this.getselectedCountryCode(this.sowForm?.sowForm?.value['country'].filter((item:any) => Array.isArray(item) ? item.length > 0 : true))
       let payload = {
         ...this.allExtractedData, extraction_results: [
           {
             ...this.allExtractedData.results[0],
             ...dataExtract
           }
-        ], country_name: this.sowForm?.sowForm?.value['country'], country_code: selectedCountryCode
+        ], 
+        country_names: this.sowForm?.sowForm?.value['country'].filter((item:any) => Array.isArray(item) ? item.length > 0 : true), 
+        country_codes: selectedCountryCode
       }
+      this.openLoader()
       this.authService.postData('/ingest_sow_page', payload).subscribe((res: any) => {
         console.log("response on saving sow fom", res);
-
+        this.dialogRef.close()
         this.sowClick.emit({ data: this.sowForm?.sowForm, type: 'submit' });
       })
     } catch (error) {
@@ -128,18 +134,17 @@ export class SowComponent {
   getselectedCountryCode(country: any) {
     let code: any = []
     this.commonService.getFormData$().subscribe(data => {
-      console.log('Combined Form Data:', data?.countryCurrencyCode);
       country.map((c: any) => {
-        data?.countryCurrencyCode.filter((el: any) => {
-          if (el?.country_name === c) {
-            code.push(el.country_code)
-          }
-        })
+        if(data?.countryCurrencyCode.length > 0 ){
+          data?.countryCurrencyCode.filter((el: any) => {
+            if (el?.country_name === c) {
+              code.push(el.country_code)
+            }
+          })
+        }
       })
     })
-    return code
-    // return ['AFG']
-    // console.log('Selected country name ', country);
+    return code.filter((item:any, index:any, arr:any) => arr.indexOf(item) === arr.lastIndexOf(item));
 
   }
   shareAccess() {
@@ -195,9 +200,6 @@ export class SowComponent {
       console.log('Res', res);
 
     })
-  }
-  getSowFormData(event: any) {
-    this.data = event //form data from sow
   }
   openLoader(): void {
     this.dialogRef = this.dialog.open(LoaderModalComponent, {

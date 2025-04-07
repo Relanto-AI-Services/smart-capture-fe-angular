@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 export class AuthService {
   constructor(private http: HttpClient, public router: Router) { }
   public userData: any
-  public userSession = new BehaviorSubject<any>('');
+  public userSession = new BehaviorSubject<Boolean>(false);
   public userLog = this.userSession.asObservable();
 
   public baseUrl = 'http://localhost:8000'
@@ -22,9 +22,12 @@ export class AuthService {
         this.userData = response
         localStorage.setItem('user', JSON.stringify(this.userData))
         localStorage.setItem('sid', response?.session_id)
-        this.userSession.next(response?.session_id)
+        this.updateUserSession(true)
       })
     );
+  }
+  public updateUserSession(status:boolean){
+    this.userSession.next(status)
   }
   private getHeaders(): HttpHeaders {
     const sessionId = localStorage.getItem('sid') 
@@ -63,11 +66,10 @@ export class AuthService {
           break;
         case 401:
           localStorage.clear();
-          this.userSession.next('');
-          // this.router.navigate(['/login']);
+          this.updateUserSession(false)
           window.setTimeout(() => {
             this.router.navigate(['/login']);
-          }, 0);
+          }, 1000);
           errorMessage = 'Unauthorized: Access is denied due to invalid credentials.';
           break;
         case 403:

@@ -82,11 +82,14 @@ export class CommonService {
     this.messagesSource.next(newMessages);
   }
 
+  getMessage(){
+    return this.messagesSource.asObservable();
+  }
 //////////////////////////////for getting form saved data
   private formDataSubject = new BehaviorSubject<any>({});
 
   setFormData(data: any): void {
-    const currentData = this.formDataSubject.value;
+    const currentData = this.formDataSubject.getValue();
     if(data){
       this.formDataSubject.next({ ...currentData, ...data });
     }

@@ -45,7 +45,6 @@ import { AuthService } from '../../../services/auth/auth.service';
 export class SowFormComponent {
   sowForm!: FormGroup;
   autoFilledFields: any = {};
-  @Output() sendFormdata = new EventEmitter<any>();
   @Output() formDataChange = new EventEmitter<any>();
 
   isFormValid: boolean = true;
@@ -108,13 +107,13 @@ export class SowFormComponent {
   countryCurrencyNewList: any=[];
   constructor(private fb: FormBuilder, public commonService: CommonService,public authService: AuthService) {
     ///////////poc    
-    this.searchControl.valueChanges
-      .pipe(startWith(''), debounceTime(300))
-      .subscribe((value: any) => {
-        this.categoryPOCFilteredOption = this.options.filter(option =>
-          option.title.toLowerCase().includes(value.toLowerCase())
-        );
-      });
+    // this.searchControl.valueChanges
+    //   .pipe(startWith(''), debounceTime(300))
+    //   .subscribe((value: any) => {
+    //     this.categoryPOCFilteredOption = this.options.filter(option =>
+    //       option.title.toLowerCase().includes(value.toLowerCase())
+    //     );
+    //   });
   }
 
   ngOnInit(): void {
@@ -139,49 +138,52 @@ export class SowFormComponent {
     this.commonService.getFormData$().subscribe(data => {
       console.log('Combined Form Data:', data);
       let isFormFilled = this.isObjectFilled(data?.sowFormData)
-      console.log('isFormFilled',isFormFilled);
       if(isFormFilled){
         this.patchValueInForm(data?.sowFormData);
-        this.sowForm.get('country')?.setValue([...this.countries().filter(c => c !== '')]);
-        this.countries.update((val: any) => [...val, data?.sowFormData?.country().filter((c:any) => c !== '')]);
-        this.sendFormdata.emit(this.sowForm.value)
+        // this.sowForm.get('country')?.setValue([...this.countries().filter(c => c !== '')]);
+        // this.countries.update((val: any) => [...val, data?.sowFormData?.country.filter((c:any) => c !== '')]);
       }
     });
     this.logFormStatus()
     if (this.extractedData && Object.keys(this.extractedData).length !== 0) {
       const jsonData = this.extractedData;
+      if (jsonData && typeof jsonData === 'object') {
+        Object.keys(jsonData).forEach((key: string) => {
+          if (jsonData[key]) {
+            this.autoFilledFields[key] = true;
+          }
+        });
+      }      
       this.patchValueInForm(jsonData);
-      this.countries.update((val: any) => [...val, jsonData?.markets_benifited_from_the_serviece().filter((c:any) => c !== '')]);
-      Object.keys(jsonData).forEach((key: string) => {
-        if ((jsonData as Record<string, string>)[key]) {
-          this.autoFilledFields[key] = true;
-        }
-      });
+      this.countries.update((val: any) => [...val, jsonData?.markets_benifited_from_the_serviece.filter((c:any) => c !== '')]);
     }
 
     this.sowForm.valueChanges.subscribe((value: any) => {
       console.log('value',value?.country);
       this.formDataChange.emit(value);
     });
-    this.commonService.messages$.subscribe((messages: any) => {
+    this.commonService.getMessage().subscribe((messages: any) => {
       console.log('messages',messages);
       if(this.isAnyValueFilled(messages?.sow_form)){
         this.patchValueInForm(messages?.sow_form);
       }
-
     });
   }
 
   isObjectFilled = (obj: Record<string, any>): boolean => {
+    if (!obj || typeof obj !== 'object') return false;
     return Object.values(obj).every(value =>
       Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
     );
-  }; 
+  };
+  
   isAnyValueFilled = (obj: Record<string, any>): boolean => {
+    if (!obj || typeof obj !== 'object') return false;
     return Object.values(obj).some(value =>
       Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
     );
   };
+  
   isAutoFilled(field: string): boolean {
     return !!this.autoFilledFields[field];
   }
@@ -206,8 +208,7 @@ export class SowFormComponent {
       // legal_name: jsonData?.legal_name ? jsonData?.legal_name : '',
       // supplier_poc_name: jsonData?.supplier_poc_name ? jsonData?.supplier_poc_name : ''
     });
-    jsonData?.markets_benifited_from_the_serviece ? this.countries.update((val: any) => jsonData?.markets_benifited_from_the_serviece) : []
-    // this.countries.update((val: any) => []);
+    jsonData?.markets_benifited_from_the_serviece ? this.countries.update((val: any) => jsonData?.markets_benifited_from_the_serviece) : this.countries.update((val: any) => jsonData?.country)
 
   }
 
@@ -216,9 +217,9 @@ export class SowFormComponent {
     this.sowForm.get('country')?.updateValueAndValidity();
     this.sowForm.markAllAsTouched();
     if (this.sowForm.valid) {
-      this.commonService.setFormData({sowFormData:this.sowForm.value})
+      let value = {...this.sowForm.value, country:this.sowForm.value.country.filter((item:any) => typeof item === 'string' && item !== '')}
+      this.commonService.setFormData({sowFormData:value})
       this.isFormValid = true
-      this.sendFormdata.emit(this.sowForm.value)
     } else {
       this.isFormValid = false
       this.sowForm.markAllAsTouched();
@@ -251,18 +252,18 @@ export class SowFormComponent {
 
 
   //////////////////////////////////POC
-  searchControl = new FormControl('');
+  // searchControl = new FormControl('');
   options = [
     { title: 'Ads product software', description: 'Ads product software, XYZ description ..', example: 'Example', subscription: 'Software Subscription - Perpetual license' },
     { title: 'Media product software', description: 'Ads product software, XYZ description ..', example: 'Example', subscription: 'Software Subscription - Perpetual license' },
     { title: 'Design ads software', description: 'Ads product software, XYZ description ..', example: 'Example', subscription: 'Software Subscription - Perpetual license' },
     { title: 'Media software', description: 'Ads product software, XYZ description ..', example: 'Example', subscription: 'Software Subscription - Perpetual license' }
   ];
-  categoryPOCFilteredOption: any[] = this.options;
-  selectCategoryItem(item: any) {
-    this.searchControl.setValue(item.title);
-    console.log('selected category item', this.searchControl.value);
-  }
+  // categoryPOCFilteredOption: any[] = this.options;
+  // selectCategoryItem(item: any) {
+  //   this.searchControl.setValue(item.title);
+  //   console.log('selected category item', this.searchControl.value);
+  // }
 
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -292,8 +293,9 @@ export class SowFormComponent {
   removeCountry(country: string): void {
     this.countries.update((el: any) => el.filter((c: any) => c !== country && c !== '')); // Remove empty
     this.announcer.announce(`Removed ${country}`);
-    this.sowForm.patchValue({ country: this.countries() });
-    this.sowForm.get('country')?.updateValueAndValidity(); // Trigger validation update
+    const filtered = this.countries().filter(c => typeof c === 'string' && c !== '');
+    this.sowForm.get('country')?.setValue(filtered.length ? filtered : []);
+        this.sowForm.get('country')?.updateValueAndValidity(); // Trigger validation update
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
@@ -302,6 +304,11 @@ export class SowFormComponent {
       this.countries.update((countries: any) => [...countries, selectedCountry]);
       this.sowForm.patchValue({ country: this.countries().filter(c => c !== '') }); // Remove empty
       this.sowForm.get('country')?.updateValueAndValidity(); // Trigger validation update
+      this.commonService.getFormData$().subscribe(data => {
+        // this.getUniqueCurrencyByName(data?.countryCurrencyCode)
+        this.filteredCountryList = data?.countryCurrencyCode
+      })
+ 
     }
     this.currentCountry.set('');
     event.option.deselect();
@@ -321,6 +328,7 @@ export class SowFormComponent {
       this.authService.getData('/countries_consume').subscribe((res)=>{
         console.log(res)
         this.countryCurrencyNewList = res?.countries_with_currencies
+        this.filteredCountryList = this.getUniqueCountriesByName(res?.countries_with_currencies);
         this.commonService.setFormData({countryCurrencyCode: res?.countries_with_currencies})
       })
     } catch (error) {
@@ -338,14 +346,33 @@ export class SowFormComponent {
     });
   }
   
-  getUniqueCurrencyByName(currency: any[]): any[] {
-    const seen = new Set<string>();
-    return currency.filter(curr => {
-      if (!seen.has(curr.country_currency)) {
-        seen.add(curr.country_currency);
-        return true;
-      }
-      return false;
-    });
+  getUniqueCurrencyByName(currencyList: any[]): any[] {
+  //   const selected = this.sowForm.get('country')?.value || [];
+
+  // const filtered = currencyList
+  //   .filter((item:any) => selected.includes(item.country_name))
+  //   .map((item:any) => item.country_currency);
+
+  // return [...new Set(filtered)].map(currency => ({ country_currency: currency }));
+  const uniqueMap = new Map<string, any>();
+
+  for (const item of currencyList) {
+    if (!uniqueMap.has(item.country_currency)) {
+      uniqueMap.set(item.country_currency, item);
+    }
   }
+
+  return Array.from(uniqueMap.values());
+}
+
+filteredCountryList: any[] = [];
+
+searchCountryList(event: any) {
+  this.filteredCountryList = this.getUniqueCountriesByName(
+    this.countryCurrencyNewList.filter((country:any) =>
+      country.country_name.toLowerCase().includes(event.target.value)
+    )
+  );
+}
+
 }
