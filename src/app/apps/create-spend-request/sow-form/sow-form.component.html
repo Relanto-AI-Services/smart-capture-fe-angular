@@ -52,7 +52,7 @@
                 <mat-select formControlName="spend_category"
                     [ngClass]="{'auto-filled': isAutoFilled('spend_category')}">
                     @for (item of spendCategory; track $index) {
-                    <mat-option [value]="item">{{item}}</mat-option>
+                    <mat-option [value]="item.toLowerCase()">{{item}}</mat-option>
                     }
                 </mat-select>
                 <mat-error *ngIf="isFieldInvalid('spend_category')">This field is required</mat-error>
@@ -103,80 +103,83 @@
         <section>
             <p class="section-title">Timeline</p>
             <div class="row">
-                <mat-form-field appearance="outline" class="half-width">
-                    <mat-label>Work Start Date </mat-label>
-                    <input matInput [matDatepicker]="picker1" formControlName="work_start_date"
-                        [ngClass]="{'auto-filled': isAutoFilled('work_start_date')}">
-                    <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
-                    <mat-datepicker #picker1></mat-datepicker>
-                    <mat-error *ngIf="isFieldInvalid('work_start_date')">This field is required</mat-error>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline" class="half-width">
-                    <mat-label>Work End Date </mat-label>
-                    <input matInput [matDatepicker]="picker2" formControlName="work_end_date"
-                        [ngClass]="{'auto-filled': isAutoFilled('work_end_date')}">
-                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
-                    <mat-datepicker #picker2></mat-datepicker>
-                    <mat-error *ngIf="isFieldInvalid('work_end_date')">This field is required</mat-error>
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Work Start Date</mat-label>
+                <input matInput [matDatepicker]="picker1" formControlName="work_start_date"
+                       [min]="today"
+                       [ngClass]="{'auto-filled': isAutoFilled('work_start_date')}">
+                <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error *ngIf="isFieldInvalid('work_start_date')">This field is required</mat-error>
+              </mat-form-field>
+          
+              <mat-form-field appearance="outline" class="half-width">
+                <mat-label>Work End Date</mat-label>
+                <input matInput [matDatepicker]="picker2" formControlName="work_end_date"
+                       [min]="sowForm.get('work_start_date')?.value"
+                       [ngClass]="{'auto-filled': isAutoFilled('work_end_date')}">
+                <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error *ngIf="isFieldInvalid('work_end_date')">This field is required</mat-error>
+                <mat-error *ngIf="sowForm.errors?.['dateRangeInvalid']">End date must be after start date</mat-error>
+              </mat-form-field>
             </div>
-        </section>
+          </section>
+          
 
-        <section>
-            <p class="section-title">Select the Market market(s) benefiting from the service provider</p>
-            <mat-form-field class="example-chip-list full-width" appearance="outline">
-                <mat-label>Select Country</mat-label>
-                <mat-chip-grid #chipGrid aria-label="Country selection">
-                    @for (country of countries(); track $index) {
-                    @if (country !=='' && country.length > 0) {
-                    <mat-chip-row (removed)="removeCountry(country)">
-                        <img class="countryFlag" *ngIf="getCountryFlag(country)" [src]="getCountryFlag(country)"
-                            alt="Country Flag" width="50">
-                        {{country}}
-                        <button matChipRemove [attr.aria-label]="'remove ' + country">
-                            <mat-icon>cancel</mat-icon>
-                        </button>
-                    </mat-chip-row>
-                    }
-                    }
-                </mat-chip-grid>
-                <input style="border: 1px solid red;" formControlName="country" #countryInput [matChipInputFor]="chipGrid"
-                    [matAutocomplete]="autoCountry" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                    (change)="searchCountryList($event)" />
-                <!-- (matChipInputTokenEnd)="addCountry($event)" -->
-                <mat-autocomplete #autoCountry="matAutocomplete"
-                    (optionSelected)="selected($event); countryInput.value = ''">
-                    @for (country of filteredCountryList; track country) {
-                    <mat-option [value]="country?.country_name"><img class="countryFlag" *ngIf="country?.country_flag"
-                            [src]="country?.country_flag" alt="Country Flag"
-                            width="50">{{country?.country_name}}</mat-option>
-                    }
-                </mat-autocomplete>
-            </mat-form-field>
-            @if (sowForm.controls['country'].invalid && sowForm.controls['country'].touched) {
-                <mat-error>This field is required
-                </mat-error>
-            }
-            <!-- <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Select Country </mat-label>
-                <mat-select formControlName="country" multiple [ngClass]="{'auto-filled': isAutoFilled('country')}">
-                    <mat-option value="USA">United States</mat-option>
-                    <mat-option value="India">India</mat-option>
-                </mat-select>
-                <mat-error *ngIf="isFieldInvalid('country')">This field is required</mat-error>
-            </mat-form-field> -->
-            <mat-form-field appearance="outline" class="full-width country">
-                <mat-label>Select Currency</mat-label>
-                <mat-select formControlName="currency" [ngClass]="{'auto-filled': isAutoFilled('currency')}">
-                    @for (cur of getUniqueCurrencyByName(countryCurrencyNewList); track cur) {
-                    <mat-option [value]="cur?.country_currency">{{cur?.country_currency}}</mat-option>
-                    }
-                </mat-select>
-                <mat-error *ngIf="isFieldInvalid('currency')">This field is required</mat-error>
-            </mat-form-field>
-        </section>
-
+<section>
+    <p class="section-title">Select the Market(s) benefiting from the service provider</p>
+  
+    <!-- Country Selection -->
+    <mat-form-field class="example-chip-list full-width" appearance="outline">
+      <mat-label>Select Country</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Country selection">
+        @for (country of countries(); track $index) {
+          @if (country && country.length > 0) {
+            <mat-chip-row (removed)="removeCountry(country)">
+              <img class="countryFlag" *ngIf="getCountryFlag(country)" [src]="getCountryFlag(country)" alt="Flag" width="30">
+              {{ country }}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip-row>
+          }
+        }
+      </mat-chip-grid>
+      <input
+        placeholder="Select Country"
+        formControlName="country"
+        #countryInput
+        [matChipInputFor]="chipGrid"
+        [matAutocomplete]="autoCountry"
+        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+        (input)="searchCountryList($event)"
+      />
+      <mat-autocomplete #autoCountry="matAutocomplete" (optionSelected)="selected($event); countryInput.value = ''">
+        @for (country of uniqueCountryList; track country) {
+          <mat-option [value]="country.country_name.toLowerCase()">
+            <img class="countryFlag" *ngIf="country?.country_flag" [src]="country.country_flag" alt="Flag" width="30">
+            {{ country.country_name }}
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+    @if (sowForm.controls['country'].invalid && sowForm.controls['country'].touched) {
+      <mat-error>This field is required</mat-error>
+    }
+  
+    <!-- Currency Selection -->
+    <mat-form-field appearance="outline" class="full-width country">
+      <mat-label>Select Currency</mat-label>
+      <mat-select formControlName="currency" [ngClass]="{ 'auto-filled': isAutoFilled('currency') }">
+        @for (cur of filteredCurrencyList; track cur.country_currency) {
+          <mat-option [value]="cur.country_currency.toLowerCase()">{{ cur.country_currency }}</mat-option>
+        }
+      </mat-select>
+      <mat-error *ngIf="isFieldInvalid('currency')">This field is required</mat-error>
+    </mat-form-field>
+  </section>
+  
         <!-- <section> -->
         <!-- <p class="section-title">Supplier Information</p> -->
         <!-- <mat-form-field appearance="outline" class="full-width">

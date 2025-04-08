@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, EventEmitter, inject, Input, model, Output, signal } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, FormsModule, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, FormsModule, FormControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -104,9 +104,14 @@ export class SowFormComponent {
 
   public spendCategory: any = ["PRODUCTION", "CONTENT LICENSING RIGHTS", "PRINT PRODUCTION - SERVICE", "PRINT PRODUCTION - GOOD", "PHOTOGRAPHY", "FILM & ANIMATION", "GLOBAL ADAPTATION", "LICENSING & RIGHTS MANAGEMENT", "GROWTH MARKETING", "GROWTH CAMPAIGN ACTIVATION - ENGAGEMENT", "GROWTH CAMPAIGN GOVERNANCE & OPERATIONS", "GROWTH CAMPAIGN ACTIVATION - ACQUISITION", "GROWTH CAMPAIGN ACTIVATION - FULL FUNNEL", "GROWTH CAMPAIGN ACTIVATION - RETENTION", "GROWTH CAMPAIGN MEASUREMENT", "GROWTH CAMPAIGN STRATEGY", "CREATIVE DESIGN", "CREATIVE STRATEGY", "CONTENT STRATEGY & CREATION", "CREATIVE DEVELOPMENT", "INTERACTIVE PRODUCTION", "BRAND STRATEGY", "BRAND ARCHITECTURE & NAMING", "BRAND IDENTITY (VISUAL, BRAND VOICE)", "BRAND STRATEGY & POSITIONING", "SPONSORSHIPS", "SPORTS / MUSIC / ENTERTAINMENT SPONSORSHIPS", "COMMUNITY I EDUCATIONAL / NON PROFIT SPONSORSHIPS", "TALENT", "CELEBRITY TALENT ENDORSEMENT", "TALENT FOR CREATIVE PRODUCTION", "TALENT FOR EVENT APPEARANCE", "SOCIAL MARKETING", "SOCIAL CONTENT CREATION & PRODUCTION", "SOCIAL INSIGHTS & MEASUREMENT", "COMMUNITY MANAGEMENT & ENGAGEMENT", "SOCIAL CONTENT & PLATFORM STRATEGY", "SOCIAL CHANNEL MANAGEMENT", "INFLUENCER & CREATOR MANAGEMENT", "EVENTS & EXPERIENCES", "EVENT VENUE & ACCOMMODATION", "EVENT MANAGEMENT & PRODUCTION", "PROMOTIONAL GOODS", "PROMOTIONAL GOODS - CLIENT & CUSTOMER", "PROMOTIONAL GOODS - EMPLOYEE", "MARKET RESEARCH & INSIGHTS", "RESEARCH - SYNDICATED", "RESEARCH - CUSTOM", "PARTNER MARKETING/CO-MARKETING", "MEDIA", "MEDIA AGENCY FEES", "MEDIA PASSTHROUGH", "MARKETING TECHNOLOGY", "PLATFORM & TOOLS MANAGEMENT", "PLATFORM & TOOLS PILOTS & PROTOTYPING", "PLATFORM & TOOLS DEVELOPMENT & INTEGRATION", "MEASUREMENT, ANALYTICS, ACCOUNTABILITY & IMPACT", "CREATIVE TESTING", "MEDIA MIX MODELING", "ANALYTICS", "PRODUCT SERVICES", "UX", "UX RESEARCH", "UX WRITING", "UX DESIGN", "SALES SUPPORT SERVICES", "FIELD SALES / SALES SUPPORT", "FIELD RETAIL OPERATIONS", "PARTNER PRODUCT TRAINING", "NON PROCURABLE", "DUES & SUBSCRIPTIONS", "DUES./ MEMBERSHIP FEES - NON TAXABLE", "DUES / MEMBERSHIP FEES - TAXABLE", "MAGAZINES / NEWSPAPERS / PERIODICALS", "DUES & SUBSCRIPTIONS", "ENTERPRISE SERVICES", "CONSULTING SERVICES", "STRATEGY CONSULTING", "HUMAN RESOURCE SERVICES", "TRAINING, LEARNING, & DEVELOPMENT"]
   public spendSubCategory: any = ["NON STREAMING - PRODUCT & SERVICE DESIGN", "ROYALTIES - NON STREAMING - US", "ROYALTIES - OTHER - US", "NON STREAMING - CONTENT & DATA - SEARCH CONTENT / METADATA", "ROYALTIES - MUSIC - US", "NON STREAMING - AD CAMPAIGN / FULL SERVICE", "NON STREAMING - DIGITAL OPTIMIZATION (DNU)", "ORIGINAL CONTENT LICENSE - MUSIC - NON US", "ROYALTIES - OTHER - NON US", "NON STREAMING - CONTENT & DATA - TRAVEL", "ROYALTIES - GAMING - NON US", "ORIGINAL CONTENT LICENSE - OTHER - US"]
-  countryCurrencyNewList: any=[];
-  constructor(private fb: FormBuilder, public commonService: CommonService,public authService: AuthService) {
-    ///////////poc    
+  allCountryCurrencyNewList: any = [];
+  uniqueCountryList: any[] = [];
+  uniqueCurrencyList: any[] = [];
+  filteredCurrencyList: any[]=[];
+  today = new Date();
+
+  constructor(private fb: FormBuilder, public commonService: CommonService, public authService: AuthService) {
+    ///////////poc   It's required  
     // this.searchControl.valueChanges
     //   .pipe(startWith(''), debounceTime(300))
     //   .subscribe((value: any) => {
@@ -121,30 +126,33 @@ export class SowFormComponent {
     // this.commonService.resetTabs()
     this.sowForm = this.fb.group({
       purchase_name: ['', [Validators.required]],
-      spend_category: ['', Validators.required],
+      spend_category: ['', [Validators.required]],
       // spend_sub_category: ['', Validators.required],
-      purchase_description: ['', Validators.required],
+      purchase_description: ['', [Validators.required]],
       // market_plan: [jsonData?.market_plan],   ref Kajal 
       // MRFID: [jsonData?.MRFID, Validators.required],
-      work_start_date: [null, Validators.required],
-      work_end_date: [null, Validators.required],
-      country: [[], Validators.required], // ??? multi select
-      currency: [, Validators.required],
+      work_start_date: [null, [Validators.required]],
+      work_end_date: [null, [Validators.required]],
+      country: [[], [Validators.required]], // ??? multi select
+      currency: [, [Validators.required]],
       // selectRole: [, Validators.required], ref vaishnavi   // TBD
       // supplier_legal_name: ['', [Validators.required]],
       // legal_name: ['', [Validators.required]],
       // supplier_poc_name: ['', [Validators.required]]
-    });
+    },
+    {
+      validators: this.dateRangeValidator.bind(this)
+    }
+  );
     this.commonService.getFormData$().subscribe(data => {
       console.log('Combined Form Data:', data);
       let isFormFilled = this.isObjectFilled(data?.sowFormData)
-      if(isFormFilled){
+      if (isFormFilled) {
         this.patchValueInForm(data?.sowFormData);
         // this.sowForm.get('country')?.setValue([...this.countries().filter(c => c !== '')]);
         // this.countries.update((val: any) => [...val, data?.sowFormData?.country.filter((c:any) => c !== '')]);
       }
     });
-    this.logFormStatus()
     if (this.extractedData && Object.keys(this.extractedData).length !== 0) {
       const jsonData = this.extractedData;
       if (jsonData && typeof jsonData === 'object') {
@@ -153,21 +161,25 @@ export class SowFormComponent {
             this.autoFilledFields[key] = true;
           }
         });
-      }      
+      }
       this.patchValueInForm(jsonData);
-      this.countries.update((val: any) => [...val, jsonData?.markets_benifited_from_the_serviece.filter((c:any) => c !== '')]);
+      this.countries.update((val: any) => [...val, jsonData?.markets_benifited_from_the_serviece.filter((c: any) => c !== '')]);
     }
 
     this.sowForm.valueChanges.subscribe((value: any) => {
-      console.log('value',value?.country);
+      console.log('value', value?.country);
       this.formDataChange.emit(value);
     });
     this.commonService.getMessage().subscribe((messages: any) => {
-      console.log('messages',messages);
-      if(this.isAnyValueFilled(messages?.sow_form)){
+      console.log('messages', messages);
+      if (this.isAnyValueFilled(messages?.sow_form)) {
         this.patchValueInForm(messages?.sow_form);
       }
     });
+    this.sowForm.get('country')?.valueChanges.subscribe((selectedCountries: string[]) => {
+      this.updateCurrencyListOnCountryChange(selectedCountries);
+    });
+    this.logFormStatus()
   }
 
   isObjectFilled = (obj: Record<string, any>): boolean => {
@@ -176,14 +188,14 @@ export class SowFormComponent {
       Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
     );
   };
-  
+
   isAnyValueFilled = (obj: Record<string, any>): boolean => {
     if (!obj || typeof obj !== 'object') return false;
     return Object.values(obj).some(value =>
       Array.isArray(value) ? value.length > 0 : value !== null && value !== undefined && value !== ''
     );
   };
-  
+
   isAutoFilled(field: string): boolean {
     return !!this.autoFilledFields[field];
   }
@@ -199,8 +211,8 @@ export class SowFormComponent {
       spend_category: jsonData?.spend_category ? jsonData?.spend_category : '',
       // spend_sub_category: jsonData?.spend_sub_category ? jsonData?.spend_sub_category : '',
       purchase_description: jsonData?.purchase_description ? jsonData?.purchase_description : '',
-      work_start_date: jsonData?.work_start_date ? this.convertsToDate(jsonData?.work_start_date) : '',
-      work_end_date: jsonData?.work_end_date ? this.convertsToDate(jsonData?.work_end_date) : '',
+      work_start_date: jsonData?.work_start_date ? this.convertsToDate(jsonData?.work_start_date) : null,
+      work_end_date: jsonData?.work_end_date ? this.convertsToDate(jsonData?.work_end_date) : null,
       country: jsonData?.markets_benifited_from_the_serviece ? jsonData?.markets_benifited_from_the_serviece : jsonData?.country,
       currency: jsonData?.currency ? jsonData?.currency : '',
       // selectRole: jsonData?.selectRole,
@@ -217,8 +229,8 @@ export class SowFormComponent {
     this.sowForm.get('country')?.updateValueAndValidity();
     this.sowForm.markAllAsTouched();
     if (this.sowForm.valid) {
-      let value = {...this.sowForm.value, country:this.sowForm.value.country.filter((item:any) => typeof item === 'string' && item !== '')}
-      this.commonService.setFormData({sowFormData:value})
+      let value = { ...this.sowForm.value, country: this.sowForm.value.country.filter((item: any) => typeof item === 'string' && item !== '') }
+      this.commonService.setFormData({ sowFormData: value })
       this.isFormValid = true
     } else {
       this.isFormValid = false
@@ -295,7 +307,7 @@ export class SowFormComponent {
     this.announcer.announce(`Removed ${country}`);
     const filtered = this.countries().filter(c => typeof c === 'string' && c !== '');
     this.sowForm.get('country')?.setValue(filtered.length ? filtered : []);
-        this.sowForm.get('country')?.updateValueAndValidity(); // Trigger validation update
+    this.sowForm.get('country')?.updateValueAndValidity(); // Trigger validation update
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
@@ -306,16 +318,16 @@ export class SowFormComponent {
       this.sowForm.get('country')?.updateValueAndValidity(); // Trigger validation update
       this.commonService.getFormData$().subscribe(data => {
         // this.getUniqueCurrencyByName(data?.countryCurrencyCode)
-        this.filteredCountryList = data?.countryCurrencyCode
+        this.uniqueCountryList = data?.countryCurrencyCode
       })
- 
+
     }
     this.currentCountry.set('');
     event.option.deselect();
   }
   getCountryFlag(countryName: string): string | null {
     if (!countryName) return null;  // Handle empty cases
-    const country = this.countryCurrencyNewList.find((c: any) =>
+    const country = this.allCountryCurrencyNewList.find((c: any) =>
       c.country_name === countryName
     );
     return country ? country.country_flag : null;
@@ -323,56 +335,141 @@ export class SowFormComponent {
   isFieldInvalid(field: string): boolean {
     return this.sowForm.controls[field].invalid && (this.sowForm.controls[field].dirty || this.sowForm.controls[field].touched);
   }
-  getCountryCurrencyList(){
-    try {
-      this.authService.getData('/countries_consume').subscribe((res)=>{
-        console.log(res)
-        this.countryCurrencyNewList = res?.countries_with_currencies
-        this.filteredCountryList = this.getUniqueCountriesByName(res?.countries_with_currencies);
-        this.commonService.setFormData({countryCurrencyCode: res?.countries_with_currencies})
-      })
-    } catch (error) {
-      console.error('error',error)
+  // getCountryCurrencyList() {
+  //   try {
+  //     this.authService.getData('/countries_consume').subscribe((res) => {
+  //       console.log(res)
+  //       this.allCountryCurrencyNewList = res?.countries_with_currencies
+  //       this.uniqueCountryList = this.getUniqueCountriesByName(res?.countries_with_currencies);
+  //       this.uniqueCurrencyList = this.getUniqueCurrencyByName(res?.countries_with_currencies);
+  //       this.commonService.setFormData({ countryCurrencyCode: res?.countries_with_currencies })
+  //     })
+  //   } catch (error) {
+  //     console.error('error', error)
+  //   }
+  // }
+
+  // getUniqueCountriesByName(countries: any[]): any[] {
+  //   const seen = new Set<string>();
+  //   return countries.filter(country => {
+  //     if (!seen.has(country.country_name)) {
+  //       seen.add(country.country_name);
+  //       return true;
+  //     }
+  //     return false;
+  //   });
+  // }
+
+  // getUniqueCurrencyByName(currencyList: any[]): any[] {
+  //   const uniqueMap = new Map<string, any>();
+
+  //   for (const item of currencyList) {
+  //     if (!uniqueMap.has(item.country_currency)) {
+  //       uniqueMap.set(item.country_currency, item);
+  //     }
+  //   }
+
+  //   return Array.from(uniqueMap.values());
+  // }
+  // searchCountryList(event: any) {
+  //   this.uniqueCountryList = this.allCountryCurrencyNewList.filter((country: any) =>
+  //     country.country_name.toLowerCase().includes(event.target.value)
+  //   )
+  // }
+// TypeScript code for managing countries and currencies
+
+getCountryCurrencyList() {
+  this.authService.getData('/countries_consume').subscribe({
+    next: (res) => {
+      const allData = res?.countries_with_currencies || [];
+      this.allCountryCurrencyNewList = allData;
+
+      this.uniqueCountryList = this.getUniqueListByKey(allData, 'country_name');
+      this.uniqueCurrencyList = this.getUniqueListByKey(allData, 'country_currency');
+
+      this.commonService.setFormData({ countryCurrencyCode: allData });
+    },
+    error: (err) => {
+      console.error('Fetch error:', err);
     }
-  }
-  getUniqueCountriesByName(countries: any[]): any[] {
-    const seen = new Set<string>();
-    return countries.filter(country => {
-      if (!seen.has(country.country_name)) {
-        seen.add(country.country_name);
-        return true;
-      }
-      return false;
-    });
-  }
-  
-  getUniqueCurrencyByName(currencyList: any[]): any[] {
-  //   const selected = this.sowForm.get('country')?.value || [];
-
-  // const filtered = currencyList
-  //   .filter((item:any) => selected.includes(item.country_name))
-  //   .map((item:any) => item.country_currency);
-
-  // return [...new Set(filtered)].map(currency => ({ country_currency: currency }));
-  const uniqueMap = new Map<string, any>();
-
-  for (const item of currencyList) {
-    if (!uniqueMap.has(item.country_currency)) {
-      uniqueMap.set(item.country_currency, item);
-    }
-  }
-
-  return Array.from(uniqueMap.values());
+  });
 }
 
-filteredCountryList: any[] = [];
+// Returns unique items based on the key
+getUniqueListByKey(arr: any[], key: string): any[] {
+  const seen = new Set();
+  return arr.filter(item => {
+    if (!seen.has(item[key])) {
+      seen.add(item[key]);
+      return true;
+    }
+    return false;
+  });
+}
 
+// Search filtered countries by name
 searchCountryList(event: any) {
-  this.filteredCountryList = this.getUniqueCountriesByName(
-    this.countryCurrencyNewList.filter((country:any) =>
-      country.country_name.toLowerCase().includes(event.target.value)
-    )
+  const searchVal = event.target.value?.toLowerCase();
+  this.uniqueCountryList = this.getUniqueListByKey(
+    this.allCountryCurrencyNewList.filter((item: any) =>
+      item.country_name.toLowerCase().includes(searchVal)
+    ),
+    'country_name'
   );
+}
+
+// Get unique currency list based on selected countries
+getCurrenciesBySelectedCountries(selectedCountries: string[]): any[] {
+  const currencySet = new Map<string, any>();
+
+  for (const entry of this.allCountryCurrencyNewList) {
+    if (selectedCountries.includes(entry.country_name)) {
+      if (!currencySet.has(entry.country_currency)) {
+        currencySet.set(entry.country_currency, entry);
+      }
+    }
+  }
+
+  return Array.from(currencySet.values());
+}
+
+// Usage in component
+
+updateCurrencyListOnCountryChange(selectedCountries: string[]) {
+  const mappedCurrencies = this.allCountryCurrencyNewList.filter((item:any) =>
+    selectedCountries.includes(item.country_name)
+  );
+
+  // Remove duplicates based on country_currency
+  const uniqueMap = new Map<string, any>();
+  for (const currency of mappedCurrencies) {
+    if (!uniqueMap.has(currency.country_currency)) {
+      uniqueMap.set(currency.country_currency, currency);
+    }
+  }
+
+  this.filteredCurrencyList = Array.from(uniqueMap.values());
+}
+
+
+minDateValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const inputDate = new Date(control.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // reset time for accurate comparison
+    return inputDate < today ? { minDate: true } : null;
+  };
+}
+
+
+dateRangeValidator(group: AbstractControl): ValidationErrors | null {
+  const start = group.get('work_start_date')?.value;
+  const end = group.get('work_end_date')?.value;
+
+  if (start && end && new Date(start) > new Date(end)) {
+    return { dateRangeInvalid: true };
+  }
+  return null;
 }
 
 }

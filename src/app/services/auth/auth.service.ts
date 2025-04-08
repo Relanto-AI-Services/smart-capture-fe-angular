@@ -22,6 +22,7 @@ export class AuthService {
         this.userData = response
         localStorage.setItem('user', JSON.stringify(this.userData))
         localStorage.setItem('sid', response?.session_id)
+        localStorage.setItem('isUserLogged', 'true')
         this.updateUserSession(true)
       })
     );

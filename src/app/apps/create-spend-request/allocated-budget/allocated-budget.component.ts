@@ -71,7 +71,7 @@ export class AllocatedBudgetComponent {
     if (extractedData) {
       const parsedData = JSON.parse(extractedData);
       this.totalSpend = parsedData?.total_amount 
-      this.getFormData(parsedData?.row_id) 
+      this.getBudgetFormData(parsedData?.row_id) 
     }
     this.commonService.getFormData$().subscribe(data => {
       let isFormFilled = this.isAnyValueFilled(data?.budgetFormData)
@@ -112,9 +112,9 @@ export class AllocatedBudgetComponent {
   toggleExpand(index: number) {
     this.forecastBudget[index].expanded = !this.forecastBudget[index].expanded;
   }
-  getFormData(id:any){
+  getBudgetFormData(id:any){
     try {
-      this.authservice.postData('/get_spend_request_tactic_data',{spend_request_id:id}).subscribe((res:any)=>{
+      this.authservice.postData('/budget_tactic_fetch',{spend_request_id:id}).subscribe((res:any)=>{
         console.log(res);
       })
     } catch (error) {
@@ -123,7 +123,8 @@ export class AllocatedBudgetComponent {
   }
   pushFormData(){
     try {
-      this.authservice.postData('','').subscribe((res:any)=>{
+      let payload ={}
+      this.authservice.postData('/ingest_to_budget_forecast',payload).subscribe((res:any)=>{
         console.log(res);
       })
     } catch (error) {
@@ -148,6 +149,7 @@ export class AllocatedBudgetComponent {
       alert("Please fill all required fields correctly.");
       return;
     }else{
+      return
       let budgetFormData = {
         totalSpend:this.totalSpend,
         eventId:this.eventId,

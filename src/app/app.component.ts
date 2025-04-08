@@ -26,7 +26,11 @@ export class AppComponent {
       if(res){
         this.userSession = true
       }else{
-        this.userSession = false
+        if(localStorage.getItem('isUserLogged')){
+          this.userSession = true
+        }else{
+          this.userSession = false
+        }
       }
       console.log('login log res',res)
     })
