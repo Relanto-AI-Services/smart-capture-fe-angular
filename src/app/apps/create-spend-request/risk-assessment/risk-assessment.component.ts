@@ -137,7 +137,6 @@ submitForm() {
 clickNext(type: any) {
   if (type === 'continue') {
     // this.onSubmit()
-    this.riskAssessmentClick.emit({ data: this.data, type: 'continue' });
     this.subMitRiskdata();
   } else {
     this.riskAssessmentClick.emit({ data: this.data, type: 'back' });
@@ -196,14 +195,23 @@ subMitRiskdata(){
       };
     });
   
-  this.apiService.saveRisk(   this.rowId, sowData, { risk_fields }).subscribe({
-    next: (response) => console.log('Success:', response),
-    error: (error) => console.error('Error:', error)
-  });
+    this.apiService.saveRisk(this.rowId, sowData, { risk_fields }).subscribe({
+      next: (response) => {
+        if (response ) {
+          console.log('Risk data saved successfully:', response);
+          this.riskAssessmentClick.emit({ data: this.data, type: 'continue' });
+
+        } else {
+          console.warn('Risk data save failed or incomplete:', response);
+        }
+      },
+      error: (error) => {
+        console.error('Error while saving risk data:', error);
+      }
+  }
+);
 
 }
-
-
 
 
 openLoader(): void {

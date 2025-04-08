@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input, OnInit} from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,13 +11,18 @@ import { ApiService } from '../../../services/api.service';
   templateUrl: './submit-spend-request.component.html',
   styleUrl: './submit-spend-request.component.scss'
 })
-export class SubmitSpendRequestComponent {
+export class SubmitSpendRequestComponent implements OnInit {
   @Output() finalSubmitionClick = new EventEmitter<any>();
+  @Input() rowId!: string;
   isActive:boolean=true
   data:any={}
 
   constructor(private apiService: ApiService){
 
+  }
+
+  ngOnInit(): void {
+    this.fetchSubmitAndReview();
   }
 
   clickNext(type:any) {
@@ -30,20 +35,16 @@ export class SubmitSpendRequestComponent {
 
  
 
-
-
-
-  fetchSubmitAndReview() {
-    this.apiService.getReviewAndSubmitData().subscribe({
-      next: (response: any) => {
-        console.log("Raw API Response:", response);
-      
-      },
-      error: (error) => {
-        console.error("Error fetching spend request data:", error);
-      },
-    
+  fetchSubmitAndReview(){
+    this.apiService.getReviewAndSubmitData( this.rowId ).subscribe({
+      next: (response) =>{
+        this.data = response;
+        console.log('Success:', response)},
+      error: (error) => console.error('Error:', error)
     });
-   
+  
   }
+
+
+
 }
