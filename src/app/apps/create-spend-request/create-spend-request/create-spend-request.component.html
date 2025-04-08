@@ -26,7 +26,7 @@
                         ngSkipHydration></app-allocated-budget>
                     }
                     @else if (activeTab === 'riskAssessment' ) {
-                    <app-risk-assessment (riskAssessmentClick)="onRiskAssessmentSelection($event)" 
+                    <app-risk-assessment (riskAssessmentClick)="onRiskAssessmentSelection($event)" [rowId]="rowId"
                         ngSkipHydration></app-risk-assessment>
                     }
                     @else if (activeTab === 'reviewAndSubmit' ) {
