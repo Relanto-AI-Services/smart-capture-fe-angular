@@ -67,7 +67,7 @@
         background-color: #f8f9fa;
         border-radius: 8px;
         margin-bottom: 12px;
-        padding: 12px;
+        padding: 0px;
     }
 
     .expand-icon {
@@ -100,13 +100,16 @@
         justify-content: space-between;
         margin-bottom: 12px;
         padding: 8px 0;
-
+        width: 45vw;
+        overflow: auto;
         .detail-title {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
             font-size: 0.9rem;
             color: #666;
+            min-width: 15vw;
+
         }
 
         .detail-inputs {
@@ -115,7 +118,7 @@
         }
 
         mat-form-field {
-            width: 140px;
+            width: 8vw;
         }
     }
 

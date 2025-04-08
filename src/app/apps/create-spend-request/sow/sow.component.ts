@@ -118,13 +118,13 @@ export class SowComponent {
             ...dataExtract
           }
         ], 
-        country_names: this.sowForm?.sowForm?.value['country'].filter((item:any) => Array.isArray(item) ? item.length > 0 : true), 
-        country_codes: selectedCountryCode
+        country_name: this.sowForm?.sowForm?.value['country'].filter((item:any) => Array.isArray(item) ? item.length > 0 : true), 
+        country_code: selectedCountryCode
       }
-      this.openLoader()
+      // this.openLoader()
       this.authService.postData('/ingest_sow_page', payload).subscribe((res: any) => {
         console.log("response on saving sow fom", res);
-        this.dialogRef.close()
+        // this.dialogRef.close()
         this.sowClick.emit({ data: this.sowForm?.sowForm, type: 'submit' });
       })
     } catch (error) {

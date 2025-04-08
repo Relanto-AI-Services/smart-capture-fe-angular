@@ -17,7 +17,11 @@ export class SubmitSpendRequestComponent {
 
   
 
-  clickNext() {
-    this.finalSubmitionClick.emit(this.data);
+  clickNext(type:any) {
+    if (type === 'continue') {
+      this.finalSubmitionClick.emit({ data: this.data, type: 'continue' });
+    }else{
+      this.finalSubmitionClick.emit({ data: this.data, type: 'back' });
+    }
   }
 }

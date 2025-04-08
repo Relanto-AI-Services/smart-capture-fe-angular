@@ -18,9 +18,9 @@
         <p class="description">Required if you selected an Event & Experiences Spend Category. For internal or external
             events greater than or equal to 20,000 USD, you need an Event ID. To get an Event ID, go to MyEventHub
             (go/myEventHub). Event ID needs to include 2 letters then 6-8 degits. </p>
-        <mat-form-field appearance="outline" class="full-width">
+        <mat-form-field appearance="outline" class="full-width" >
             <mat-label>EVENT ID</mat-label>
-            <input matInput type="text" #eventIdRef="ngModel" pattern="^[A-Za-z]{2}\d{6,8}$" [(ngModel)]="eventId" #eventIdInput="ngModel" />
+            <input matInput type="text" #eventIdRef="ngModel" [required]="selectedCurrency > 20000" pattern="^[A-Za-z]{2}\d{6,8}$" [(ngModel)]="eventId" #eventIdInput="ngModel" />
             <mat-error *ngIf="eventIdInput.invalid && eventIdInput.touched">
                 Invalid Event ID
             </mat-error>
@@ -38,9 +38,9 @@
                 (click)="distributeTotalSpend()">Distribute Total Spend</button>
         </div>
 
-        <mat-accordion class="budget-accordion">
+        <!-- <mat-accordion class="budget-accordion"> -->
             <!-- [(expanded)]="budget.expanded" -->
-            <mat-expansion-panel *ngFor="let budget of forecastBudget; let i = index" >
+            <!-- <mat-expansion-panel *ngFor="let budget of forecastBudget; let i = index" >
                 <mat-expansion-panel-header style="display: flex;justify-content: space-between;">
                     <mat-panel-title>
                         <span class="expand-icon" [innerHTML]="budget.expanded ? '&#8722;' : '&#43;'"></span>
@@ -76,9 +76,49 @@
                         </mat-form-field>
                     </div>
                 </div>
-            </mat-expansion-panel>
-        </mat-accordion>
-        <div class="all-cc-total">
+            </mat-expansion-panel> -->
+        <!-- </mat-accordion> -->
+        <mat-accordion class="budget-accordion">
+            @for (budget of fetchedBudgetData?.['tactic_details']; track $index; let i = $index) {
+              <mat-expansion-panel [(expanded)]="budget.expanded">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <span class="expand-icon" [innerHTML]="budget?.expanded ? '&#8722;' : '&#43;'"></span>
+                    <span class="budget-title">{{ budget?.cost_center_code }}</span>
+                  </mat-panel-title>
+                  <mat-panel-title>
+                    <mat-select [disabled]="true" [(ngModel)]="budget.selectedPeriod">
+                      @for (period of fetchedBudgetData.time; track period) {
+                        <mat-option [value]="period">{{ period }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-panel-title>
+                  <span class="budget-remaining">Available Budget Remaining: <b>${{ budget.budgetRemaining.toLocaleString() }}</b></span>
+                </mat-expansion-panel-header>
+          
+                <div class="detail-item">
+                  <div class="detail-title">
+                    <span class="detail-name"><strong>{{ budget.tactic_id }}</strong></span>
+                    <span class="detail-description">{{ budget.tactic_type }}</span>
+                  </div>
+                  <div class="detail-inputs">
+                    @for (item of fetchedBudgetData['time']; track item) {
+                      <mat-form-field appearance="outline">
+                        <mat-label>{{ item }}</mat-label>
+                        <input matInput type="number" min="0" [(ngModel)]="budget.forecast[item]" required />
+                    </mat-form-field>
+                    }
+                    <mat-form-field appearance="outline">
+                      <mat-label>All Periods</mat-label>
+                      <input matInput type="number" [value]="getTotalForecast(budget)" disabled />
+                    </mat-form-field>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            }
+          </mat-accordion>
+          
+        <div class="all-cc-total" (click)="submitForecastForm()">
             <div class="total-row">
                 <div class="total-label">All CC Total</div>
                 <div class="total-sub-row">

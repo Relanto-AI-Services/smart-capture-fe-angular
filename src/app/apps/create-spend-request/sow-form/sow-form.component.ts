@@ -202,9 +202,11 @@ export class SowFormComponent {
 
   convertsToDate(dateString: string): Date | null {
     if (!dateString) return null;
-    const formattedDate = moment.default(dateString, 'DD-MM-YYYY', true);
+    // const dateOnly = new Date(dateString).toISOString().split('T')[0];
+    const formattedDate = moment.default(dateString, ['DD-MM-YYYY', 'DD/MM/YYYY','YYYY-MM-DDTHH:mm:ss.SSSZ'], true);
     return formattedDate.isValid() ? formattedDate.toDate() : null;
   }
+
   patchValueInForm(jsonData: any) {
     this.sowForm.patchValue({
       purchase_name: jsonData?.purchase_name ? jsonData?.purchase_name : '',

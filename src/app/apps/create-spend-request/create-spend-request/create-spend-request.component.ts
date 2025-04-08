@@ -111,11 +111,12 @@ export class CreateSpendRequestComponent {
         break;
       case 'sow':
         this.chatBoatEndPoint = '/spend_request_chatbot_url'
-        this.getPrimaryKey();
+        // this.getPrimaryKey();
         this.loadMessages({ "messages": [] })
         break;
         case 'allocatedBudget':
-        // this.chatBoatEndPoint = '/spend_request_chatbot_url'
+          this.chatBoatEndPoint = '/allocate_budget_chatbot_url'
+          this.loadMessages({ "messages": [] })
         break;
       case 'riskAssessment':
         this.chatBoatEndPoint = '/risk_field_chatbot_url'
@@ -191,7 +192,7 @@ export class CreateSpendRequestComponent {
       this.tabClick('reviewAndSubmit')
     }else{
       this.activePage = 'Risk Assessment';
-      this.tabClick('riskAssessment')
+      this.tabClick('allocatedBudget')
     }
   }
   onFinalSubmitionClick(event: any) {
