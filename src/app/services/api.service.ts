@@ -70,4 +70,26 @@ export class ApiService {
     return this.http.post(url, body, { headers });
   }
 
+
+  getReviewAndSubmitData(
+    spendRequestId: string,
+
+    
+  ): Observable<any> {
+    const url = `${this.baseUrl}/review_pull`;
+    const sessionId = localStorage.getItem('sid') || ''; 
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      'session-id': sessionId,
+      'Content-Type': 'application/json',
+    });
+    const body = {
+      spend_request_id: spendRequestId,
+    };
+    return this.http.post(url, body, { headers });
+  }
+
+
+
+
 }

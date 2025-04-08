@@ -10,22 +10,22 @@
       </mat-card-title>
       <mat-card-content>
         <div class="info-section">
-          <p><strong>Purchase name:</strong> Print Product Purchase</p>
-          <p><strong>Spend Category:</strong> Learning</p>
-          <p><strong>Purchase Description:</strong> Annual license for office productivity software (Word, Excel, PowerPoint).</p>
+          <p><strong>Purchase name:</strong> {{data.sow.purchase_name}}</p>
+          <p><strong>Spend Category:</strong> {{data.sow.purchase_name}}</p>
+          <p><strong>Purchase Description:</strong> {{data.sow.purchase_description}}</p>
         </div>
         <mat-divider></mat-divider>
         <div class="timeline">
           <h4>Timeline</h4>
-          <p><strong>Work Start Date:</strong> 03/01/2025</p>
-          <p><strong>Work End Date:</strong> 03/01/2026</p>
+          <p><strong>Work Start Date:</strong> {{data.sow.work_start_date}}</p>
+          <p><strong>Work End Date:</strong>{{data.sow.work_end_date}}6</p>
         </div>
         <mat-divider></mat-divider>
         <div class="markets">
           <h4>Select the market(s) benefiting from the services provided</h4>
-          <p><strong>Select Country:</strong> United States, Canada</p>
-          <p><strong>Select Currency:</strong> USD</p>
-          <p><strong>Select Role:</strong> Project Manager</p>
+          <p><strong>Select Country:</strong> {{data.sow.country}}</p>
+          <p><strong>Select Currency:</strong> {{data.sow.currency}}</p>
+          <p><strong>Select Role:</strong> {{data.sow.row_id}}</p>
         </div>
       </mat-card-content>
     </mat-card>
