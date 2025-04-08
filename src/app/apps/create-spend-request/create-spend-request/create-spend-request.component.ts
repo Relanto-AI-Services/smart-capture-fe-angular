@@ -126,7 +126,7 @@ export class CreateSpendRequestComponent {
         });
         this.loadMessages({
           "messages": [],
-          "context": {"vendor_name": 'quantum software solutions'}, //change here
+          "context": {"vendor_name": contextValue || ""}, //change here
           "risk_form": {},
           "sow_form": {}
         })
