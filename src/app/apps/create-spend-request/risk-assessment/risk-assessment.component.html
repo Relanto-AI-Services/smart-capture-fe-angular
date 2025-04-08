@@ -38,140 +38,131 @@
         <input matInput formControlName="supplier_poc_email" type="email" />
       </mat-form-field>
   
-      <!-- <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Marketing Garage Exception ID [*]</mat-label>
-        <input matInput formControlName="marketingGarageID" />
-      </mat-form-field> -->
+ 
   
-      <h3>Additional Details</h3>
-      <p>Please review and update any additional details to ensure completeness and accuracy.</p>
-  
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>In what type of location will services be performed? *</mat-label>
-        <input matInput formControlName="serviceLocation" />
-      </mat-form-field>
-  
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Do you need to supervise the worker's activities? *</mat-label>
-        <mat-select formControlName="supervisionRequired" multiple>
-          <mat-option value="yes">Yes</mat-option>
-          <mat-option value="no">No</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Do you need a badge or "&#64;"google account for supplier workers for more than 30 days? *</mat-label>
-        <mat-select formControlName="googleBadge">
-          <mat-option value="yes">Yes</mat-option>
-          <mat-option value="no">No</mat-option>
-        </mat-select>
-      </mat-form-field>
     
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Will the supplier create deliverables visible to the public? *</mat-label>
-        <mat-select formControlName="deliverablesPublic">
-          <mat-option value="yes">Yes, including product support materials and conference presentations</mat-option>
-          <mat-option value="no">No</mat-option>
-        </mat-select>
-      </mat-form-field>
-    
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Is anything in your project accessible by children or minors (age 18 or under)? *</mat-label>
-        <mat-select formControlName="childrenAccessible">
-          <mat-option value="yes">Yes</mat-option>
-          <mat-option value="no">No</mat-option>
-        </mat-select>
-      </mat-form-field>
-    
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Is your supplier any of the following? (Select all that apply) *</mat-label>
-        <mat-select formControlName="supplierType" multiple>
-          <mat-option value="independent_contractor">Independent contractor</mat-option>
-          <mat-option value="vendor">Vendor</mat-option>
-          <mat-option value="agency">Agency</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Does your project any of the following. (Select all that apply) *</mat-label>
-        <mat-select formControlName="projectInvolve" multiple>
-          <mat-option value="software_development">software development</mat-option>
-          <mat-option value="It_Service">It Service</mat-option>
-          <mat-option value="xyz">XYZ</mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <!-- Marketing Activities -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Which of these marketing activities are part of the purchase? (Select all that apply) *</mat-label>
-    <mat-select formControlName="marketingActivities" multiple>
-      <mat-option value="digital_advertising">Digital advertising</mat-option>
-      <mat-option value="content_creation">Content creation</mat-option>
-      <mat-option value="event_sponsorship">Event sponsorship</mat-option>
-      <mat-option value="social_media">Social media</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Signed Contract Required -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Will a signed contract be required for this purchase regardless of the risk level? *</mat-label>
-    <mat-select formControlName="signedContract">
-      <mat-option value="yes">Yes</mat-option>
-      <mat-option value="no">No</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Work Already Begun -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Has work already begun on your purchase? *</mat-label>
-    <mat-select formControlName="workBegun">
-      <mat-option value="yes">Yes</mat-option>
-      <mat-option value="no">No</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Googler Relationship -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Does the Googler who decided to hire this supplier have any of the following relationships with the supplier? *</mat-label>
-    <mat-select formControlName="googlerRelationship">
-      <mat-option value="none">None</mat-option>
-      <mat-option value="family">Family relationship</mat-option>
-      <mat-option value="business">Previous business relationship</mat-option>
-      <mat-option value="friend">Personal friendship</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-   <!-- Government Body Interaction -->
-   <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Is the supplier a government body or official, or will they interact with anyone on Google’s behalf? *</mat-label>
-    <mat-select formControlName="govtInteraction">
-      <mat-option value="yes">Yes</mat-option>
-      <mat-option value="no">No</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Use of Google Equipment -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Will the supplier exclusively use Google equipment and credentials to perform all the project work? *</mat-label>
-    <mat-select formControlName="googleEquipment">
-      <mat-option value="yes">Yes</mat-option>
-      <mat-option value="no">No</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <!-- Exposure to Extreme Content -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Will any of the supplier’s workers be exposed to egregious/extreme content while providing their services? *</mat-label>
-    <mat-select formControlName="extremeContent">
-      <mat-option value="yes">Yes</mat-option>
-      <mat-option value="no">No</mat-option>
-    </mat-select>
-  </mat-form-field>
+        <h3>Additional Details</h3>
+        <p>Please review and update any additional details to ensure completeness and accuracy.</p>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>In what type of location will services be performed? *</mat-label>
+          <input matInput formControlName="serviceLocation" />
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Do you need to supervise the worker's activities? *</mat-label>
+          <mat-select formControlName="supervisionRequired" multiple>
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Do you need a badge or google account for supplier workers for more than 30 days? *</mat-label>
+          <mat-select formControlName="googleBadge" multiple>
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Will the supplier create deliverables visible to the public? *</mat-label>
+          <mat-select formControlName="deliverablesPublic" multiple>
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Is anything in your project accessible by children or minors (age 18 or under)? *</mat-label>
+          <mat-select formControlName="childrenAccessible" multiple>
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Is your supplier any of the following? *</mat-label>
+          <mat-select formControlName="supplierType" multiple>
+            <mat-option value="independent_contractor">Independent contractor</mat-option>
+            <mat-option value="vendor">Vendor</mat-option>
+            <mat-option value="agency">Agency</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Does your project involve any of the following? *</mat-label>
+          <mat-select formControlName="projectInvolve" multiple>
+            <mat-option value="software_development">Software Development</mat-option>
+            <mat-option value="It_Service">IT Service</mat-option>
+            <mat-option value="xyz">XYZ</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Which of these marketing activities are part of the purchase? *</mat-label>
+          <mat-select formControlName="marketingActivities" multiple>
+            <mat-option value="digital_advertising">Digital Advertising</mat-option>
+            <mat-option value="content_creation">Content Creation</mat-option>
+            <mat-option value="event_sponsorship">Event Sponsorship</mat-option>
+            <mat-option value="social_media">Social Media</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Will a signed contract be required for this purchase regardless of the risk level? *</mat-label>
+          <mat-select formControlName="signedContract">
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Has work already begun on your purchase? *</mat-label>
+          <mat-select formControlName="workBegun">
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Does the Googler who decided to hire this supplier have any of the following relationships with the supplier? *</mat-label>
+          <mat-select formControlName="googlerRelationship">
+            <mat-option value="none">None</mat-option>
+            <mat-option value="family">Family</mat-option>
+            <mat-option value="business">Previous Business</mat-option>
+            <mat-option value="friend">Friend</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Is the supplier a government body or official, or will they interact on Google’s behalf? *</mat-label>
+          <mat-select formControlName="govtInteraction">
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Will the supplier exclusively use Google equipment and credentials? *</mat-label>
+          <mat-select formControlName="googleEquipment">
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+      
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Will any workers be exposed to extreme content? *</mat-label>
+          <mat-select formControlName="extremeContent">
+            <mat-option value="yes">Yes</mat-option>
+            <mat-option value="no">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+     
+      </form>
+      
   
-      <!-- <button mat-raised-button color="primary" type="submit" [disabled]="riskForm.invalid">
-        Submit
-      </button> -->
-    </form>
+      
   </div>
   
 

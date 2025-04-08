@@ -103,17 +103,7 @@ export class TacticTableComponent implements OnInit {
     });
    
   }
-  
-  
 
-  // toggleSelection(event: any, row: any) {
-  //   this.isActive = true;
-  //   if (event.target.checked) {
-  //     this.selectedData.push(row);
-  //   } else {
-  //     this.selectedData = this.selectedData.filter((item) => item !== row);
-  //   }
-  // }
 
   toggleSelection(event: any, row: any) {
     this.isActive = true;
@@ -166,9 +156,6 @@ export class TacticTableComponent implements OnInit {
     }
   }
 
-  //   editDetails(row:any){
-  //     console.log(row);
-  //   }
   clickNext(type: any) {
     if(type === 'continue' && this.droppedItems.length){
       this.sendRequest([...this.droppedItems])
@@ -181,7 +168,7 @@ export class TacticTableComponent implements OnInit {
 
   sendRequest(arr: Array<any>) {
     console.log(arr)
-    const spendRequestId = this.rowId || this.generateRandomString(10);
+    const spendRequestId = this.rowId ;
     const tacticDetails = this.droppedItems.map((dt) => {
       let obj = {
         "tactic_id": "",

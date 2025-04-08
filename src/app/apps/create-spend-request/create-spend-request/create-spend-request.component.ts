@@ -119,9 +119,14 @@ export class CreateSpendRequestComponent {
         break;
       case 'riskAssessment':
         this.chatBoatEndPoint = '/risk_field_chatbot_url'
+        let contextValue = '';
+        this.commonService.getFormData$().subscribe(data => {
+          console.log('Combined Form Data:', data);
+          contextValue = data.extractedSowFormData.supplier_legal_name;
+        });
         this.loadMessages({
           "messages": [],
-          "context": {"vendor_name":"quantum software solutions"}, //change here
+          "context": {"vendor_name": contextValue || ""}, //change here
           "risk_form": {},
           "sow_form": {}
         })
@@ -230,9 +235,14 @@ export class CreateSpendRequestComponent {
   selectOption(option: string) {
     this.messages['messages'].push({ content: option, role: 'user' });
     if(this.activeTab === 'riskAssessment'){
+      let context = {}
+      this.commonService.getMessage().subscribe(data => {
+     
+       context = data.context
+      })
       this.loadMessages({
         "messages":this.messages['messages'],
-        "context": {"vendor_name":"quantum software solutions"}, //change here
+        "context":   context, //change here
         "risk_form": {},
         "sow_form": {}}
       )
