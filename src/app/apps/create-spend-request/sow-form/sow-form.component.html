@@ -103,6 +103,7 @@
         <section>
             <p class="section-title">Timeline</p>
             <div class="row">
+                <!-- {{sowForm.value.work_start_date < today}} -->
                 <mat-form-field appearance="outline" class="half-width">
                     <mat-label>Work Start Date</mat-label>
                     <input matInput [matDatepicker]="picker1" formControlName="work_start_date" [min]="today"

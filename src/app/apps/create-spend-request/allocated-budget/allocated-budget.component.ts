@@ -139,7 +139,7 @@ export class AllocatedBudgetComponent {
     const extractedData = localStorage.getItem("extractedData");
     if (extractedData) {
       const parsedData = JSON.parse(extractedData);
-      this.totalSpend = parsedData?.total_amount
+      this.totalSpend = parsedData?.results[0]?.spend_request[0]?.total_amount
       this.getBudgetFormData(this.rowId)
     }
     this.commonService.getFormData$().subscribe(data => {
