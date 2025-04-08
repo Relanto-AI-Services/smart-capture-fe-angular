@@ -4,6 +4,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ApiService } from '../../../services/api.service';
 @Component({
   selector: 'app-submit-spend-request',
   imports: [CommonModule, MatDividerModule, MatCardModule, MatButtonModule, MatIconModule],
@@ -15,7 +16,9 @@ export class SubmitSpendRequestComponent {
   isActive:boolean=true
   data:any={}
 
-  
+  constructor(private apiService: ApiService){
+
+  }
 
   clickNext(type:any) {
     if (type === 'continue') {
@@ -23,5 +26,24 @@ export class SubmitSpendRequestComponent {
     }else{
       this.finalSubmitionClick.emit({ data: this.data, type: 'back' });
     }
+  }
+
+ 
+
+
+
+
+  fetchSubmitAndReview() {
+    this.apiService.getReviewAndSubmitData().subscribe({
+      next: (response: any) => {
+        console.log("Raw API Response:", response);
+      
+      },
+      error: (error) => {
+        console.error("Error fetching spend request data:", error);
+      },
+    
+    });
+   
   }
 }

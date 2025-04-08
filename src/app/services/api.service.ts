@@ -70,4 +70,14 @@ export class ApiService {
     return this.http.post(url, body, { headers });
   }
 
+
+  getReviewAndSubmitData() {
+    const sessionIdd = localStorage.getItem('sid') || '';
+    const headers = new HttpHeaders({
+      'session-id': sessionIdd, 
+    });
+
+    return this.http.get( `${this.baseUrl}/tactic_listing`, { headers });
+  }
+
 }
