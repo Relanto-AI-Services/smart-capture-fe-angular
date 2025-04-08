@@ -54,31 +54,12 @@ export class TacticTableComponent implements OnInit {
   }
 
   refreshSpendRequestData() {
-    this.openLoader()
     this.apiService.refreshSpendRequest().subscribe({
       next: (response: any) => {
         console.log("Raw API Response:", response);
-  
-        // Ensure response.data exists and is an array
-        if (!response?.data || !Array.isArray(response.data)) {
-          console.error("API response does not contain a valid data array:", response);
-          return;
-        }
-  
-        this.data = response.data.map((item: any) => ({
-          id: item["Tactic_ID"] || "N/A",
-          tacticName: item["Tactic_title"] || "No Title",
-          program: item["PV"] || "Unknown",
-          type: item["Tactic_Type"] || "N/A",
-          startDate: item["Start_date"] || "N/A",
-          endDate: item["End_date"] || "N/A",
-          costCenter: item["Primary_CC"] || "N/A",
-          warning: item["Priority"] || "",
-        }));
-  
-        this.filteredData = [...this.data]; 
-        console.log("Processed Data:", this.filteredData);
-        this.dialogRef.close()
+       if(response){
+        this.fetchSpendRequestData();
+       }
       },
       error: (error) => {
         console.error("Error fetching spend request data:", error);

@@ -34,15 +34,7 @@
       </div>
     </div>
 
-    <div class="tactic-refresh">
-      <h4>Select the tactic(s) your spend request is funding</h4>
-      <p>
-        Can't find your tactis?
-        <span class="refresh" (click)="refreshTactic()"
-          ><img />refresh the list</span
-        >
-      </p>
-    </div>
+   
 
     <div
       [ngClass]="{ 'full-table': !conceptValue, 'half-table': conceptValue }"
@@ -115,7 +107,7 @@
 
             <!-- No data message -->
             <tr *ngIf="filteredData.length === 0">
-              <td colspan="5" class="no-data-cell">
+              <td colspan="3" class="no-data-cell">
                 <div class="no-data-wrapper">
                   <img
                     src="assets/images/no-data-icon.png"
@@ -128,6 +120,16 @@
                     refine your search and reload tactic and try again.
                   </div>
                 </div>
+
+              
+                  
+                  <p>
+                   
+                    <span class="refresh" (click)="refreshTactic()"
+                      ><img />refresh the list</span
+                    >
+                  </p>
+              
               </td>
             </tr>
           </tbody>

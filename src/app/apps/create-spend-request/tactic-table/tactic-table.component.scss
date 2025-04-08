@@ -28,17 +28,12 @@ input {
   font-family: "Roboto";
 }
 
-.tactic-refresh{
-  display: flex;
-  justify-content: space-between;
-  p{
-    font-size: 10px;
-  }
+
   .refresh{
     color: #0b57d0;
     cursor: pointer;
     
-  }
+  
 }
 .edit-tactic {
   color: #0b57d0;
