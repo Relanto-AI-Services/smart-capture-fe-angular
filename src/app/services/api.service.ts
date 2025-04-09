@@ -74,9 +74,26 @@ export class ApiService {
   getReviewAndSubmitData(
     spendRequestId: string,
 
-    
+
   ): Observable<any> {
     const url = `${this.baseUrl}/review_pull`;
+    const sessionId = localStorage.getItem('sid') || ''; 
+    const headers = new HttpHeaders({
+      accept: 'application/json',
+      'session-id': sessionId,
+      'Content-Type': 'application/json',
+    });
+    const body = {
+      spend_request_id: spendRequestId,
+    };
+    return this.http.post(url, body, { headers });
+  }
+
+  postReviewAndSubmitData(
+    spendRequestId: string,
+
+  ): Observable<any> {
+    const url = `${this.baseUrl}/update_spend_req_status`;
     const sessionId = localStorage.getItem('sid') || ''; 
     const headers = new HttpHeaders({
       accept: 'application/json',

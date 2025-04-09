@@ -123,7 +123,7 @@ export class CreateSpendRequestComponent {
         let contextValue = '';
         this.commonService.getFormData$().subscribe(data => {
           console.log('Combined Form Data:', data);
-          contextValue = data.extractedSowFormData.supplier_legal_name;
+          contextValue = data?.extractedSowFormData?.supplier_legal_name;
         });
         this.loadMessages({
           "messages": [],
