@@ -66,12 +66,12 @@ export class RiskAssessmentComponent implements OnInit {
     this.commonService.getFormData$().subscribe(data => {
       console.log('Combined Form Data:', data);
       this.riskForm.patchValue({
-        supplier_legal_name: data.extractedSowFormData.supplier_legal_name || '',
-        legal_name: data.extractedSowFormData.legal_name || '',
-        primaryContactName: data.extractedSowFormData.supplier_poc_name || '',
-        primaryContactEmail: data.extractedSowFormData.supplier_poc_email || '',
-        supplier_poc_name: data.extractedSowFormData.supplier_poc_name || '',
-        supplier_poc_email: data.extractedSowFormData.supplier_poc_email || ''
+        supplier_legal_name: data?.extractedSowFormData?.supplier_legal_name || '',
+        legal_name: data?.extractedSowFormData?.legal_name || '',
+        primaryContactName: data?.extractedSowFormData?.supplier_poc_name || '',
+        primaryContactEmail: data?.extractedSowFormData?.supplier_poc_email || '',
+        supplier_poc_name: data?.extractedSowFormData?.supplier_poc_name || '',
+        supplier_poc_email: data?.extractedSowFormData?.supplier_poc_email || ''
       });
     });
 
@@ -110,8 +110,8 @@ riskPatch(data: any){
 
 
 populateForm(jsonData: any): void {
-  const riskFormData = jsonData.risk_form.risk_fields;
-  riskFormData.forEach((item: any) => {
+  const riskFormData = jsonData?.risk_form?.risk_fields;
+  riskFormData?.forEach((item: any) => {
     const controlName = item.map;
     const response = item.response;
 
