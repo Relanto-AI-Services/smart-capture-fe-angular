@@ -39,7 +39,7 @@ export class SubmitSpendRequestComponent implements OnInit {
   }
 
   postSubmitAndReview(){
-    this.apiService.postReviewAndSubmitData( 'SR-SCTE1038' ).subscribe({
+    this.apiService.postReviewAndSubmitData( this.rowId ).subscribe({
       next: (response) =>{        
         console.log('Success:', response)},
       error: (error) => console.error('Error:', error)
@@ -48,7 +48,7 @@ export class SubmitSpendRequestComponent implements OnInit {
   }
 
   fetchSubmitAndReview(){
-    this.apiService.getReviewAndSubmitData( 'SR-SCTE1038' ).subscribe({
+    this.apiService.getReviewAndSubmitData( this.rowId ).subscribe({
       next: (response) =>{
         this.data = response;
         this.sowdata = this.data.sow;
