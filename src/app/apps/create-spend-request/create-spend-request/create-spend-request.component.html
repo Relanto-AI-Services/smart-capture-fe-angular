@@ -30,7 +30,7 @@
                         ngSkipHydration></app-risk-assessment>
                     }
                     @else if (activeTab === 'reviewAndSubmit' ) {
-                    <app-submit-spend-request (finalSubmitionClick)="onFinalSubmitionClick($event)" [rowId]="rowId"
+                    <app-submit-spend-request (finalSubmitionClick)="onFinalSubmitionClick($event)" [rowId]="rowId" (finalSubmitionEditRouter) = "onfinalSubmitionEditRouter($event)"
                         ngSkipHydration></app-submit-spend-request>
                     }
         </div>

@@ -106,7 +106,7 @@
                 <!-- {{sowForm.value.work_start_date < today}} -->
                 <mat-form-field appearance="outline" class="half-width">
                     <mat-label>Work Start Date</mat-label>
-                    <input matInput [matDatepicker]="picker1" formControlName="work_start_date" [min]="today"
+                    <input matInput [matDatepicker]="picker1" formControlName="work_start_date"
                         [ngClass]="{'auto-filled': isAutoFilled('work_start_date')}">
                     <mat-datepicker-toggle matIconSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>

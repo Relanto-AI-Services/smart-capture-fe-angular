@@ -9,7 +9,7 @@ import { RiskAssessmentComponent } from '../risk-assessment/risk-assessment.comp
 import { SubmitSpendRequestComponent } from '../submit-spend-request/submit-spend-request.component';
 import { CommonService } from '../../../services/common/common.service';
 import { AuthService } from '../../../services/auth/auth.service';
-import { AllocatedBudgetComponent } from "../allocated-budget/allocated-budget.component";
+import { AllocatedBudgetComponent } from '../allocated-budget/allocated-budget.component';
 
 @Component({
   selector: 'app-create-spend-request',
@@ -24,33 +24,36 @@ import { AllocatedBudgetComponent } from "../allocated-budget/allocated-budget.c
     SubmitSpendRequestComponent,
     FormsModule,
     ReactiveFormsModule,
-    AllocatedBudgetComponent
+    AllocatedBudgetComponent,
   ],
   templateUrl: './create-spend-request.component.html',
   styleUrl: './create-spend-request.component.scss',
 })
 export class CreateSpendRequestComponent {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
-  public activeTab: any = 'tactic'
-  public activePage = 'Request Type'
-  public user: any //localStorage.getItem('user')
+  public activeTab: any = 'tactic';
+  public activePage = 'Request Type';
+  public user: any; //localStorage.getItem('user')
   // public userData:any = JSON.parse(this.user ? this.user : "");
   // public userAvtarText = this.userData?.email.split('@')[0].split('.').map((word: any[]) => word[0]).join('').toUpperCase();
-  public userData: any = {}
-  public userAvtarText: any = {}
+  public userData: any = {};
+  public userAvtarText: any = {};
   public rowId: any;
   public chatBoatEndPoint: string = '';
   public messages: any = {
     messages: [],
     options: [],
-    session_id: "",
-    next_url: ""
+    session_id: '',
+    next_url: '',
   };
 
   newMessage: string = '';
   chatVisible: boolean = true;
-  public sowFormData: any = {}
-  constructor(public commonService: CommonService, public authService: AuthService) { }
+  public sowFormData: any = {};
+  constructor(
+    public commonService: CommonService,
+    public authService: AuthService
+  ) {}
   ngOnInit() {
     // if (!localStorage.getItem('user')) {
     //   const user = {
@@ -73,9 +76,14 @@ export class CreateSpendRequestComponent {
     //   localStorage.setItem('user', JSON.stringify(user))
     //   localStorage.setItem('sid', user?.session_id)
     // }
-    this.user = localStorage.getItem('user')
-    this.userData = JSON.parse(this.user ? this.user : "");
-    this.userAvtarText = this.userData?.email.split('@')[0].split('.').map((word: any[]) => word[0]).join('').toUpperCase();
+    this.user = localStorage.getItem('user');
+    this.userData = JSON.parse(this.user ? this.user : '');
+    this.userAvtarText = this.userData?.email
+      .split('@')[0]
+      .split('.')
+      .map((word: any[]) => word[0])
+      .join('')
+      .toUpperCase();
     this.commonService.messages$.subscribe((messages: any) => {
       this.messages = messages;
     });
@@ -94,124 +102,129 @@ export class CreateSpendRequestComponent {
     }, 1000);
   }
   tabClick(event: any) {
-    this.activeTab = event
-    this.commonService.resetTabs()
+    this.activeTab = event;
+    this.commonService.resetTabs();
     this.commonService.setActiveTab(event);
     this.messages = {
       messages: [],
       options: [],
-      session_id: "",
-      next_url: ""
-    }
+      session_id: '',
+      next_url: '',
+    };
     switch (this.activeTab) {
       case 'tactic':
-        this.chatBoatEndPoint = '/tactic_chatbot_url'
+        this.chatBoatEndPoint = '/tactic_chatbot_url';
         this.getPrimaryKey();
-        this.loadMessages({ "messages": [] })
+        this.loadMessages({ messages: [] });
         break;
       case 'sow':
-        this.chatBoatEndPoint = '/spend_request_chatbot_url'
+        this.chatBoatEndPoint = '/spend_request_chatbot_url';
         // this.getPrimaryKey();
-        this.loadMessages({ "messages": [] })
+        this.loadMessages({ messages: [] });
         break;
-        case 'allocatedBudget':
-          this.chatBoatEndPoint = '/allocate_budget_chatbot_url'
-          this.loadMessages({ "messages": [] })
+      case 'allocatedBudget':
+        this.chatBoatEndPoint = '/allocate_budget_chatbot_url';
+        this.loadMessages({ messages: [] });
         break;
       case 'riskAssessment':
-        this.chatBoatEndPoint = '/risk_field_chatbot_url'
+        this.chatBoatEndPoint = '/risk_field_chatbot_url';
         let contextValue = '';
-        this.commonService.getFormData$().subscribe(data => {
+        this.commonService.getFormData$().subscribe((data) => {
           console.log('Combined Form Data:', data);
           contextValue = data?.extractedSowFormData?.supplier_legal_name;
         });
         this.loadMessages({
-          "messages": [],
-          "context": {"vendor_name": contextValue || ""}, //change here
-          "risk_form": {},
-          "sow_form": {}
-        })
+          messages: [],
+          context: { vendor_name: contextValue || '' }, //change here
+          risk_form: {},
+          sow_form: {},
+        });
 
         break;
       default:
-        console.log('wait')
+        console.log('wait');
         // this.messages = {}
         break;
     }
   }
   requestType(event: any) {
-    this.activePage = 'Tactics'
-    this.tabClick('tactic')
+    this.activePage = 'Tactics';
+    this.tabClick('tactic');
   }
   onTacticSelection(event: any) {
     if (event?.type === 'continue') {
-      this.activePage = 'SOW'
-      this.tabClick('sow')
+      this.activePage = 'SOW';
+      this.tabClick('sow');
     } else {
-      this.activePage = 'Request Type'
+      this.activePage = 'Request Type';
     }
   }
   onSowSelection(event: any) {
     console.log(event.data);
-    this.sowFormData = event.data
+    this.sowFormData = event.data;
     if (event.type === 'extract') {
       window.setTimeout(() => {
-        let filterData: any = []
-        let res: any = []
+        let filterData: any = [];
+        let res: any = [];
         this.commonService.tabObserver.subscribe((resp: any) => {
-          res = resp
-        })
+          res = resp;
+        });
         filterData = res.filter((el: any) => {
-          if (el.subLabel !== "") return el
-        })
-        
-        if(filterData.length>0){
-          this.messages['messages'].push({ content: filterData[0]['subLabel'], role: 'assistant' });
+          if (el.subLabel !== '') return el;
+        });
+
+        if (filterData.length > 0) {
+          this.messages['messages'].push({
+            content: filterData[0]['subLabel'],
+            role: 'assistant',
+          });
         }
       }, 1000);
-    } else if(event.type === 'submit') {
+    } else if (event.type === 'submit') {
       this.activePage = 'Allocated Budget';
-      this.tabClick('allocatedBudget')
-    }else{
+      this.tabClick('allocatedBudget');
+    } else {
       this.activePage = 'Tactic';
-      this.tabClick('tactic')
+      this.tabClick('tactic');
     }
   }
   onAllocatedBidgetSelection(event: any) {
-    if(event.type === 'continue'){
+    if (event.type === 'continue') {
       this.activePage = 'Risk Assessment';
-      this.tabClick('riskAssessment')
-    }else{
-      this.activePage = 'SOW'
-      this.tabClick('sow')
+      this.tabClick('riskAssessment');
+    } else {
+      this.activePage = 'SOW';
+      this.tabClick('sow');
     }
   }
   onRiskAssessmentSelection(event: any) {
-    if(event.type === 'continue'){
-      this.activePage = 'Review And Submit'
-      this.tabClick('reviewAndSubmit')
-    }else{
+    if (event.type === 'continue') {
+      this.activePage = 'Review And Submit';
+      this.tabClick('reviewAndSubmit');
+    } else {
       this.activePage = 'Risk Assessment';
-      this.tabClick('allocatedBudget')
+      this.tabClick('allocatedBudget');
     }
   }
   onFinalSubmitionClick(event: any) {
-    if(event.type === 'continue'){
-      this.activePage = 'Review And Submit'
-      this.tabClick('reviewAndSubmit')
-    }else{
+    if (event.type === 'continue') {
+      this.activePage = 'Review And Submit';
+      this.tabClick('reviewAndSubmit');
+    } else {
       this.activePage = 'Risk Assessment';
-      this.tabClick('riskAssessment')
+      this.tabClick('riskAssessment');
     }
   }
 
   getPrimaryKey() {
     try {
-      this.authService.postData('/generate_primary_key', {}).subscribe((res) => {
-        this.rowId = res.row_id
-      })
+      this.authService
+        .postData('/generate_primary_key', {})
+        .subscribe((res) => {
+          this.rowId = res.row_id;
+        });
     } catch (error) {
-      console.error('error', error)
+      console.error('error', error);
     }
   }
   // ####################################
@@ -222,76 +235,82 @@ export class CreateSpendRequestComponent {
   }
 
   sendMessage() {
-    
     if (this.newMessage.trim()) {
-      this.messages['messages'].push({ content: this.newMessage, role: 'user' });
+      this.messages['messages'].push({
+        content: this.newMessage,
+        role: 'user',
+      });
       this.newMessage = '';
-     
-      this.loadMessages({ "messages": this.messages['messages'] })
-
-      
+      this.loadMessages({ messages: this.messages['messages'] });
     }
   }
 
   selectOption(option: string) {
     this.messages['messages'].push({ content: option, role: 'user' });
-    if(this.activeTab === 'riskAssessment'){
-      let context = {}
-      this.commonService.getMessage().subscribe(data => {
-     
-       context = data.context
-      })
+    if (this.activeTab === 'riskAssessment') {
+      let context = {};
+      this.commonService.getMessage().subscribe((data) => {
+        context = data.context;
+      });
       this.loadMessages({
-        "messages":this.messages['messages'],
-        "context":   context, //change here
-        "risk_form": {},
-        "sow_form": {}}
-      )
-      }else{
-      this.loadMessages({ "messages": this.messages['messages'] })
-
-      }
-
-   
-
-
-    
-
+        messages: this.messages['messages'],
+        context: context, //change here
+        risk_form: {},
+        sow_form: {},
+      });
+    } else {
+      this.loadMessages({ messages: this.messages['messages'] });
+    }
   }
 
   loadMessages(message: any) {
     try {
       this.authService.getData(this.chatBoatEndPoint).subscribe((res: any) => {
-        this.getMessages(res.next_url, message)
+        this.getMessages(res.next_url, message);
       });
     } catch (error) {
-      console.error('error', error)
+      console.error('error', error);
     }
   }
 
-
   getMessages(url: any, message: any) {
-    let payload: any = {...message}
-    if(this.activeTab === 'sow'){
-      payload = { ...payload, sow_form: this.sowFormData ? this.sowFormData : {} }
+    let payload: any = { ...message };
+    if (this.activeTab === 'sow') {
+      payload = {
+        ...payload,
+        sow_form: this.sowFormData ? this.sowFormData : {},
+      };
+    } else if (this.activeTab === 'riskAssessment') {
+      let context = {};
+      this.commonService.getMessage().subscribe((data) => {
+        context = data;
+      });
+
+      payload = { ...payload, ...context};
     }
 
     this.authService.postData(url, payload).subscribe({
-      next: secondResponse => {
+      next: (secondResponse) => {
         // this.messages = secondResponse
         this.commonService.updateMessages(secondResponse);
       },
-      error: error => console.error('Error:', error),
-      complete: () => console.log('Chat API calls completed')
+      error: (error) => console.error('Error:', error),
+      complete: () => console.log('Chat API calls completed'),
     });
   }
 
   showChat() {
     if (!this.chatVisible) {
-      this.chatVisible = true
+      this.chatVisible = true;
     }
   }
   getSowFormData(event: any) {
-    this.sowFormData = { ...this.sowFormData, ...event }
+    this.sowFormData = { ...this.sowFormData, ...event };
+  }
+
+  onfinalSubmitionEditRouter(event: any){
+    this.activePage = event.label;
+    this.tabClick(event.value);
+
   }
 }

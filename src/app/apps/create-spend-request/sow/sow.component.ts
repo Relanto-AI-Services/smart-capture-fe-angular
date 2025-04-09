@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialog } from '@angular/material/dialog';
 import { LoaderModalComponent } from '../../../components/shared/loader-modal/loader-modal.component';
+import moment from 'moment';
 
 @Component({
   selector: 'app-sow',
@@ -112,8 +113,8 @@ export class SowComponent {
         purchase_name: this.sowForm?.sowForm?.value?.purchase_name,
         spend_category: this.sowForm?.sowForm?.value['spend_category'],
         purchase_description: this.sowForm?.sowForm?.value['purchase_description'],
-        work_start_date: this.sowForm?.sowForm?.value['work_start_date'],
-        work_end_date: this.sowForm?.sowForm?.value['work_end_date'],
+        work_start_date: moment(this.sowForm?.sowForm?.value['work_start_date']).format('DD-MM-YYYY'),
+        work_end_date:  moment(this.sowForm?.sowForm?.value['work_end_date']).format('DD-MM-YYYY'),
         currency: this.sowForm?.sowForm?.value['currency'],
         markets_benifited_from_the_serviece: this.sowForm?.sowForm?.value['country']
       }
