@@ -293,6 +293,7 @@ tr.cdk-drag {
   background-color: #f8f9fa;
   border-radius: 8px;
   padding: 10px;
+  overflow-y: scroll;
 }
 
 .side-panel h3 {
@@ -300,7 +301,7 @@ tr.cdk-drag {
   color: #333;
   border-bottom: 1px solid #ddd;
   padding-bottom: 0.2rem;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -324,11 +325,12 @@ tr.cdk-drag {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   background-color: white;
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  font-size: 10px;
 }
 
 .dropped-item button {

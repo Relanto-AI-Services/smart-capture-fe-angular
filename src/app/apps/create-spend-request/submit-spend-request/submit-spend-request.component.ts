@@ -13,6 +13,7 @@ import { ApiService } from '../../../services/api.service';
 })
 export class SubmitSpendRequestComponent implements OnInit {
   @Output() finalSubmitionClick = new EventEmitter<any>();
+  @Output() finalSubmitionEditRouter = new EventEmitter<any>();
   @Input() rowId!: string;
   isActive:boolean=true
   data:any={}
@@ -83,7 +84,9 @@ export class SubmitSpendRequestComponent implements OnInit {
     return Object.values(grouped);
   }
   
-
+  edit(value:string, label:string){
+    this.finalSubmitionEditRouter.emit({value: value, label:label})
+  }
 
 
 }
