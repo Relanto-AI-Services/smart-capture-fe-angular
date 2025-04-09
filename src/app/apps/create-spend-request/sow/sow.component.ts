@@ -90,7 +90,9 @@ export class SowComponent {
       }
     } else if (type === 'submit') {
       this.sowForm.onSubmit();
-      if (this.sowForm.isFormValid && this.extractedData) {
+      // const extractedData = localStorage.getItem("extractedData");
+      // const parsedData = JSON.parse(extractedData);
+      if (this.sowForm.isFormValid) {
         this.submitSowForm()
       }
     } else {
@@ -99,7 +101,13 @@ export class SowComponent {
   }
   submitSowForm() {
     try {
-      this.commonService.getFormData$
+      // this.commonService.getFormData$
+      let extData:any ={}
+      const extractedData = localStorage.getItem("extractedData");
+      if (extractedData) {
+        const parsedData = JSON.parse(extractedData);
+        extData = parsedData
+      }
       let dataExtract = {
         purchase_name: this.sowForm?.sowForm?.value?.purchase_name,
         spend_category: this.sowForm?.sowForm?.value['spend_category'],
@@ -109,17 +117,22 @@ export class SowComponent {
         currency: this.sowForm?.sowForm?.value['currency'],
         markets_benifited_from_the_serviece: this.sowForm?.sowForm?.value['country']
       }
-      delete this.allExtractedData.total_processing_time
+      if(extData?.total_processing_time){
+        delete extData?.total_processing_time
+      }
       let selectedCountryCode = this.getselectedCountryCode(this.sowForm?.sowForm?.value['country'].filter((item:any) => Array.isArray(item) ? item.length > 0 : true))
       let payload = {
-        ...this.allExtractedData, extraction_results: [
+        ...extData, extraction_results: [
           {
-            ...this.allExtractedData.results[0],
+            ...extData?.results[0],
             ...dataExtract
           }
         ], 
         country_name: this.sowForm?.sowForm?.value['country'].filter((item:any) => Array.isArray(item) ? item.length > 0 : true), 
         country_code: selectedCountryCode
+      }
+      if(payload?.results){
+        delete payload?.results
       }
       // this.openLoader()
       this.authService.postData('/ingest_sow_page', payload).subscribe((res: any) => {
@@ -182,7 +195,7 @@ export class SowComponent {
         this.extractedData = proRes?.results[0]?.spend_request[0]
         this.commonService.setFormData({ extractedSowFormData: proRes?.results[0]?.spend_request[0] })
         this.showSowForm = true // after extracting data
-        localStorage.setItem("extractedData", JSON.stringify(this.extractedData));
+        localStorage.setItem("extractedData", JSON.stringify(proRes));
         this.pushToBigQuery({ ...proRes, extraction_results: proRes?.results })
         window.setTimeout(() => {
           this.sowClick.emit({ data: this.sowForm?.sowForm?.value, type: 'extract' });
@@ -193,8 +206,10 @@ export class SowComponent {
     }
   }
   pushToBigQuery(data: any) {
-    delete data.total_processing_time
-    delete data.results
+    if(data?.total_processing_time && data.results){
+      delete data.total_processing_time
+      delete data.results
+    }
     let payload = data;
     this.authService.postData('/ingest_to_log_table', payload).subscribe((res) => {
       console.log('Res', res);
