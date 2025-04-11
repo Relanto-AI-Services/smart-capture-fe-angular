@@ -90,6 +90,9 @@ export class TacticTableComponent implements OnInit {
           endDate: item["End_date"] || "N/A",
           costCenter: item["Primary_CC"] || "N/A",
           warning: item["Priority"] || "",
+          additional_cost_centers: item['additional_cost_centers'] || '',
+          additional_cost_centers_code : item["additional_cost_centers_code"] || '',
+
         }));
   
         this.filteredData = [...this.data]; 
@@ -176,7 +179,9 @@ export class TacticTableComponent implements OnInit {
       "tactic_type": "",
       "tactic_code": "",
       "primary_cost_center": "",
-      "cost_center_code":"12"
+      "cost_center_code":"",
+      "additional_cost_centers": "",
+      "additional_cost_centers_code" : ""
       }
       obj['tactic_id'] = dt.id;
       obj['tactic_name'] = dt.tacticName;
@@ -184,11 +189,15 @@ export class TacticTableComponent implements OnInit {
       obj['tactic_code'] = '';
       obj['primary_cost_center'] = dt.costCenter;
       obj['cost_center_code'] = '';
+      obj["additional_cost_centers"] = dt.additional_cost_centers || '';
+      obj['additional_cost_centers_code'] = dt.additional_cost_centers_code  || '';
 
 
       return obj
     })
-
+         
+    
+   
    
    
 
